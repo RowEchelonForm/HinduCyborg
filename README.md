@@ -16,7 +16,7 @@ With Git Bash:
   - git config --global user.name "[your name]"
   - git config --global user.email "[your email address]"
 
-  Cloning the project to your PC:
+  Cloning the project to your PC (use HTTPS if you use a SourceTree, SSH only if you've generated an SSH key):
   - HTTPS: git clone https://github.com/RowEchelonForm/HinduCyborg.git
   OR
   - SSH: git clone git@github.com:RowEchelonForm/HinduCyborg.git
