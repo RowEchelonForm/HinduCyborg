@@ -11,6 +11,7 @@ To use Git:
 - Adding an SSH key to keep your sanity with Git Bash: https://help.github.com/articles/connecting-to-github-with-ssh/
 
 With Git Bash:
+
   Configure Git (optional but recommended):
   - git config --global user.name "[your name]"
   - git config --global user.email "[your email address]"
@@ -35,3 +36,5 @@ With Git Bash:
   AND
   - git push
   (this will push the changes to THE GLOBAL repository)
+  
+  If something weird happens when you push, there are changes in the global repository and you must pull them first. Then you will need to merge the files if there are conflicts (Git will merge automatically if there are no confilcts). If think this is confusing, use a GUI, e.g. SourceTree. If you hate typing in your username and password all the time, use SSH or a GUI.
