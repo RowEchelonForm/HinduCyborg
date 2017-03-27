@@ -10,6 +10,7 @@ To use Git:
 - Download and install Git https://git-scm.com/downloads
 - Make a Github account
 - A handy Git guide: https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf
+- A really long Git guide book: https://git-scm.com/book/en/v2/
 - Use an advanced Git GUI: https://www.sourcetreeapp.com/ (optional, but might make life easier)
 - Adding an SSH key to keep your sanity with Git Bash: https://help.github.com/articles/connecting-to-github-with-ssh/
 
@@ -40,4 +41,5 @@ With Git Bash:
   - git push
   (this will push the changes to THE GLOBAL repository)
   
-  If something weird happens when you push, there are probably changes in the global repository and you must pull them first. Then you will need to merge the files if there are conflicts (Git will merge automatically if there are no confilcts). If you think this is confusing, use a GUI, e.g. SourceTree. If you hate typing in your username and password all the time, use SSH or a GUI.
+
+If something weird happens when you push, there are probably changes in the global repository and you must pull them first. Then you will need to merge the files if there are conflicts (Git will merge automatically if there are no confilcts). If you think this is confusing, use a GUI, e.g. SourceTree. If you hate typing in your username and password all the time, use SSH or a GUI.
