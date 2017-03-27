@@ -10,7 +10,7 @@ To use Git:
 - Download and install Git https://git-scm.com/downloads
 - Make a Github account
 - A handy Git guide: https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf
-- Use an advanced GIT GUI: https://www.sourcetreeapp.com/ (optional, but might make life easier)
+- Use an advanced Git GUI: https://www.sourcetreeapp.com/ (optional, but might make life easier)
 - Adding an SSH key to keep your sanity with Git Bash: https://help.github.com/articles/connecting-to-github-with-ssh/
 
 With Git Bash:
