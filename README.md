@@ -8,7 +8,7 @@ Team: Hindu Cyborgs
 -------------------------
 To use Git:
 - Download and install Git https://git-scm.com/downloads
-- Make a Github account
+- Make a Github account 
 - A handy Git guide: https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf
 - A really long Git guide book: https://git-scm.com/book/en/v2/
 - Use an advanced Git GUI: https://www.sourcetreeapp.com/ (optional, but might make life easier)
@@ -29,7 +29,7 @@ With Git Bash:
   - git pull
   (pulls the changes from the global repository master branch)
 
-  After making changes to the project and stuff:
+  After making changes to the project and stuff (you'll need to be a contributor to contribute to this project):
   - git add [file_name]
   OR
   - git add --all
