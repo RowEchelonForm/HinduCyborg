@@ -1,5 +1,5 @@
 # HinduCyborg
-Repository for Hindu Cyborg in Space game made with Unity 5.5.
+Repository for Hindu Cyborg in Space game made with Unity 5.5.2f1
 ITIA9 Game Project course at University of Tampere, 2017
 Team: Hindu Cyborgs
 
@@ -37,4 +37,4 @@ With Git Bash:
   - git push
   (this will push the changes to THE GLOBAL repository)
   
-  If something weird happens when you push, there are changes in the global repository and you must pull them first. Then you will need to merge the files if there are conflicts (Git will merge automatically if there are no confilcts). If think this is confusing, use a GUI, e.g. SourceTree. If you hate typing in your username and password all the time, use SSH or a GUI.
+  If something weird happens when you push, there are probably changes in the global repository and you must pull them first. Then you will need to merge the files if there are conflicts (Git will merge automatically if there are no confilcts). If you think this is confusing, use a GUI, e.g. SourceTree. If you hate typing in your username and password all the time, use SSH or a GUI.
