@@ -7,6 +7,10 @@ public class CameraFollow : MonoBehaviour {
     private bool lockY = true;
     [SerializeField]
     private GameObject player;
+    [SerializeField]
+    private Vector3 cameraOffset;
+    [SerializeField]
+    private float lerpMe;
 
     private Transform mainCamTransform;
     private Transform playerTransform;
@@ -26,15 +30,15 @@ public class CameraFollow : MonoBehaviour {
 		if ( player.activeSelf )
 		{
             Vector3 camerapos = mainCamTransform.position;
-            Vector3 playerpos = playerTransform.position;
-			Vector3 cameraChange = Vector3.Lerp(camerapos, playerpos, 1f*Time.deltaTime);
+            Vector3 playerpos = playerTransform.position + cameraOffset;
+			Vector3 cameraChange = Vector3.Lerp(camerapos, playerpos, lerpMe*Time.deltaTime);
             if (lockY)
             {
                 cameraChange.y = prevCamPos.y;
             }
             cameraChange.z = prevCamPos.z;
             mainCamTransform.position = cameraChange;
-			prevCamPos.Set(cameraChange.x, cameraChange.y, cameraChange.z);
+			prevCamPos = new Vector3(cameraChange.x, cameraChange.y, cameraChange.z);
 		}
 
 	}

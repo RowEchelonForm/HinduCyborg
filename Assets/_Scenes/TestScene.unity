@@ -370,8 +370,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01692e0647419774d89de42c8e4b7155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockY: 1
+  lockY: 0
   player: {fileID: 0}
+  cameraOffset: {x: 0, y: 2, z: 0}
+  lerpMe: 3
 --- !u!1 &1912600191
 GameObject:
   m_ObjectHideFlags: 0

@@ -448,7 +448,7 @@ GameObject:
   - component: {fileID: 1065348199}
   - component: {fileID: 1065348198}
   - component: {fileID: 1065348203}
-  - component: {fileID: 1065348202}
+  - component: {fileID: 1065348201}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -519,7 +519,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1065348196}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!138 &1065348202
+--- !u!138 &1065348201
 FixedJoint:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
