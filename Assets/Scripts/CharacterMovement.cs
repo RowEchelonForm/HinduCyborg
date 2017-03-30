@@ -23,34 +23,49 @@ public class CharacterMovement : MonoBehaviour
     //private Animator anim;
 
 
-    // Use this for initialization
-    void Awake () 
+    void Start()
     {
-        //anim = GetComponent<Animator>();
-        rb2d = GetComponent<Rigidbody2D>();
+        findComponents();
     }
 
     // Update is called once per frame
-    void Update () 
+    void Update() 
     {
-    	// Only casting towards the 'Ground' layer
-        grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
-        if (Input.GetButtonDown("Jump") && grounded)
-        {
-            jump = true;
-        }
+        grounded = checkGroundedStatus();
+        jump = checkJumpStatus();
     }
 
     void FixedUpdate()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-
         //anim.SetFloat("Speed", Mathf.Abs(h));
 
+        applyVelocity(horizontalInput);
+        handleFlipping(horizontalInput);
+        handleJumping();
+    }
+
+    private bool checkGroundedStatus()
+    {
+        // Only casting towards the 'Ground' layer
+        return Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
+    }
+
+    private bool checkJumpStatus()
+    {
+        if (Input.GetButtonDown("Jump") && grounded)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void applyVelocity(float horizontalInput)
+    {
         float curVelocityX = rb2d.velocity.x;
-        //Debug.Log(horizontalInput);
         rb2d.AddForce(Vector2.right * horizontalInput * moveForce);
 
+        // clamp velocity to maxSpeed
         if (Mathf.Abs(curVelocityX) > maxSpeed)
         {
             if (!grounded)
@@ -62,7 +77,10 @@ public class CharacterMovement : MonoBehaviour
                 rb2d.velocity = new Vector2(Mathf.Sign(curVelocityX) * maxSpeed, rb2d.velocity.y);
             }
         }
+    }
 
+    private void handleFlipping(float horizontalInput)
+    {
         if (horizontalInput > 0 && !facingRight)
         {
             flip();
@@ -71,7 +89,18 @@ public class CharacterMovement : MonoBehaviour
         {
             flip();
         }
+    }
 
+    private void flip()
+    {
+        facingRight = !facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
+
+    private void handleJumping()
+    {
         if (jump)
         {
             //animation here
@@ -81,11 +110,22 @@ public class CharacterMovement : MonoBehaviour
     }
 
 
-    void flip()
+    private void findComponents()
     {
-        facingRight = !facingRight;
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
+        rb2d = GetComponent<Rigidbody2D>();
+        if (rb2d == null)
+        {
+            Debug.LogError("Error: No Rigidbody2D found on the player from CharacterMovement script! Please attah it.");
+        }
+
+        if (groundCheck == null)
+        {
+            groundCheck = transform.FindChild("groundCheck");
+            if (groundCheck == null)
+            {
+                Debug.LogError("CharacterMovement script can't find groundCheck child object.");
+            }
+        }
     }
+
 }
