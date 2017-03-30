@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterMovement : MonoBehaviour {
+public class CharacterMovement : MonoBehaviour
+{
 
     [SerializeField]
     private float moveForce = 365f;
@@ -30,8 +31,8 @@ public class CharacterMovement : MonoBehaviour {
     // Update is called once per frame
     void Update () 
     {
-        //grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
-        grounded = true;
+    	// Only casting towards the 'Ground' layer
+        grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
         if (Input.GetButtonDown("Jump") && grounded)
         {
             jump = true;
@@ -40,13 +41,23 @@ public class CharacterMovement : MonoBehaviour {
 
     void FixedUpdate()
     {
-        float h = Input.GetAxis("Horizontal");
+        float horizontalInput = Input.GetAxis("Horizontal");
 
         //anim.SetFloat("Speed", Mathf.Abs(h));
 
-        if (h * rb2d.velocity.x < maxSpeed)
+        float curVelocityX = rb2d.velocity.x;
+        Debug.Log(horizontalInput);
+        if (horizontalInput != 0)
         {
-            rb2d.AddForce(Vector2.right * h * moveForce);
+			rb2d.AddForce(Vector2.right * horizontalInput * moveForce);
+        }
+        else // slow down faster
+        {
+			if (curVelocityX > 0 || curVelocityX < 0)
+        	{
+				rb2d.velocity = new Vector2(0.1f*curVelocityX, rb2d.velocity.y);
+        		curVelocityX = rb2d.velocity.x;
+        	}
         }
 
         if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
@@ -54,11 +65,11 @@ public class CharacterMovement : MonoBehaviour {
             rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
         }
 
-        if (h > 0 && !facingRight)
+        if (horizontalInput > 0 && !facingRight)
         {
             flip();
         }
-        else if (h < 0 && facingRight)
+        else if (horizontalInput < 0 && facingRight)
         {
             flip();
         }
