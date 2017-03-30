@@ -11,6 +11,8 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField]
     private float jumpForce = 1000f;
     [SerializeField]
+    private float airSpeedFactor = 0.3f;
+    [SerializeField]
     private Transform groundCheck;
 
     private bool facingRight = true;
@@ -46,23 +48,19 @@ public class CharacterMovement : MonoBehaviour
         //anim.SetFloat("Speed", Mathf.Abs(h));
 
         float curVelocityX = rb2d.velocity.x;
-        Debug.Log(horizontalInput);
-        if (horizontalInput != 0)
-        {
-			rb2d.AddForce(Vector2.right * horizontalInput * moveForce);
-        }
-        else // slow down faster
-        {
-			if (curVelocityX > 0 || curVelocityX < 0)
-        	{
-				rb2d.velocity = new Vector2(0.1f*curVelocityX, rb2d.velocity.y);
-        		curVelocityX = rb2d.velocity.x;
-        	}
-        }
+        //Debug.Log(horizontalInput);
+        rb2d.AddForce(Vector2.right * horizontalInput * moveForce);
 
-        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+        if (Mathf.Abs(curVelocityX) > maxSpeed)
         {
-            rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+            if (!grounded)
+            {
+                rb2d.velocity = new Vector2(Mathf.Sign(curVelocityX) * maxSpeed * airSpeedFactor, rb2d.velocity.y);
+            }
+            else
+            {
+                rb2d.velocity = new Vector2(Mathf.Sign(curVelocityX) * maxSpeed, rb2d.velocity.y);
+            }
         }
 
         if (horizontalInput > 0 && !facingRight)
@@ -77,7 +75,6 @@ public class CharacterMovement : MonoBehaviour
         if (jump)
         {
             //animation here
-            Debug.Log("jump");
             rb2d.AddForce(new Vector2(0f, jumpForce));
             jump = false;
         }
