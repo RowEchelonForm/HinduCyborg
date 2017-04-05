@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class orbit : MonoBehaviour {
+public class Orbit : MonoBehaviour {
 
     [SerializeField]
     private float rotation = 5;

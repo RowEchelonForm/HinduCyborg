@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ship : MonoBehaviour {
+public class Ship : MonoBehaviour {
 
     [SerializeField]
     private GameObject sun;
@@ -13,7 +13,7 @@ public class ship : MonoBehaviour {
     private bool onPlanet;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         onPlanet = false;
     }
 
@@ -25,7 +25,7 @@ public class ship : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -48,6 +48,7 @@ public class ship : MonoBehaviour {
         if (col.gameObject.Equals(sun))
         {
             print("schorhed by sun");
+            LevelManager.reloadCurrentLevel();
         }
         else if (col.gameObject.Equals(planet1) && !onPlanet && rb.velocity.magnitude < 30)
         {
@@ -55,6 +56,7 @@ public class ship : MonoBehaviour {
             gameObject.GetComponent<FixedJoint>().connectedBody = col.rigidbody;
             onPlanet = true;
             print("landed on planet");
+            LevelManager.loadLevel("Planet01"); // TODO make an another script for the planet that has the level's name etc.
         }
     }
 }
