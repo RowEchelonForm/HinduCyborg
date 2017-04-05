@@ -21,17 +21,18 @@ public class CameraFollow : MonoBehaviour {
 	{
 		findPlayer();
         cacheTransforms();
+        initPosition();
         prevCamPos = new Vector3 (mainCamTransform.position.x, mainCamTransform.position.y, mainCamTransform.position.z);
 	}
 	
 	// Update is called once per frame
-	void LateUpdate ()
+	void LateUpdate()
 	{
 		if ( player.activeSelf )
 		{
-            Vector3 camerapos = mainCamTransform.position;
-            Vector3 playerpos = playerTransform.position + cameraOffset;
-			Vector3 cameraChange = Vector3.Lerp(camerapos, playerpos, lerpMe*Time.deltaTime);
+            Vector3 cameraPos = mainCamTransform.position;
+            Vector3 playerPos = playerTransform.position + cameraOffset;
+			Vector3 cameraChange = Vector3.Lerp(cameraPos, playerPos, lerpMe*Time.deltaTime);
             if (lockY)
             {
                 cameraChange.y = prevCamPos.y;
@@ -40,6 +41,12 @@ public class CameraFollow : MonoBehaviour {
             mainCamTransform.position = cameraChange;
 			prevCamPos = new Vector3(cameraChange.x, cameraChange.y, cameraChange.z);
 		}
+
+        // TODO This should be in some other script!
+        if ( Input.GetKeyDown(KeyCode.Escape) )
+        {
+            LevelManager.quitRequest();
+        }
 
 	}
 
@@ -67,5 +74,17 @@ public class CameraFollow : MonoBehaviour {
             playerTransform = player.transform;
         }
         mainCamTransform = Camera.main.transform;
+    }
+
+    private void initPosition()
+    {
+        if (lockY)
+        {
+            mainCamTransform.position = new Vector3(playerTransform.position.x, mainCamTransform.position.y, mainCamTransform.position.z) + cameraOffset;
+        }
+        else
+        {
+            mainCamTransform.position = new Vector3 (playerTransform.position.x, playerTransform.position.y, mainCamTransform.position.z) + cameraOffset;
+        }
     }
 }

@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scenes/TestScene.unity
+    path: Assets/_Scenes/Space.unity
   - enabled: 1
-    path: Assets/_Scenes/I'm In Spaace.unity
+    path: Assets/_Scenes/Planet01.unity

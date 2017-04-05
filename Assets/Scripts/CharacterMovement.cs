@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -13,13 +14,14 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField]
     private float airSpeedFactor = 0.3f;
     [SerializeField]
-    private Transform groundCheck;
+    private List<Transform> groundChecks;
 
     private bool facingRight = true;
     private bool jump = false;
 
     private bool grounded = false;
     private Rigidbody2D rb2d;
+    private Transform cachedTransform;
     //private Animator anim;
 
 
@@ -47,8 +49,15 @@ public class CharacterMovement : MonoBehaviour
 
     private bool checkGroundedStatus()
     {
-        // Only casting towards the 'Ground' layer
-        return Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
+        // Only casting on the 'Ground' layer. Casts rays towards the all the GroundCheck tagged objects.
+        for (int i = 0; i < groundChecks.Count; ++i)
+        {
+            if (Physics2D.Linecast(transform.position, groundChecks[i].position, 1 << LayerMask.NameToLayer("Ground")))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private bool checkJumpStatus()
@@ -109,21 +118,38 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        Debug.Log("Killed player");
+        if ( collider.CompareTag("Kill") )
+        {
+            LevelManager.reloadCurrentLevel(); // TODO should load a checkpoint
+        }
+    }
 
     private void findComponents()
     {
+        cachedTransform = transform;
+
         rb2d = GetComponent<Rigidbody2D>();
         if (rb2d == null)
         {
             Debug.LogError("Error: No Rigidbody2D found on the player from CharacterMovement script! Please attah it.");
         }
 
-        if (groundCheck == null)
+        if (groundChecks.Count <= 0)
         {
-            groundCheck = transform.FindChild("groundCheck");
-            if (groundCheck == null)
+            for (int i = 0; i < cachedTransform.childCount; ++i)
             {
-                Debug.LogError("CharacterMovement script can't find groundCheck child object.");
+                Transform child = cachedTransform.GetChild(i);
+                if (child.CompareTag("GroundCheck"))
+                {
+                    groundChecks.Add(child);
+                }
+            }
+            if (groundChecks.Count <= 0)
+            {
+                Debug.LogError("Error: CharacterMovement class can't find any child Transforms tagged 'GroundCheck'.");
             }
         }
     }

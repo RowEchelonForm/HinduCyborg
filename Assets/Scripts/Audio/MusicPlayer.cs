@@ -49,7 +49,7 @@ public class MusicPlayer : MonoBehaviour
 
 	void Start()
 	{
-		playMusicOnLoop("assimilator", 0f); // TODO delete
+		playMusicOnLoop("track_name", 0f); // TODO delete
 	}
 	
 
@@ -239,6 +239,13 @@ public class MusicPlayer : MonoBehaviour
 	private void initVariables()
 	{
 		audioSource = gameObject.GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.volume = 1.0f;
+            audioSource.dopplerLevel = 0;
+            audioSource.spread = 0;
+        }
 		maxVolume = audioSource.volume;
 		lastPlayingTrackName = "";
 		lastPlayingTrackTime = 0f;
