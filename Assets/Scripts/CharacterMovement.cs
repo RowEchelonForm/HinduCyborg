@@ -34,7 +34,7 @@ public class CharacterMovement : MonoBehaviour
     void Update() 
     {
         grounded = checkGroundedStatus();
-        jump = checkJumpStatus();
+        checkJumpFlag();
     }
 
     void FixedUpdate()
@@ -60,19 +60,18 @@ public class CharacterMovement : MonoBehaviour
         return false;
     }
 
-    private bool checkJumpStatus()
+	private void checkJumpFlag()
     {
         if (Input.GetButtonDown("Jump") && grounded)
         {
-            return true;
+            jump = true;
         }
-        return false;
     }
 
     private void applyVelocity(float horizontalInput)
     {
         float curVelocityX = rb2d.velocity.x;
-        rb2d.AddForce(Vector2.right * horizontalInput * moveForce);
+		rb2d.AddForce(Vector2.right * horizontalInput * moveForce);
 
         // clamp velocity to maxSpeed
         if (Mathf.Abs(curVelocityX) > maxSpeed)
