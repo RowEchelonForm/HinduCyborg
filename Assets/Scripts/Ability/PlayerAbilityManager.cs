@@ -57,19 +57,22 @@ public class PlayerAbilityManager : MonoBehaviour
 		abilities = new Dictionary<string, PlayerAbility>();
 		List<PlayerAbility> tempAbilityList = new List<PlayerAbility>();
 		gameObject.GetComponents<PlayerAbility>(tempAbilityList);
+		int disabledAbilities = 0;
 		for (int i = 0; i < tempAbilityList.Count; ++i)
 		{
 			if ( !abilities.ContainsKey(tempAbilityList[i].ABILITY_NAME) )
 			{
 				abilities.Add(tempAbilityList[i].ABILITY_NAME, tempAbilityList[i]);
 				tempAbilityList[i].enabled = false;
+				++disabledAbilities;
 			}
 			else
 			{
 				Debug.LogError("Error: PlayerAbilityManager found two PlayerAbility components with the same name on the player");
 			}
 		}
-		Debug.Log("The player has " + abilities.Count + " abilities");
+		Debug.Log("The player has " + abilities.Count + " abilities in total. " + 
+				  (abilities.Count - disabledAbilities) + " of those abilities are enabled");
 	}
 
 
