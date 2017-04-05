@@ -34,7 +34,7 @@ public class CharacterMovement : MonoBehaviour
     void Update() 
     {
         grounded = checkGroundedStatus();
-        checkJumpFlag();
+		setJumpFlag();
     }
 
     void FixedUpdate()
@@ -60,7 +60,7 @@ public class CharacterMovement : MonoBehaviour
         return false;
     }
 
-	private void checkJumpFlag()
+	private void setJumpFlag()
     {
         if (Input.GetButtonDown("Jump") && grounded)
         {

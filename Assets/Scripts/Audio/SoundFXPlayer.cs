@@ -18,8 +18,8 @@ public class SoundFXPlayer : MonoBehaviour
 	private NamedSoundFX[] soundEffectsArray; // for editor
 
 	private Dictionary<string, AudioClip> soundEffectsDictionary; // hashtable containing the sfx during runtime
-    private Stack<AudioSource> disabledAudioSources; // contains disabled AudioSources
-    private Transform cachedTransform;
+	private Stack<AudioSource> disabledAudioSources; // contains disabled AudioSources
+	private Transform cachedTransform;
 	
 
 	void Awake()
@@ -27,7 +27,7 @@ public class SoundFXPlayer : MonoBehaviour
 		if (instance == null)
 		{
 			instance = this;
-            cachedTransform = transform;
+			cachedTransform = transform;
 			GameObject.DontDestroyOnLoad(gameObject);
 			soundEffectsDictionary = new Dictionary<string, AudioClip>();
             disabledAudioSources = new Stack<AudioSource>();
