@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 61302890719575294}
   - component: {fileID: 50996447985386926}
   - component: {fileID: 114272163092455886}
+  - component: {fileID: 114581986609226614}
+  - component: {fileID: 114471375935778092}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -98,7 +100,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1474888237418588}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.88, z: 0}
+  m_LocalPosition: {x: 0, y: -4.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4289017260882908}
@@ -111,7 +113,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1923114682738350}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.77, y: -3.88, z: 0}
+  m_LocalPosition: {x: 1.77, y: -4.5, z: 0}
   m_LocalScale: {x: 0.9999998, y: 0.9999998, z: 1}
   m_Children: []
   m_Father: {fileID: 4289017260882908}
@@ -124,7 +126,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1670809503187844}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.44, y: -3.88, z: 0}
+  m_LocalPosition: {x: -1.44, y: -4.5, z: 0}
   m_LocalScale: {x: 0.9999998, y: 0.9999998, z: 1}
   m_Children: []
   m_Father: {fileID: 4289017260882908}
@@ -175,11 +177,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23cf09eba15f0a147b76385a7c2cf1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 200
-  maxSpeed: 5
-  jumpForce: 400
-  airSpeedFactor: 0.01
-  groundChecks: []
+  maxSpeed: 8
+  jumpForce: 8
+  airSpeedFactor: 0.7
+--- !u!114 &114471375935778092
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1324519731144850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baf3726ab25739a41a3ef4525c8c4b4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityName: Dash
+  cooldownTime: 5
+  dashForce: 20
+--- !u!114 &114581986609226614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1324519731144850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79e81e0d0ed5a7b449b5aef8396580fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212657606027597288
 SpriteRenderer:
   m_ObjectHideFlags: 1

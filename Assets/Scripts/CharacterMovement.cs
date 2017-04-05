@@ -4,22 +4,18 @@ using System.Collections.Generic;
 
 public class CharacterMovement : MonoBehaviour
 {
-
-    [SerializeField]
-    private float moveForce = 365f;
     [SerializeField]
     private float maxSpeed = 5f;
     [SerializeField]
-    private float jumpForce = 1000f;
+    private float jumpForce = 8f;
     [SerializeField]
     private float airSpeedFactor = 0.3f;
-    [SerializeField]
-    private List<Transform> groundChecks;
 
-    private bool facingRight = true;
-    private bool jump = false;
+    public bool facingRight { get; private set; }
 
+	private List<Transform> groundChecks;
     private bool grounded = false;
+	private bool jump = false;
     private Rigidbody2D rb2d;
     private Transform cachedTransform;
     //private Animator anim;
@@ -27,7 +23,8 @@ public class CharacterMovement : MonoBehaviour
 
     void Start()
     {
-        findComponents();
+		facingRight = true;
+		initComponents();
     }
 
     // Update is called once per frame
@@ -42,7 +39,7 @@ public class CharacterMovement : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         //anim.SetFloat("Speed", Mathf.Abs(h));
 
-        applyVelocity(horizontalInput);
+        applyMovementVelocity(horizontalInput);
         handleFlipping(horizontalInput);
         handleJumping();
     }
@@ -68,23 +65,43 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    private void applyVelocity(float horizontalInput)
+	private void applyMovementVelocity(float horizontalInput)
     {
         float curVelocityX = rb2d.velocity.x;
-		rb2d.AddForce(Vector2.right * horizontalInput * moveForce);
 
-        // clamp velocity to maxSpeed
-        if (Mathf.Abs(curVelocityX) > maxSpeed)
+        float deltaVelocity; // the difference in velocity to get to maxSpeed
+        if (facingRight)
         {
-            if (!grounded)
-            {
-                rb2d.velocity = new Vector2(Mathf.Sign(curVelocityX) * maxSpeed * airSpeedFactor, rb2d.velocity.y);
-            }
-            else
-            {
-                rb2d.velocity = new Vector2(Mathf.Sign(curVelocityX) * maxSpeed, rb2d.velocity.y);
-            }
+        	if (!grounded) // if in air
+        	{
+				deltaVelocity = maxSpeed * airSpeedFactor - curVelocityX;
+        	}
+        	else
+        	{
+        		deltaVelocity = maxSpeed - curVelocityX;
+        	}
         }
+        else
+        {
+			if (!grounded) // if in air
+        	{
+				deltaVelocity = (-1) * maxSpeed * airSpeedFactor - curVelocityX;
+        	}
+        	else
+        	{
+        		deltaVelocity = (-1) * maxSpeed - curVelocityX;
+        	}
+        }
+
+		// Calculate the maximum force that we can apply so that we never go over maxSpeed
+		float forceToApply = rb2d.mass * deltaVelocity / Time.fixedDeltaTime;
+
+		// Don't artificially slow down if already going faster than maxSpeed (high speed could be caused by a dash etc.)
+        if ( (curVelocityX > maxSpeed && forceToApply < 0f) || (curVelocityX < maxSpeed*(-1) && forceToApply > 0f) )
+        {
+        	forceToApply = 0f;
+        }
+		rb2d.AddForce(Vector2.right * Mathf.Abs(horizontalInput) * forceToApply);
     }
 
     private void handleFlipping(float horizontalInput)
@@ -112,30 +129,31 @@ public class CharacterMovement : MonoBehaviour
         if (jump)
         {
             //animation here
-            rb2d.AddForce(new Vector2(0f, jumpForce));
+            rb2d.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             jump = false;
         }
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("Killed player");
         if ( collider.CompareTag("Kill") )
         {
+			Debug.Log("Killed player");
             LevelManager.reloadCurrentLevel(); // TODO should load a checkpoint
         }
     }
 
-    private void findComponents()
+    private void initComponents()
     {
         cachedTransform = transform;
 
         rb2d = GetComponent<Rigidbody2D>();
         if (rb2d == null)
         {
-            Debug.LogError("Error: No Rigidbody2D found on the player from CharacterMovement script! Please attah it.");
+            Debug.LogError("Error: No Rigidbody2D found on the player from CharacterMovement script! Please attach it.");
         }
 
+		groundChecks = new List<Transform>();
         if (groundChecks.Count <= 0)
         {
             for (int i = 0; i < cachedTransform.childCount; ++i)
