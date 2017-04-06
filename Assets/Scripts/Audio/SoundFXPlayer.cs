@@ -149,11 +149,11 @@ public class SoundFXPlayer : MonoBehaviour
             sfxName = soundEffectsArray[i].name;
             if ( !soundEffectsArray[i].soundFX || sfxName == "" ) // needs to have an actual sound and name
             {
-                Debug.Log("soundEffectsArray in SoundFXPlayer contains an empty/incorrect entry on index " + i );
+                Debug.LogError("Error: soundEffectsArray in SoundFXPlayer contains an empty/incorrect entry on index " + i );
             }
             else if ( soundEffectsDictionary.ContainsKey( sfxName ) ) // sound with the same name already exists
             {
-                Debug.Log("Two soundFXs have the name '" + sfxName + "' in soundEffectsArray in SoundFXPlayer class. See entry with index " + i);
+                Debug.LogError("Error: Two soundFXs have the name '" + sfxName + "' in soundEffectsArray in SoundFXPlayer class. See entry with index " + i);
             }
             else // successfully add new sound
             {

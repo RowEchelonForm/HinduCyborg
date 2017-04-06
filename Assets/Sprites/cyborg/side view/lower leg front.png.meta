@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: 53cbb997d5a4c744b98e3a20e2fe1624
-timeCreated: 1491484774
+guid: 23c243c10eed0bd48bd65f4a62a90057
+timeCreated: 1491488597
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: lower leg back_0
-    21300002: lower leg front_0
+    21300000: lower leg front_0
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
