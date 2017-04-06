@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 /*
  * Plays music. Has a few different ways to play.
- * Supports fade in/fade out. Doesn't support layered music.
+ * Supports fade in/fade out and changing the volume.
+ * Doesn't support layered music.
 */
 
 public class MusicPlayer : MonoBehaviour
 {
-
 	enum PlayingState { NotPlaying, Playing, FadeIn, FadeOut };
 
 	public static MusicPlayer instance = null; // singleton
@@ -56,7 +56,25 @@ public class MusicPlayer : MonoBehaviour
 	{
 		playMusicOnLoop("track_name", 0f); // TODO delete
 	}
-	
+
+
+	// Changes the current volume of music to 'volume' (0...1). 
+	// If not playing anything, the volume will still change 
+	// and it will remain changed when starting to play music the next time.
+	public void changeVolume(float volume)
+	{
+		if (volume > 1.0f)
+		{
+			volume = 1.0f;
+		}
+		else if (volume <= 0f)
+		{
+			volume = 0f;
+			Debug.Log("Muted music player.");
+		}
+		audioSource.volume = volume;
+		maxVolume = volume;
+	}
 
 	// Plays music on loop. If the same music is already playing,
 	// just continues playing it (doesn't reset).
