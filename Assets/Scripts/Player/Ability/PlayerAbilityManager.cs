@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
- Attach to the player.
- Manages the abilities that the player has.
- Do not turn the abilites on or off manually, this class will handle it.
- The ability scripts should be enabled at start, this script will disable them.
+ * Attach to the player.
+ * Manages the PlayerAbility abilities that the player has.
+ * Do not turn the abilites on or off manually, this class will handle it.
+ * The ability scripts should be enabled at start, this script will disable them.
 */
 public class PlayerAbilityManager : MonoBehaviour
 {

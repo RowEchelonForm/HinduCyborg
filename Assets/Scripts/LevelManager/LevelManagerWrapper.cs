@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// If you need to use a MonoBehaviour instance to call the LevelManager (for buttons etc)
+/*
+ * If you need to use a MonoBehaviour instance to call the LevelManager (for buttons etc).
+*/
 public class LevelManagerWrapper : MonoBehaviour
 {
 	public void loadLevelWrapper(string levelName)

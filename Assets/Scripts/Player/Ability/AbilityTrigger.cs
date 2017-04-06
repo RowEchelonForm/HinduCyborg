@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
- Used on a trigger object that gives the player an unlockable ability.
+ * Used on a trigger object that enables an unlockable ability on the player.
 */
 public class AbilityTrigger : MonoBehaviour
 {

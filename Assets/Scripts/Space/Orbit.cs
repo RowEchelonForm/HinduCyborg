@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orbit : MonoBehaviour {
+public class Orbit : MonoBehaviour
+{
 
     [SerializeField]
     private float rotation = 5;
@@ -19,20 +20,20 @@ public class Orbit : MonoBehaviour {
 
     private Rigidbody rb;
 
-    void Start ()
+    void Start()
     {
         rotation += randomRotation < 0 ? Random.Range(randomRotation, 0) : Random.Range(0, randomRotation);
         rotation /= (minDistance + maxDistance)/2;
         randomSelfRotation += randomSelfRotation < 0 ? Random.Range(randomSelfRotation, 0) : Random.Range(0, randomSelfRotation);
     }
     // Use this for initialization
-    void Awake ()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
     {
         //transform.position.Set(transform.position.x, transform.position.y, 0);
         //rb.velocity.Set(rb.velocity.x, rb.velocity.y, 0);

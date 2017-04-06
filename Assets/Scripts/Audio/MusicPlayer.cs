@@ -2,6 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+ * Plays music. Has a few different ways to play.
+ * Supports fade in/fade out. Doesn't support layered music.
+*/
+
 public class MusicPlayer : MonoBehaviour
 {
 
@@ -127,7 +132,7 @@ public class MusicPlayer : MonoBehaviour
 		}
 	}
 
-	// Continues playing music
+    // Continues playing music (after stopping)
 	public void continuePlayingMusic(float fadeInTime = 1.0f)
 	{
 		if ( audioSource.isPlaying || state == PlayingState.Playing || !musicTrackDictionary.ContainsKey(lastPlayingTrackName) )

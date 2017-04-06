@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ship : MonoBehaviour {
+public class Ship : MonoBehaviour
+{
 
     [SerializeField]
     private GameObject sun;

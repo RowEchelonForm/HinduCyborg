@@ -2,6 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+ * The general movement system for the player character (running, jumping, falling etc.).
+ * Works only with Rigidbody2D and Unity's built-in physics system.
+ * Does not control any of the player's abilities.
+*/
 public class CharacterMovement : MonoBehaviour
 {
     [SerializeField]

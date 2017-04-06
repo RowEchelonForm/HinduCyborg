@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraFollow : MonoBehaviour {
+/*
+ * Follows the player GameObject smoothly.
+*/
+
+public class CameraFollow : MonoBehaviour
+{
 
     [SerializeField]
-    private bool lockY = true;
+    private bool lockY = true; // locks the y axis movement of the camera
     [SerializeField]
     private GameObject player;
     [SerializeField]

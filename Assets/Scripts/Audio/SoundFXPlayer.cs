@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+ * Plays sound effects and handles GameObjects with AudioSource component and Audio.
+ * Use whenever you need to play a sound that isn't music.
+ * The sound has to be attached in the editor to the prefab that has this script attached
+ * (not as a component but in the soundEffectsArray).
+*/
 public class SoundFXPlayer : MonoBehaviour
 {
 	
@@ -42,10 +48,10 @@ public class SoundFXPlayer : MonoBehaviour
 
 
 	// Basically a custom 2D version of AudioSource.PlayClipAtPoint().
-	// Plays an AudioClip 'clip' with the desired volume at the (0, 0, 0) position; the position doesn't matter since it's 2D.
+	// Plays an AudioClip with the clipName with the desired volume; the position doesn't matter since it's 2D.
     // Returns a reference to the AudioSource component (can be null if clip not found).
     // After playing the audio deactivates the itself (the whole GameObject).
-    // DO NOT ADD/REMOVE COMPONENTS TO/FROM THE GAMEOBJECT OR ENABLE/DISABLE ANYTHING
+    // DO NOT ADD/REMOVE COMPONENTS TO/FROM THE GAMEOBJECT OR ENABLE/DISABLE ANYTHING MANUALLY
 	public AudioSource play2DClipOnce( string clipName, float volume = 1f )
 	{
 		if ( soundEffectsDictionary.ContainsKey(clipName) )
@@ -114,8 +120,8 @@ public class SoundFXPlayer : MonoBehaviour
         return aSource;
     }
 
-    // Disables the GameObject that the AudioSource component is attached to and puts it to disabledAudioSources container
-    // after the AudioSource has done playing its AudioClip.
+    // Disables the GameObject that the AudioSource component is attached to and 
+    // puts it to disabledAudioSources container after the AudioSource has done playing its AudioClip.
     private IEnumerator disableAfterPlaying(AudioSource aSource)
     {
         if (aSource.clip == null)

@@ -2,6 +2,10 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+/*
+ * Use this to load levels.
+*/
+
 public static class LevelManager
 {
 	

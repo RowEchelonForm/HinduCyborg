@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
- The base class for player's unlockable abilities.
+ * The base class for player's unlockable abilities.
+ * Now a bit of a stub, maybe gets some functionality regarding the logic for sprites etc.
 */
 public abstract class PlayerAbility : MonoBehaviour
 {
