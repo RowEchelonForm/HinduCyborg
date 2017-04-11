@@ -8,6 +8,7 @@ using UnityEngine;
  * Do not turn the abilites on or off manually, this class will handle it.
  * The ability scripts should be enabled at start, this script will disable them.
 */
+[RequireComponent(typeof(SpritePartManager))]
 public class PlayerAbilityManager : MonoBehaviour
 {
 

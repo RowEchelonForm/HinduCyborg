@@ -8,6 +8,7 @@ using System.Collections.Generic;
  * Doesn't support layered music.
 */
 
+[RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
 {
 	enum PlayingState { NotPlaying, Playing, FadeIn, FadeOut };

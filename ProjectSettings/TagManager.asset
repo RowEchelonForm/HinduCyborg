@@ -7,6 +7,7 @@ TagManager:
   - Kill
   - GroundCheck
   - AbilityTrigger
+  - SFXObject
   layers:
   - Default
   - TransparentFX

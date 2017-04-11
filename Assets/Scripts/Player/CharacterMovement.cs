@@ -7,6 +7,7 @@ using System.Collections.Generic;
  * Works only with Rigidbody2D and Unity's built-in physics system.
  * Does not control any of the player's abilities.
 */
+[RequireComponent(typeof(Rigidbody2D))]
 public class CharacterMovement : MonoBehaviour
 {
     [SerializeField]

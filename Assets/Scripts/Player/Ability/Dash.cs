@@ -6,6 +6,8 @@ using UnityEngine;
  * The Dash ability that the player has.
  * Needs the Rigidbody2D and CharacterMovement components of the player.
 */
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CharacterMovement))]
 public class Dash : PlayerAbility
 {
 	public override string ABILITY_NAME

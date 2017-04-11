@@ -22,12 +22,14 @@ public class SoundFXPlayer : MonoBehaviour
 
 	[SerializeField]
 	private NamedSoundFX[] soundEffectsArray; // for editor
+    [SerializeField]
+    private string audioObjectTag = "SFXObject"; // the tag for all the AudioSource GameObjects (remember to create this tag in Unity)
 
 	private Dictionary<string, AudioClip> soundEffectsDictionary; // hashtable containing the sfx during runtime
 	private Stack<AudioSource> disabledAudioSources; // contains disabled AudioSources
 	private Transform cachedTransform;
 	
-
+	
 	void Awake()
 	{
 		if (instance == null)
@@ -46,36 +48,66 @@ public class SoundFXPlayer : MonoBehaviour
 		}
 	}
 
+    void Start()
+    {
+        verifyTag(ref audioObjectTag);
+    }
 
-	// Basically a custom 2D version of AudioSource.PlayClipAtPoint().
-	// Plays an AudioClip with the clipName with the desired volume; the position doesn't matter since it's 2D.
-    // Returns a reference to the AudioSource component (can be null if clip not found).
-    // After playing the audio deactivates the itself (the whole GameObject).
-    // DO NOT ADD/REMOVE COMPONENTS TO/FROM THE GAMEOBJECT OR ENABLE/DISABLE ANYTHING MANUALLY
-	public AudioSource play2DClipOnce( string clipName, float volume = 1f )
+
+    /* 
+     * Plays an AudioClip with the clipName with the desired volume once. Default behavior is playing a 2D sound
+     * Returns a reference to the AudioSource component (null if clip not found).
+     * Will play the audioclip once and then disable the whole GameObject.
+     * DISABLING/ENABLING IS HANDLED AUTOMATICALLY, DO NOT ENABLE/DISABLE MANUALLY.
+     * levelOf3D controls the spatial blend (0==2D, 1==3D), position only matters, if levelOf3D > 0.
+     * The rest of the parameters control the corresponding settings of AudioSource.
+    */
+    public AudioSource playClipOnce(string clipName, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
+                                    float dopplerLevel = 0f, float spread = 0f, float minDistance = 1, float maxDistance = 500,
+                                    AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic)
 	{
-		if ( soundEffectsDictionary.ContainsKey(clipName) )
-		{
-            AudioSource aSource = getAudioSourceObject();
-			aSource.clip = soundEffectsDictionary[clipName];
-			aSource.volume = volume;
-
-			// Set the desired settings (no 3D):
-			aSource.spread = 0;
-			aSource.dopplerLevel = 0;
-
-			aSource.playOnAwake = false; // for my own sanity
-			aSource.Play();
-            StartCoroutine( disableAfterPlaying(aSource) );
-            return aSource;
-		}
-		else
-		{
-			Debug.Log("No sound with the name: " + clipName);
-            return null;
-		}
+        AudioSource aSource = playClip(clipName, false, volume, levelOf3D, position, dopplerLevel, spread, minDistance, maxDistance, rolloffMode);
+        if (aSource != null)
+        {
+            StartCoroutine(disableAfterPlaying(aSource));
+        }
+        return aSource;
 	}
-        
+
+    /* 
+     * Plays an AudioClip with the clipName with the desired volume. Default behavior is playing a 2D sound
+     * Returns a reference to the AudioSource component (null if clip not found).
+     * Will continue playing the audio over and over, can be paused manually.
+     * Disabling/enabling should be handled by calling recycleAudioSource or completely manually.
+     * levelOf3D controls the spatial blend (0==2D, 1==3D), position only matters, if levelOf3D > 0.
+     * The rest of the settings control the corresponding settings of AudioSource.
+    */
+    public AudioSource playClipContinuosly(string clipName, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
+                                           float dopplerLevel = 0f, float spread = 0f, float minDistance = 1, float maxDistance = 500,
+                                           AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic)
+    {
+        return playClip(clipName, true, volume, levelOf3D, position, dopplerLevel, spread, minDistance, maxDistance, rolloffMode);
+    }
+
+    // Call to manually recycle and disable a GameObject with an AudioSource component.
+    // Call this when you want to completely stop playing a continuous AudioSource.
+    // DO NOT TRY TO USE THE AUDIOSOURCE OR THE GAMEOBJECT IT IS ATTACHED TO AFTER CALLING THIS.
+    public void recycleAudioSource(AudioSource aSource)
+    {
+        if (aSource.CompareTag(audioObjectTag))
+        {
+            aSource.Stop();
+            aSource.clip = null;
+            aSource.gameObject.SetActive(false);
+            disabledAudioSources.Push(aSource);
+        }
+        else
+        {
+            Debug.LogWarning("recycleAudioSource was called for an AudioSource GameObject that isn't tagged with " + audioObjectTag +
+                             ". Please only use AudioSources created by the SoundFXPlayer as parameters for recycleAudioSource function.");
+        }
+    }
+
     // Destroys the percentage (0-100) of disabled AudioSource GameObjects entirely.
     // Only call if you think there are too many disabled AudioSources in the memory.
     public void destroyDisabledAudioObjects(float percentage)
@@ -100,6 +132,38 @@ public class SoundFXPlayer : MonoBehaviour
     }
 
 
+    // Plays the AudioClip with name 'clipName' with the desired parameters
+    private AudioSource playClip(string clipName, bool loop, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
+                                 float dopplerLevel = 0f, float spread = 0f, float minDistance = 1, float maxDistance = 500,
+                                 AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic)
+    {
+        if ( soundEffectsDictionary.ContainsKey(clipName) )
+        {
+            AudioSource aSource = getAudioSourceObject();
+            aSource.clip = soundEffectsDictionary[clipName];
+
+            // Set the desired settings:
+            aSource.volume = volume;
+            aSource.spatialBlend = levelOf3D;
+            aSource.spread = spread;
+            aSource.dopplerLevel = dopplerLevel;
+            aSource.transform.position = position;
+            aSource.minDistance = minDistance;
+            aSource.maxDistance = maxDistance;
+            aSource.rolloffMode = rolloffMode;
+            aSource.loop = loop;
+
+            aSource.playOnAwake = false; // for my own sanity
+            aSource.Play();
+            return aSource;
+        }
+        else
+        {
+            Debug.Log("No sound with the name: " + clipName);
+            return null;
+        }
+    }
+
     // Returns an AudioSource component of an otherwise empty GameObject.
     private AudioSource getAudioSourceObject()
     {
@@ -112,7 +176,8 @@ public class SoundFXPlayer : MonoBehaviour
         }
         else
         {
-            GameObject audioObj = new GameObject("Audio Shot 2D"); // create the audio game object
+            GameObject audioObj = new GameObject("AudioObject"); // create the audio game object
+            audioObj.tag = audioObjectTag;
             DontDestroyOnLoad(audioObj);
             aSource = audioObj.AddComponent<AudioSource>(); // add an audio source component
             aSource.transform.position = cachedTransform.position;
@@ -133,11 +198,14 @@ public class SoundFXPlayer : MonoBehaviour
         {
             float waitTime = aSource.clip.length;
             yield return new WaitForSeconds(waitTime);
-            aSource.clip = null;
-            aSource.gameObject.SetActive(false);
-            disabledAudioSources.Push(aSource);
+            if (aSource.gameObject.activeSelf)
+            {
+                aSource.Stop();
+                aSource.clip = null;
+                aSource.gameObject.SetActive(false);
+                disabledAudioSources.Push(aSource);
+            }
         }
-		Debug.Log("Disabled: " + disabledAudioSources.Count);
     }
 
     // Call on start; fills the hashtable with the values in soundEffectsArray
@@ -159,6 +227,20 @@ public class SoundFXPlayer : MonoBehaviour
             {
                 soundEffectsDictionary.Add( sfxName, soundEffectsArray[i].soundFX );
             }
+        }
+    }
+
+    private void verifyTag(ref string tag)
+    {
+        try
+        {
+            gameObject.CompareTag(tag);
+        }
+        catch (UnityException ex)
+        {
+            Debug.LogError("Error: In " + this.GetType().ToString() + ": Tag  " + audioObjectTag + "  does not exist. Please create it in Unity.");
+            tag = "Untagged";
+            throw ex;
         }
     }
 
