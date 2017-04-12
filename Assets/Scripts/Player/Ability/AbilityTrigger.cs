@@ -14,5 +14,6 @@ public class AbilityTrigger : MonoBehaviour
 	}
 
 	[SerializeField]
-	private string abilityName_ = "";
-}
+    private string abilityName_ = "";
+        
+};
