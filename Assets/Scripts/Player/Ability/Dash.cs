@@ -70,11 +70,11 @@ public class Dash : PlayerAbility
 	{
 		if (charMov.facingRight)
 		{
-			rb2d.AddForce(Vector2.right * dashForce, ForceMode2D.Impulse);
+            rb2d.AddForce(Vector2.right * dashForce, ForceMode2D.Impulse);
 		}
 		else
 		{
-			rb2d.AddForce(Vector2.right * dashForce * (-1), ForceMode2D.Impulse);
+            rb2d.AddForce(Vector2.right * dashForce * (-1), ForceMode2D.Impulse);
 		}
 		doDash = false;
 	}
