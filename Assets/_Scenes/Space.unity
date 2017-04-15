@@ -1469,6 +1469,11 @@ Prefab:
       propertyPath: planet1
       value: 
       objectReference: {fileID: 406107136}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: timePart
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 20844768cd3ffbf4d968f7ab27dd2af7, type: 2}
   m_IsPrefabParent: 0
@@ -6627,7 +6632,7 @@ Prefab:
     - target: {fileID: 20115828656556008, guid: 363f3144c8ed0fa478bdfc034ac76120,
         type: 2}
       propertyPath: orthographic size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114629813896403544, guid: 363f3144c8ed0fa478bdfc034ac76120,
         type: 2}

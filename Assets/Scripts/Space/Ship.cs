@@ -11,7 +11,9 @@ public class Ship : MonoBehaviour
     [SerializeField]
     private GameObject planet1;
     [SerializeField]
-    private double timePart = 0.1;
+    private double bufferTime = 0.1;
+    [SerializeField]
+    private int bufferParts = 10;
 
     private Rigidbody rb;
     private bool onPlanet;
@@ -23,11 +25,6 @@ public class Ship : MonoBehaviour
 
     // Use this for initialization
     void Start() {
-        onPlanet = false;
-        speedParts = new double[5] { 0, 0, 0, 0, 0 };
-        speedTimes = new double[5] { timePart, timePart, timePart, timePart, timePart };
-        speedBuffer = 0;
-        timeBuffer = 0;
     }
 
     // Use this for initialization
@@ -35,13 +32,32 @@ public class Ship : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         onPlanet = false;
+        speedParts = new double[bufferParts];
+        speedTimes = new double[bufferParts];
+        for (int i = 0; i < speedParts.Length; i++)
+        {
+            speedParts[i] = 0;
+            speedTimes[i] = bufferTime;
+        }
+        lastPosition = rb.position;
+        speedBuffer = 0;
+        timeBuffer = 0;
     }
 
     public float avgSpeed()
     {
-        double avgSpeed = speedParts[0] * (speedTimes[0] - timeBuffer) + speedParts[1] + speedParts[3] + speedParts[4] + speedBuffer;
-        avgSpeed = avgSpeed / (speedTimes[0] + speedTimes[1] + speedTimes[2] + speedTimes[3] + speedTimes[4]);
-        return (float)avgSpeed;
+        double avgSpeed = 0;
+        foreach (double i in speedParts)
+        {
+            avgSpeed += i;
+        }
+        double div = 0;
+        foreach (double i in speedTimes)
+        {
+            div += i;
+        }
+        Debug.Log((avgSpeed / div));
+        return (float)(avgSpeed/div);
     }
 
     // Update is called once per frame
@@ -54,17 +70,18 @@ public class Ship : MonoBehaviour
         speedBuffer += (rb.position-lastPosition).magnitude;
         lastPosition = rb.position;
         timeBuffer += Time.deltaTime;
-        if (timeBuffer >= timePart)
+        if (timeBuffer >= bufferTime)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 1; i < speedParts.Length; i++)
             {
-                speedParts[i] = speedParts[i + 1];
-                speedTimes[i] = speedTimes[i + 1];
+                speedParts[i-1] = speedParts[i];
+                speedTimes[i-1] = speedTimes[i];
             }
-            speedParts[4] = speedBuffer;
-            speedTimes[4] = timeBuffer;
+            speedParts[speedParts.Length-1] = speedBuffer;
+            speedTimes[speedParts.Length-1] = timeBuffer;
             speedBuffer = 0;
             timeBuffer = 0;
+            avgSpeed();
         }
         if  (v != 0)
         {
@@ -82,16 +99,22 @@ public class Ship : MonoBehaviour
     {
         if (col.gameObject.Equals(sun))
         {
-            print("schorhed by sun");
+            //grats on landing on sun
             LevelManager.reloadCurrentLevel();
         }
-        else if (col.gameObject.Equals(planet1) && !onPlanet && rb.velocity.magnitude < 30)
+        else if (col.gameObject.Equals(planet1) && !onPlanet)
         {
-            gameObject.AddComponent<FixedJoint>();
-            gameObject.GetComponent<FixedJoint>().connectedBody = col.rigidbody;
-            onPlanet = true;
-            print("landed on planet");
-            LevelManager.loadLevel("Planet01"); // TODO make an another script for the planet that has the level's name etc.
+            if (avgSpeed() < 0.5) {
+                //landed on planet
+                gameObject.AddComponent<FixedJoint>();
+                gameObject.GetComponent<FixedJoint>().connectedBody = col.rigidbody;
+                onPlanet = true;
+                LevelManager.loadLevel("Planet01"); // TODO make an another script for the planet that has the level's name etc.
+            }
+            else
+            {
+                //crashlanding
+            }
         }
     }
 }

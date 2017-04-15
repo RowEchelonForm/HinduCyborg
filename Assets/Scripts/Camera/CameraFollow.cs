@@ -11,13 +11,19 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private bool lockY = true; // locks the y axis movement of the camera
     [SerializeField]
-    private bool speedZoom = false; // locks the y axis movement of the camera
+    private bool speedZoom = false; // allow zooming out with speed
     [SerializeField]
     private GameObject player;
     [SerializeField]
     private Vector3 cameraOffset;
     [SerializeField]
     private float lerpMe;
+    [SerializeField]
+    private float zoomLerp;
+    [SerializeField]
+    private float zoomDefault;
+    [SerializeField]
+    private float zoomSpeedMulti = 0.75f;
 
     private Transform mainCamTransform;
     private Transform playerTransform;
@@ -31,6 +37,7 @@ public class CameraFollow : MonoBehaviour
 		findPlayer();
         cacheTransforms();
         initPosition();
+        addZoomComponents();
         prevCamPos = new Vector3 (mainCamTransform.position.x, mainCamTransform.position.y, mainCamTransform.position.z);
 	}
 	
@@ -51,7 +58,7 @@ public class CameraFollow : MonoBehaviour
 			prevCamPos = new Vector3(cameraChange.x, cameraChange.y, cameraChange.z);
             if (speedZoom)
             {
-                cam.orthographicSize = 3 + playerScript.avgSpeed();
+                cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, zoomDefault + playerScript.avgSpeed() * zoomSpeedMulti, zoomLerp * Time.deltaTime);
             }
         }
 
@@ -76,30 +83,34 @@ public class CameraFollow : MonoBehaviour
 			else
 			{
 				player = pl;
-                if (speedZoom)
-                {
-                    Ship s1 = player.GetComponent<Ship>();
-                    if (s1 == null)
-                    {
-                        Debug.Log("Can't find ship script");
-                    }
-                    else
-                    {
-                        playerScript = s1;
-                    }
-                    Camera c1 = gameObject.GetComponent<Camera>();
-                    if (c1 == null)
-                    {
-                        Debug.Log("Can't find camera");
-                    }
-                    else
-                    {
-                        cam = c1;
-                    }
-                }
             }
 		}
 	}
+
+    private void addZoomComponents()
+    {
+        if (speedZoom && player != null)
+        {
+            Ship s1 = player.GetComponent<Ship>();
+            if (s1 == null)
+            {
+                Debug.Log("Can't find ship script");
+            }
+            else
+            {
+                playerScript = s1;
+            }
+            Camera c1 = gameObject.GetComponent<Camera>();
+            if (c1 == null)
+            {
+                Debug.Log("Can't find camera");
+            }
+            else
+            {
+                cam = c1;
+            }
+        }
+    }
 
     private void cacheTransforms()
     {
