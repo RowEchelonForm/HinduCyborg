@@ -11,6 +11,8 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private bool lockY = true; // locks the y axis movement of the camera
     [SerializeField]
+    private bool speedZoom = false; // locks the y axis movement of the camera
+    [SerializeField]
     private GameObject player;
     [SerializeField]
     private Vector3 cameraOffset;
@@ -20,6 +22,8 @@ public class CameraFollow : MonoBehaviour
     private Transform mainCamTransform;
     private Transform playerTransform;
 	private Vector3 prevCamPos;
+    private Ship playerScript;
+    private Camera cam;
 
 	// Use this for initialization
 	void Start ()
@@ -45,7 +49,11 @@ public class CameraFollow : MonoBehaviour
             cameraChange.z = prevCamPos.z;
             mainCamTransform.position = cameraChange;
 			prevCamPos = new Vector3(cameraChange.x, cameraChange.y, cameraChange.z);
-		}
+            if (speedZoom)
+            {
+                cam.orthographicSize = 3 + playerScript.avgSpeed();
+            }
+        }
 
         // TODO This should be in some other script!
         if ( Input.GetKeyDown(KeyCode.Escape) )
@@ -68,7 +76,28 @@ public class CameraFollow : MonoBehaviour
 			else
 			{
 				player = pl;
-			}
+                if (speedZoom)
+                {
+                    Ship s1 = player.GetComponent<Ship>();
+                    if (s1 == null)
+                    {
+                        Debug.Log("Can't find ship script");
+                    }
+                    else
+                    {
+                        playerScript = s1;
+                    }
+                    Camera c1 = gameObject.GetComponent<Camera>();
+                    if (c1 == null)
+                    {
+                        Debug.Log("Can't find camera");
+                    }
+                    else
+                    {
+                        cam = c1;
+                    }
+                }
+            }
 		}
 	}
 

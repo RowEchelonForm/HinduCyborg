@@ -6570,11 +6570,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4731758996995346, guid: 363f3144c8ed0fa478bdfc034ac76120, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 1.43
+      value: -3.98
       objectReference: {fileID: 0}
     - target: {fileID: 4731758996995346, guid: 363f3144c8ed0fa478bdfc034ac76120, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -3.48
+      value: -0.38
       objectReference: {fileID: 0}
     - target: {fileID: 4731758996995346, guid: 363f3144c8ed0fa478bdfc034ac76120, type: 2}
       propertyPath: m_LocalPosition.z
@@ -6632,7 +6632,17 @@ Prefab:
     - target: {fileID: 114629813896403544, guid: 363f3144c8ed0fa478bdfc034ac76120,
         type: 2}
       propertyPath: cameraOffset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114629813896403544, guid: 363f3144c8ed0fa478bdfc034ac76120,
+        type: 2}
+      propertyPath: speedZoom
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114629813896403544, guid: 363f3144c8ed0fa478bdfc034ac76120,
+        type: 2}
+      propertyPath: cameraOffset.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 363f3144c8ed0fa478bdfc034ac76120, type: 2}

@@ -10,13 +10,24 @@ public class Ship : MonoBehaviour
     private GameObject sun;
     [SerializeField]
     private GameObject planet1;
+    [SerializeField]
+    private double timePart = 0.1;
 
     private Rigidbody rb;
     private bool onPlanet;
+    private double[] speedParts;
+    private double[] speedTimes;
+    private double speedBuffer;
+    private double timeBuffer;
+    private Vector3 lastPosition;
 
     // Use this for initialization
     void Start() {
         onPlanet = false;
+        speedParts = new double[5] { 0, 0, 0, 0, 0 };
+        speedTimes = new double[5] { timePart, timePart, timePart, timePart, timePart };
+        speedBuffer = 0;
+        timeBuffer = 0;
     }
 
     // Use this for initialization
@@ -26,6 +37,13 @@ public class Ship : MonoBehaviour
         onPlanet = false;
     }
 
+    public float avgSpeed()
+    {
+        double avgSpeed = speedParts[0] * (speedTimes[0] - timeBuffer) + speedParts[1] + speedParts[3] + speedParts[4] + speedBuffer;
+        avgSpeed = avgSpeed / (speedTimes[0] + speedTimes[1] + speedTimes[2] + speedTimes[3] + speedTimes[4]);
+        return (float)avgSpeed;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -33,6 +51,21 @@ public class Ship : MonoBehaviour
         float v = Input.GetAxis("Vertical");
         //transform.position.Set(transform.position.x, transform.position.y, 0);
         //rb.velocity.Set(rb.velocity.x, rb.velocity.y, 0);
+        speedBuffer += (rb.position-lastPosition).magnitude;
+        lastPosition = rb.position;
+        timeBuffer += Time.deltaTime;
+        if (timeBuffer >= timePart)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                speedParts[i] = speedParts[i + 1];
+                speedTimes[i] = speedTimes[i + 1];
+            }
+            speedParts[4] = speedBuffer;
+            speedTimes[4] = timeBuffer;
+            speedBuffer = 0;
+            timeBuffer = 0;
+        }
         if  (v != 0)
         {
             rb.AddRelativeForce(0, v * Time.deltaTime * 90, 0);
