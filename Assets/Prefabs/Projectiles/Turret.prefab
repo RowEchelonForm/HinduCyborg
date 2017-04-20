@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 114315367287252346}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -114,6 +114,7 @@ MonoBehaviour:
   projectileSpeed: 20
   projectileTag: Projectile
   shootTimer: 1
+  delaySyncFactor: 0
 --- !u!212 &212255272602816258
 SpriteRenderer:
   m_ObjectHideFlags: 1

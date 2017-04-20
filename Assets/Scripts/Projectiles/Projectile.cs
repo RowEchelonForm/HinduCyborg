@@ -85,7 +85,10 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D otherCollider)
     {
-        despawn();
+    	if (otherCollider.transform.GetInstanceID() != spawner.transform.GetInstanceID()) // ignore collision with spawner
+    	{
+			despawn();
+    	}
     }
 
     // angle is in degrees
