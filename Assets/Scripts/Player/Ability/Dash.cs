@@ -20,10 +20,12 @@ public class Dash : PlayerAbility
 	[SerializeField]
 	private float cooldownTime = 5f;
 	[SerializeField]
-	private float dashForce = 20f;
+    private float dashVelocity = 30f;
+    [SerializeField]
+    private float dashTime = 0.2f;
 
 	private float timer = 0f;
-	private bool doDash = false;
+	private float doDash = 0f;
 
 	private Rigidbody2D rb2d;
 	private CharacterMovement charMov;
@@ -42,10 +44,11 @@ public class Dash : PlayerAbility
 
 	void FixedUpdate()
 	{
-		if (doDash)
+		if (doDash > 0)
 		{
 			applyDashing();
 		}
+        Debug.Log(rb2d.velocity);
 	}
 
 
@@ -61,22 +64,26 @@ public class Dash : PlayerAbility
 	{
 		if (Input.GetButtonDown("Dash") && hasAbility_ && (timer <= 0f) )
 		{
-			doDash = true;
+            doDash = dashTime;
 			timer = cooldownTime;
 		}
 	}
 
 	private void applyDashing()
 	{
-		if (charMov.facingRight)
-		{
-            rb2d.AddForce(Vector2.right * dashForce, ForceMode2D.Impulse);
+        doDash -= Time.fixedDeltaTime;
+        if (doDash < 0f)
+        {
+            rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
+        }
+		else if (charMov.facingRight)
+        {
+            rb2d.velocity = new Vector2(dashVelocity, rb2d.velocity.y);
 		}
 		else
 		{
-            rb2d.AddForce(Vector2.right * dashForce * (-1), ForceMode2D.Impulse);
+            rb2d.velocity = new Vector2(dashVelocity * (-1), rb2d.velocity.y);
 		}
-		doDash = false;
 	}
 
 
