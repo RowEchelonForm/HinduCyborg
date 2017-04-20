@@ -41,7 +41,7 @@ public class SoundFXPlayer : MonoBehaviour
 
     /* 
      * Plays an AudioClip 'clip' with the desired volume once. Default behavior is playing a 2D sound
-     * Returns a reference to the AudioSource component.
+     * Returns a reference to the AudioSource component (null if clip is invalid).
      * Will play the audioclip once and then disable the whole GameObject.
      * DISABLING/ENABLING IS HANDLED AUTOMATICALLY, DO NOT ENABLE/DISABLE MANUALLY.
      * levelOf3D controls the spatial blend (0==2D, 1==3D), position only matters, if levelOf3D > 0.
@@ -61,7 +61,7 @@ public class SoundFXPlayer : MonoBehaviour
 
     /* 
      * Plays an AudioClip 'clip' with the desired volume. Default behavior is playing a 2D sound
-     * Returns a reference to the AudioSource component.
+     * Returns a reference to the AudioSource component (null if clip is invalid).
      * Will continue playing the audio over and over, can be paused manually.
      * Disabling/enabling should be handled by calling recycleAudioSource or completely manually.
      * levelOf3D controls the spatial blend (0==2D, 1==3D), position only matters, if levelOf3D > 0.
@@ -122,6 +122,11 @@ public class SoundFXPlayer : MonoBehaviour
                                  float dopplerLevel = 0f, float spread = 0f, float minDistance = 1, float maxDistance = 500,
                                  AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic)
     {
+        if (clip == null)
+        {
+            Debug.LogError("Error: The audio clip is invalid or missing.");
+            return null;
+        }
         AudioSource aSource = getAudioSourceObject();
         aSource.clip = clip;
 
