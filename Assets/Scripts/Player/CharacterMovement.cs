@@ -155,11 +155,16 @@ public class CharacterMovement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if ( collider.CompareTag("Kill") )
+		if ( collider.CompareTag("Kill") )
         {
 			Debug.Log("Killed player");
             LevelManager.reloadCurrentLevel(); // TODO should load a checkpoint
         }
+		else if ( collider.CompareTag("Projectile") )
+		{
+			Debug.Log("Player hit projectile");
+			LevelManager.reloadCurrentLevel(); // TODO should load a checkpoint
+		}
     }
 
     private void initComponents()
