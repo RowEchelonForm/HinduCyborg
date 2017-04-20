@@ -41,9 +41,23 @@ public class CharacterMovement : MonoBehaviour
 		setJumpFlag();
     }
 
+    void HandleAnimation(float input)
+    {
+        if (input!=0)
+        {
+            anim.Play("run");
+        }
+        else
+        {
+            anim.Play("idle");
+        }
+
+    }
+
     void FixedUpdate()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
+        HandleAnimation(horizontalInput); //switch animation
         applyMovementVelocity(horizontalInput);
         handleFlipping(horizontalInput);
         handleJumping();
