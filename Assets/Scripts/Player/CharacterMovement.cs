@@ -41,18 +41,6 @@ public class CharacterMovement : MonoBehaviour
 		setJumpFlag();
     }
 
-    void HandleAnimation(float input)
-    {
-        if (input!=0)
-        {
-            anim.Play("run");
-        }
-        else
-        {
-            anim.Play("idle");
-        }
-
-    }
 
     void FixedUpdate()
     {
@@ -199,6 +187,28 @@ public class CharacterMovement : MonoBehaviour
         {
             Debug.LogError("Error: No Animator found on the player from CharacterMovement script! Please attach it.");
         }
+    }
+
+    //Switch the animations
+    void HandleAnimation(float input)
+    {
+
+        if (grounded)
+        {
+            if (input == 0)
+            {
+                anim.Play("idle");
+            }
+            else
+            {
+                anim.Play("run");
+            }
+        }
+        else
+        {
+            anim.Play("jump_on air");
+        }
+
     }
 
 }
