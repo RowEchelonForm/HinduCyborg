@@ -8,6 +8,8 @@ TagManager:
   - GroundCheck
   - AbilityTrigger
   - SFXObject
+  - Projectile
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
