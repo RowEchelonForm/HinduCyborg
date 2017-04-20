@@ -270,7 +270,7 @@ Transform:
   m_GameObject: {fileID: 121382523}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -15.2, y: -1.9, z: 1}
-  m_LocalScale: {x: 300, y: 15, z: 1}
+  m_LocalScale: {x: 900, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
@@ -658,6 +658,11 @@ Prefab:
         type: 2}
       propertyPath: dashTime
       value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 114272163092455886, guid: 5468c47465777b94095dd2569b28613a,
+        type: 2}
+      propertyPath: jumpForce
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5468c47465777b94095dd2569b28613a, type: 2}
