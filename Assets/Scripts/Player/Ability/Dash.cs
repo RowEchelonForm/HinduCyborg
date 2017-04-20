@@ -17,11 +17,11 @@ public class Dash : PlayerAbility
 
 	[SerializeField]
 	private string abilityName = "Dash";
-	[SerializeField]
+    [SerializeField] [Range(0, 60f)]
 	private float cooldownTime = 5f;
-	[SerializeField]
+    [SerializeField] [Range(0, 300f)]
     private float dashVelocity = 30f;
-    [SerializeField]
+    [SerializeField] [Range(0, 1)]
     private float dashTime = 0.2f;
 
 	private float timer = 0f;
@@ -48,7 +48,6 @@ public class Dash : PlayerAbility
 		{
 			applyDashing();
 		}
-        Debug.Log(rb2d.velocity);
 	}
 
 

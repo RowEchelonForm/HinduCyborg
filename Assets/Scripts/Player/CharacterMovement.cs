@@ -10,12 +10,12 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Rigidbody2D))]
 public class CharacterMovement : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] [Range(0, 100f)]
     private float maxSpeed = 5f;
-    [SerializeField]
+    [SerializeField] [Range(0, 100f)]
     private float jumpForce = 8f;
-    [SerializeField]
-    private float airSpeedFactor = 0.3f;
+    [SerializeField] [Range(0, 1f)]
+    private float airSpeedFactor = 0.7f;
 
     public bool facingRight { get; private set; }
 
