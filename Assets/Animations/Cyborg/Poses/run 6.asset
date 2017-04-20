@@ -14,7 +14,7 @@ MonoBehaviour:
   m_PoseEntries:
   - path: bones/hip
     localPosition: {x: 0.21089363, y: 0.17163467, z: 0}
-    localRotation: {x: 0, y: 0, z: 0.6500508, w: 0.7598908}
+    localRotation: {x: 0, y: 0, z: 0.6978233, w: 0.71627}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/thigh back
     localPosition: {x: -1.16553, y: 0.7621343, z: 0}
@@ -54,32 +54,32 @@ MonoBehaviour:
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair/hair 1
     localPosition: {x: 1.4799967, y: 0.0000022649765, z: 0}
-    localRotation: {x: 0, y: 0, z: 0.13890523, w: 0.99030566}
+    localRotation: {x: 0, y: -0, z: 0.016784241, w: -0.99985915}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair/hair 1/hair 2
     localPosition: {x: 1.1923585, y: -0.00000070536043, z: 0}
-    localRotation: {x: -0, y: 0, z: -0.048605718, w: -0.9988181}
+    localRotation: {x: 0, y: 0, z: 0.002109222, w: 0.9999978}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3
     localPosition: {x: 1.3753525, y: -0.000000067055225, z: 0}
-    localRotation: {x: 0, y: -0, z: 0.34979862, w: -0.936825}
+    localRotation: {x: 0, y: -0, z: 0.15797919, w: -0.98744243}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4
     localPosition: {x: 1.3590275, y: 0.0000004107569, z: 0}
-    localRotation: {x: 0, y: 0, z: -0.23929653, w: 0.9709465}
+    localRotation: {x: 0, y: -0, z: 0.09624962, w: -0.9953572}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5
     localPosition: {x: 1.0000006, y: -0.0000047242356, z: 0}
-    localRotation: {x: 0, y: -0, z: 0.28350443, w: -0.958971}
+    localRotation: {x: 0, y: -0, z: 0.3147775, w: -0.9491655}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5/hair 6
     localPosition: {x: 1.1776628, y: 0.000001385808, z: 0}
-    localRotation: {x: 0, y: 0, z: -0.43376207, w: 0.9010275}
+    localRotation: {x: 0, y: -0, z: 0.21713929, w: -0.9761406}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5/hair 6/hair
       7
     localPosition: {x: 0.7516992, y: 0.0000023245811, z: 0}
-    localRotation: {x: 0, y: -0, z: 0.20272769, w: -0.97923523}
+    localRotation: {x: 0, y: 0, z: 0.09941692, w: 0.9950459}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/arm right
     localPosition: {x: 3.5117843, y: 1.1318051, z: 0}
