@@ -5,27 +5,15 @@ using System.Collections.Generic;
 /*
  * Plays sound effects and handles GameObjects with AudioSource component and Audio.
  * Use whenever you need to play a sound that isn't music.
- * The sound has to be attached in the editor to the prefab that has this script attached
- * (not as a component but in the soundEffectsArray).
 */
 public class SoundFXPlayer : MonoBehaviour
 {
 	
 	public static SoundFXPlayer instance = null; // singleton
-
-	[System.Serializable]
-	public struct NamedSoundFX // for editor
-	{
-		public string name;
-		public AudioClip soundFX;
-	}
-
-	[SerializeField]
-	private NamedSoundFX[] soundEffectsArray; // for editor
+    
     [SerializeField]
     private string audioObjectTag = "SFXObject"; // the tag for all the AudioSource GameObjects (remember to create this tag in Unity)
 
-	private Dictionary<string, AudioClip> soundEffectsDictionary; // hashtable containing the sfx during runtime
 	private Stack<AudioSource> disabledAudioSources; // contains disabled AudioSources
 	private Transform cachedTransform;
 	
@@ -37,10 +25,7 @@ public class SoundFXPlayer : MonoBehaviour
 			instance = this;
 			cachedTransform = transform;
 			GameObject.DontDestroyOnLoad(gameObject);
-			soundEffectsDictionary = new Dictionary<string, AudioClip>();
             disabledAudioSources = new Stack<AudioSource>();
-			fillSFXHashtable();
-			soundEffectsArray = null; // empty the array because it's only used in the editor
 		}
 		else if (instance != null)
 		{
@@ -55,18 +40,18 @@ public class SoundFXPlayer : MonoBehaviour
 
 
     /* 
-     * Plays an AudioClip with the clipName with the desired volume once. Default behavior is playing a 2D sound
-     * Returns a reference to the AudioSource component (null if clip not found).
+     * Plays an AudioClip 'clip' with the desired volume once. Default behavior is playing a 2D sound
+     * Returns a reference to the AudioSource component.
      * Will play the audioclip once and then disable the whole GameObject.
      * DISABLING/ENABLING IS HANDLED AUTOMATICALLY, DO NOT ENABLE/DISABLE MANUALLY.
      * levelOf3D controls the spatial blend (0==2D, 1==3D), position only matters, if levelOf3D > 0.
      * The rest of the parameters control the corresponding settings of AudioSource.
     */
-    public AudioSource playClipOnce(string clipName, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
+    public AudioSource playClipOnce(AudioClip clip, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
                                     float dopplerLevel = 0f, float spread = 0f, float minDistance = 1, float maxDistance = 500,
                                     AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic)
 	{
-        AudioSource aSource = playClip(clipName, false, volume, levelOf3D, position, dopplerLevel, spread, minDistance, maxDistance, rolloffMode);
+        AudioSource aSource = playClip(clip, false, volume, levelOf3D, position, dopplerLevel, spread, minDistance, maxDistance, rolloffMode);
         if (aSource != null)
         {
             StartCoroutine(disableAfterPlaying(aSource));
@@ -75,18 +60,18 @@ public class SoundFXPlayer : MonoBehaviour
 	}
 
     /* 
-     * Plays an AudioClip with the clipName with the desired volume. Default behavior is playing a 2D sound
-     * Returns a reference to the AudioSource component (null if clip not found).
+     * Plays an AudioClip 'clip' with the desired volume. Default behavior is playing a 2D sound
+     * Returns a reference to the AudioSource component.
      * Will continue playing the audio over and over, can be paused manually.
      * Disabling/enabling should be handled by calling recycleAudioSource or completely manually.
      * levelOf3D controls the spatial blend (0==2D, 1==3D), position only matters, if levelOf3D > 0.
      * The rest of the settings control the corresponding settings of AudioSource.
     */
-    public AudioSource playClipContinuosly(string clipName, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
+    public AudioSource playClipContinuosly(AudioClip clip, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
                                            float dopplerLevel = 0f, float spread = 0f, float minDistance = 1, float maxDistance = 500,
                                            AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic)
     {
-        return playClip(clipName, true, volume, levelOf3D, position, dopplerLevel, spread, minDistance, maxDistance, rolloffMode);
+        return playClip(clip, true, volume, levelOf3D, position, dopplerLevel, spread, minDistance, maxDistance, rolloffMode);
     }
 
     // Call to manually recycle and disable a GameObject with an AudioSource component.
@@ -132,36 +117,28 @@ public class SoundFXPlayer : MonoBehaviour
     }
 
 
-    // Plays the AudioClip with name 'clipName' with the desired parameters
-    private AudioSource playClip(string clipName, bool loop, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
+    // Plays the AudioClip 'clip' with the desired parameters
+    private AudioSource playClip(AudioClip clip, bool loop, float volume = 1f, float levelOf3D = 0, Vector3 position =  default(Vector3),
                                  float dopplerLevel = 0f, float spread = 0f, float minDistance = 1, float maxDistance = 500,
                                  AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic)
     {
-        if ( soundEffectsDictionary.ContainsKey(clipName) )
-        {
-            AudioSource aSource = getAudioSourceObject();
-            aSource.clip = soundEffectsDictionary[clipName];
+        AudioSource aSource = getAudioSourceObject();
+        aSource.clip = clip;
 
-            // Set the desired settings:
-            aSource.volume = volume;
-            aSource.spatialBlend = levelOf3D;
-            aSource.spread = spread;
-            aSource.dopplerLevel = dopplerLevel;
-            aSource.transform.position = position;
-            aSource.minDistance = minDistance;
-            aSource.maxDistance = maxDistance;
-            aSource.rolloffMode = rolloffMode;
-            aSource.loop = loop;
+        // Set the desired settings:
+        aSource.volume = volume;
+        aSource.spatialBlend = levelOf3D;
+        aSource.spread = spread;
+        aSource.dopplerLevel = dopplerLevel;
+        aSource.transform.position = position;
+        aSource.minDistance = minDistance;
+        aSource.maxDistance = maxDistance;
+        aSource.rolloffMode = rolloffMode;
+        aSource.loop = loop;
 
-            aSource.playOnAwake = false; // for my own sanity
-            aSource.Play();
-            return aSource;
-        }
-        else
-        {
-            Debug.Log("No sound with the name: " + clipName);
-            return null;
-        }
+        aSource.playOnAwake = false; // for my own sanity
+        aSource.Play();
+        return aSource;
     }
 
     // Returns an AudioSource component of an otherwise empty GameObject.
@@ -204,28 +181,6 @@ public class SoundFXPlayer : MonoBehaviour
                 aSource.clip = null;
                 aSource.gameObject.SetActive(false);
                 disabledAudioSources.Push(aSource);
-            }
-        }
-    }
-
-    // Call on start; fills the hashtable with the values in soundEffectsArray
-    private void fillSFXHashtable()
-    {
-        string sfxName;
-        for (int i=0; i<soundEffectsArray.Length; ++i)
-        {
-            sfxName = soundEffectsArray[i].name;
-            if ( !soundEffectsArray[i].soundFX || sfxName == "" ) // needs to have an actual sound and name
-            {
-                Debug.LogError("Error: soundEffectsArray in SoundFXPlayer contains an empty/incorrect entry on index " + i );
-            }
-            else if ( soundEffectsDictionary.ContainsKey( sfxName ) ) // sound with the same name already exists
-            {
-                Debug.LogError("Error: Two soundFXs have the name '" + sfxName + "' in soundEffectsArray in SoundFXPlayer class. See entry with index " + i);
-            }
-            else // successfully add new sound
-            {
-                soundEffectsDictionary.Add( sfxName, soundEffectsArray[i].soundFX );
             }
         }
     }
