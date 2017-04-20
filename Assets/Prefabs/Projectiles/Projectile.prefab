@@ -101,7 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnSound: {fileID: 0}
   damage_: 1
-  despawnDistance: 100
+  despawnDistance: 30
+  angularVelocity: 50
   rb2d: {fileID: 50497236959393166}
 --- !u!212 &212663239805304052
 SpriteRenderer:

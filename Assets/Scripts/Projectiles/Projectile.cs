@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+ * Projectile that is spawned (shot) by a class that _inherits_ the ProjectileSpawner class.
+ * The lifecycle of the projectile is managed by the spawner.
+*/
 [RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
 {
@@ -14,18 +18,20 @@ public class Projectile : MonoBehaviour
     private int damage_ = 1;
     [SerializeField]
     private float despawnDistance = 1000f;
+    [SerializeField] [Range(0, 300)]
+    private float angularVelocity = 50f;  // basically just a visual effect
     [SerializeField]
     private Rigidbody2D rb2d;
 
-    private bool initStatus = false;  // True after init() is called
+    private bool initStatus = false;  // true after init() is called
     private Transform cachedTransform;
     private Vector3 spawnPosition;
     private ProjectileSpawner spawner;
 
-
+	
     public void hit()
     {
-        // TODO play hit effects here
+        // TODO play hit effects here (NOT USED RIGHT NOW)
         despawn();
     }
 
@@ -85,10 +91,11 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D otherCollider)
     {
-    	if (otherCollider.transform.GetInstanceID() != spawner.transform.GetInstanceID()) // ignore collision with spawner
+    	if (otherCollider.transform.GetInstanceID() == spawner.transform.GetInstanceID()) // ignore collision with spawner
     	{
-			despawn();
+			return;
     	}
+		despawn();
     }
 
     // angle is in degrees
@@ -107,6 +114,7 @@ public class Projectile : MonoBehaviour
         float xSpeed = Mathf.Cos(angle*Mathf.PI/180) * speed;
         float ySpeed = Mathf.Sin(angle*Mathf.PI/180) * speed;
         rb2d.velocity = new Vector2(xSpeed, ySpeed);
+		rb2d.angularVelocity = angularVelocity;
         return true;
     }
 

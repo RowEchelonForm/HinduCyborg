@@ -6,6 +6,7 @@ using UnityEngine;
  * Base class for things that spawn projectiles.
  * The projectiles are managed by this script,
  * that is, enabled and disabled.
+ * This script must be inherited, it can't be used on its own.
 */
 public abstract class ProjectileSpawner : MonoBehaviour
 {

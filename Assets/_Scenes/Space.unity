@@ -1382,8 +1382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planetName: Test Planet
-  description: "das test planet ist nicht fertigt\ntest planet is not ready\ntestiplaneetta
-    ei ole valmis\n\u30C6\u30B9\u30C8\u30D7\u30E9\u30CD\u30C3\u30C8\u306F\u6E96\u5099\u304C\u3067\u304D\u3066\u3044\u307E\u305B\u3093"
+  description: The mythical test planet that normally only developers may enter.
   level: Planet01
   sun: 0
 --- !u!4 &439921695 stripped
