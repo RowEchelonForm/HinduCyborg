@@ -93,7 +93,7 @@ public class Ship : MonoBehaviour
         {
             div += i;
         }
-        Debug.Log((avgSpeed / div));
+        //Debug.Log((avgSpeed / div));
         return (float)(avgSpeed / div);
     }
 
