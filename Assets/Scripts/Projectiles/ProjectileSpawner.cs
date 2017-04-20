@@ -146,4 +146,57 @@ public abstract class ProjectileSpawner : MonoBehaviour
         }
     }
 
+
+
+
+    // For editor: draws the arrows that point to the shooting direction
+	private void OnDrawGizmos()
+	{
+		// Starting position:
+		Vector3 startingPosition = transform.position;
+		if (projectileSpawnPoint == null)
+		{
+			for (int i = 0; i < transform.childCount; ++i) // find projectileSpawnPoint position
+			{
+				Transform child = transform.GetChild(i);
+	            if (child.CompareTag("SpawnPoint"))
+	            {
+	                startingPosition = child.position;
+	                break;
+	            }
+			}
+		}
+		else
+		{
+			startingPosition = projectileSpawnPoint.position;
+		}
+
+		// Variables used in calculations:
+		float radianConversion = Mathf.PI/180;
+		float directionAngle = (projectileAngle + transform.rotation.eulerAngles.z)*radianConversion;
+		float arrowHeadAngleDiff = 20f;
+		float rightAngle = directionAngle + arrowHeadAngleDiff*radianConversion;
+		float leftAngle = directionAngle - arrowHeadAngleDiff*radianConversion;
+		float lengthFactor = projectileSpeed/20;
+		float arrowHeadLenghtFactor = 0.25f * lengthFactor;
+
+		// Base ray:
+		float xDir = Mathf.Cos(directionAngle) * lengthFactor;
+		float yDir = Mathf.Sin(directionAngle) * lengthFactor;
+		Vector3 direction = new Vector3(xDir, yDir, 0);
+		Gizmos.DrawRay(startingPosition, direction);
+
+		// Right head ray:
+		xDir = -Mathf.Cos(rightAngle) * arrowHeadLenghtFactor;
+		yDir = -Mathf.Sin(rightAngle) * arrowHeadLenghtFactor;
+		Vector3 headDirection = new Vector3(xDir, yDir, 0);
+		Gizmos.DrawRay(startingPosition + direction, headDirection);
+
+		// Left head ray:
+		xDir = -Mathf.Cos(leftAngle) * arrowHeadLenghtFactor;
+		yDir = -Mathf.Sin(leftAngle) * arrowHeadLenghtFactor;
+		headDirection = new Vector3(xDir, yDir, 0);
+		Gizmos.DrawRay(startingPosition + direction, headDirection);
+	}
+
 }
