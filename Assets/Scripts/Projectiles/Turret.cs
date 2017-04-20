@@ -10,6 +10,8 @@ public class Turret : ProjectileSpawner
 
     [SerializeField] [Range(0f, 10f)]
     private float shootTimer = 1f;
+    [SerializeField] [Range(0f, 1f)]
+    private float delayPercentage = 0.2;
 
     private float internalShootTimer; // used for actual calculations
 
