@@ -8,6 +8,7 @@ using System.Collections.Generic;
  * Does not control any of the player's abilities.
 */
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
 public class CharacterMovement : MonoBehaviour
 {
     [SerializeField] [Range(0, 100f)]
@@ -24,7 +25,7 @@ public class CharacterMovement : MonoBehaviour
 	private bool jump = false;
     private Rigidbody2D rb2d;
     private Transform cachedTransform;
-    //private Animator anim;
+    private Animator anim;
 
 
     void Start()
@@ -43,8 +44,6 @@ public class CharacterMovement : MonoBehaviour
     void FixedUpdate()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        //anim.SetFloat("Speed", Mathf.Abs(h));
-
         applyMovementVelocity(horizontalInput);
         handleFlipping(horizontalInput);
         handleJumping();
@@ -174,6 +173,12 @@ public class CharacterMovement : MonoBehaviour
             {
                 Debug.LogError("Error: CharacterMovement class can't find any child Transforms tagged 'GroundCheck'.");
             }
+        }
+
+        anim = GetComponent<Animator>();
+        if (anim == null)
+        {
+            Debug.LogError("Error: No Animator found on the player from CharacterMovement script! Please attach it.");
         }
     }
 

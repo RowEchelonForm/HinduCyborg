@@ -55,7 +55,7 @@ public class SpritePartManager : MonoBehaviour
     // Enables the visual sprites associated with the abilityName
     public void enableAbilitySprites(string abilityName)
     {
-        if ( !abilityParts.ContainsKey(abilityName) )
+        /*if ( !abilityParts.ContainsKey(abilityName) )
         {
             Debug.LogWarning("SpritePartManager does not know an ability with the name '" + abilityName + "'.");
             return;
@@ -65,14 +65,14 @@ public class SpritePartManager : MonoBehaviour
         for (int i = 0; i < parts.Count; ++i)
         {
             playerPartObjects[parts[i].partName].sprite = parts[i].sprite;
-        }
+        }*/
     }
 
 
     // Call at Start first.
     // Fills playerPartObjects Dictionary with the sprite parts that the player has.
     private void findPlayerSpriteParts()
-    {
+    {/*
         Transform sprites = transform.FindChild("Sprites");
         if (sprites == null)
         {
@@ -95,7 +95,7 @@ public class SpritePartManager : MonoBehaviour
                 continue;
             }
             playerPartObjects.Add(bodyPart.name, bodyPart);
-        }
+        }*/
     }
 
     // Call at Start after calling findPlayerSpriteParts.
