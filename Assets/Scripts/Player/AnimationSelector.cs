@@ -63,9 +63,7 @@ public class AnimationSelector : MonoBehaviour
 	
 	private void LateUpdate()
 	{
-		Debug.Log("Before: " + highestPriorityName);
 		handleAnimationPlaying();
-		Debug.Log("After: " + highestPriorityName);
 	}
 
 
