@@ -30,8 +30,9 @@ public class Dash : PlayerAbility
 	private Rigidbody2D rb2d;
 	private CharacterMovement charMov;
 
+    public bool is_dashing = false;
 
-	void Start()
+    void Start()
 	{
 		findComponents();
 	}
@@ -44,9 +45,12 @@ public class Dash : PlayerAbility
 
 	void FixedUpdate()
 	{
-		if (doDash > 0)
+        //Debug.Log(is_dashing);
+        if (doDash > 0)
 		{
-			applyDashing();
+            
+            applyDashing();
+            
 		}
 	}
 
@@ -74,13 +78,16 @@ public class Dash : PlayerAbility
         if (doDash < 0f)
         {
             rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
+            is_dashing = false;
         }
 		else if (charMov.facingRight)
         {
+            is_dashing = true;
             rb2d.velocity = new Vector2(dashVelocity, rb2d.velocity.y);
 		}
 		else
 		{
+            is_dashing = true;
             rb2d.velocity = new Vector2(dashVelocity * (-1), rb2d.velocity.y);
 		}
 	}
@@ -99,6 +106,7 @@ public class Dash : PlayerAbility
         {
             Debug.LogError("Error: No Rigidbody2D found on the player from Dash script! Please attach it.");
         }
-	}
+
+    }
 
 }

@@ -27,6 +27,10 @@ public class CharacterMovement : MonoBehaviour
     private Transform cachedTransform;
     private Animator anim;
 
+    private Dash dashscript;
+
+
+    public static int played_animation;
 
     void Start()
     {
@@ -45,7 +49,12 @@ public class CharacterMovement : MonoBehaviour
     void FixedUpdate()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        HandleAnimation(horizontalInput); //switch animation
+
+        HandleAnimation(horizontalInput); //select played animation
+        Switch_Animation(); // switch animation
+
+        //Debug.Log(played_animation);
+
         applyMovementVelocity(horizontalInput);
         handleFlipping(horizontalInput);
         handleJumping();
@@ -187,28 +196,53 @@ public class CharacterMovement : MonoBehaviour
         {
             Debug.LogError("Error: No Animator found on the player from CharacterMovement script! Please attach it.");
         }
+
+        dashscript = GetComponent<Dash>();
     }
 
-    //Switch the animations
+    //select played animation
     void HandleAnimation(float input)
     {
 
-        if (grounded)
+        if (grounded && !dashscript.is_dashing)
         {
             if (input == 0)
             {
-                anim.Play("idle");
+                played_animation = 0;
             }
             else
             {
-                anim.Play("run");
+                played_animation = 1;
             }
         }
-        else
+        else if (!grounded && !dashscript.is_dashing)
         {
-            anim.Play("jump_on air");
+            played_animation = 2;
+        }
+        else if (dashscript.is_dashing)
+        {
+            played_animation = 3;
+        }
+        
+
+    }
+
+    //switch animation
+    void Switch_Animation()
+    {
+        switch (played_animation)
+        {
+            case 0: anim.Play("idle");break;
+
+            case 1: anim.Play("run");break;
+
+            case 2: anim.Play("jump_on air");break;
+
+            case 3: anim.Play("dash");break;
         }
 
     }
+
+
 
 }
