@@ -8,6 +8,7 @@ using UnityEngine;
 */
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CharacterMovement))]
+[RequireComponent(typeof(AnimationSelector))]
 public class Dash : PlayerAbility
 {
 	public override string ABILITY_NAME
@@ -29,28 +30,24 @@ public class Dash : PlayerAbility
 
 	private Rigidbody2D rb2d;
 	private CharacterMovement charMov;
+	private AnimationSelector animSelector;
 
-    public bool is_dashing = false;
-
-    void Start()
+    private void Start()
 	{
 		findComponents();
 	}
 
-	void Update()
+	private void Update()
 	{
 		handleTimer();
 		handleDashInput();
 	}
 
-	void FixedUpdate()
+	private void FixedUpdate()
 	{
-        //Debug.Log(is_dashing);
         if (doDash > 0)
 		{
-            
             applyDashing();
-            
 		}
 	}
 
@@ -78,33 +75,39 @@ public class Dash : PlayerAbility
         if (doDash < 0f)
         {
             rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
-            is_dashing = false;
         }
 		else if (charMov.facingRight)
         {
-            is_dashing = true;
             rb2d.velocity = new Vector2(dashVelocity, rb2d.velocity.y);
+            animSelector.playAnimation("dash");
 		}
 		else
 		{
-            is_dashing = true;
             rb2d.velocity = new Vector2(dashVelocity * (-1), rb2d.velocity.y);
+			animSelector.playAnimation("dash");
 		}
 	}
 
 
 	private void findComponents()
 	{
-		charMov = gameObject.GetComponent<CharacterMovement>();
+		charMov = GetComponent<CharacterMovement>();
 		if (charMov == null)
 		{
 			Debug.LogError("Error: Dash ability can't find CharacterMovement component, disabling Dash.");
 			this.enabled = false;
 		}
-		rb2d = gameObject.GetComponent<Rigidbody2D>();
+
+		rb2d = GetComponent<Rigidbody2D>();
 		if (rb2d == null)
         {
             Debug.LogError("Error: No Rigidbody2D found on the player from Dash script! Please attach it.");
+        }
+
+		animSelector = GetComponent<AnimationSelector>();
+		if (animSelector == null)
+        {
+			Debug.LogError("Error: AnimationSelector found on the player from Dash script! Please attach it.");
         }
 
     }
