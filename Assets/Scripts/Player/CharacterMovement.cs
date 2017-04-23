@@ -222,6 +222,11 @@ public class CharacterMovement : MonoBehaviour
     void Check_Finished_Aimation()
     {
         check_finished = true;
+        maxSpeed = 5f;
     }
 
+    void Slow_After_Jump()
+    {
+        maxSpeed = 4.5f;
+    }
 }
