@@ -17,6 +17,8 @@ public class CharacterMovement : MonoBehaviour
     private float jumpForce = 8f;
     [SerializeField] [Range(0, 1f)]
     private float airSpeedFactor = 0.7f;
+    [SerializeField] [Range(0.5f,2f)]
+    private float SlowAfterJump =1f; 
 
     public bool facingRight { get; private set; }
 
@@ -227,6 +229,6 @@ public class CharacterMovement : MonoBehaviour
 
     void Slow_After_Jump()
     {
-        maxSpeed = 4.5f;
+        maxSpeed = maxSpeed - SlowAfterJump;
     }
 }
