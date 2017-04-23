@@ -27,6 +27,9 @@ public class CharacterMovement : MonoBehaviour
     private Transform cachedTransform;
     private AnimationSelector animSelector;
 
+    private bool was_jumping = false;
+    private bool check_finished = false;
+
     void Start()
     {
 		facingRight = true;
@@ -160,18 +163,29 @@ public class CharacterMovement : MonoBehaviour
     {
         if (grounded)
         {
-            if (input == 0)
+            if (was_jumping)
             {
-				animSelector.playAnimation("idle");
+                animSelector.playAnimation("jump_finished");
+                was_jumping = false;
+                check_finished = false;
             }
-            else
+
+            if (check_finished)
             {
-				animSelector.playAnimation("run");
+                if (input == 0)
+                {
+                    animSelector.playAnimation("idle");
+                }
+                else
+                {
+                    animSelector.playAnimation("run");
+                }
             }
         }
         else if (!grounded)
         {
-				animSelector.playAnimation("jump_on_air");
+            was_jumping = true;
+			animSelector.playAnimation("jump_on_air");
         }
     }
 
@@ -202,6 +216,12 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 		animSelector = GetComponent<AnimationSelector>();
+    }
+
+
+    void Check_Finished_Aimation()
+    {
+        check_finished = true;
     }
 
 }
