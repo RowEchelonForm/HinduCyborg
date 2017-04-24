@@ -214,11 +214,7 @@ public class CharacterMovement : MonoBehaviour
             Debug.LogError("Error: No Animator found on the player from CharacterMovement script! Please attach it.");
         }
 
-        Effect_Dash = transform.Find("Sprites").gameObject.transform.Find("Effect_Dash").gameObject;
-        if (Effect_Dash == null)
-        {
-            Debug.LogError("Error: no GameObject found");
-        }
+
     }
 
 
