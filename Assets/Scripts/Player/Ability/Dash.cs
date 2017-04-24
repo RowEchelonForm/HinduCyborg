@@ -49,6 +49,7 @@ public class Dash : PlayerAbility
 
 	private void FixedUpdate()
 	{
+        //Debug.Log(timer);
         if (doDash > 0)
 		{
             applyDashing();
@@ -61,7 +62,11 @@ public class Dash : PlayerAbility
 		if (timer > 0f)
 		{
 			timer -= Time.deltaTime;
-		}
+        }
+        else
+        {
+            Effect_Dash.SetActive(true);
+        }
 	}
 
 	private void handleDashInput()
@@ -80,13 +85,15 @@ public class Dash : PlayerAbility
         {
             rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
 			triggeredDash = false;
+            Effect_Dash.SetActive(false);
         }
         else
         {
 			if (charMov.facingRight)
 	        {
 	            rb2d.velocity = new Vector2(dashVelocity, rb2d.velocity.y);
-			}
+                Effect_Dash.SetActive(false);
+            }
 			else
 			{
 	            rb2d.velocity = new Vector2(dashVelocity * (-1), rb2d.velocity.y);

@@ -165,6 +165,57 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b0f66939000a2da42adf41e94e2ec063, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &1456260070
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 2.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -3.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025844060459454, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 137642624108951686, guid: b058747ab2dc70847b320e404af4a4fd,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1227506457886668, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+      propertyPath: m_Name
+      value: 'Shroom '
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: b058747ab2dc70847b320e404af4a4fd, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &1648321344
 Prefab:
   m_ObjectHideFlags: 0
@@ -213,6 +264,12 @@ Prefab:
       propertyPath: m_Name
       value: Blob_Tree
       objectReference: {fileID: 0}
+    - target: {fileID: 137563574897646392, guid: 25f8c68e302dd8f44a43f357a9f932fd,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 21211549472028922, guid: 506d3b81d8428b24589b38d53b3396a1,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 25f8c68e302dd8f44a43f357a9f932fd, type: 2}
   m_IsPrefabParent: 0
