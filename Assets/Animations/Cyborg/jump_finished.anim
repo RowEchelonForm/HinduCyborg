@@ -5519,14 +5519,14 @@ AnimationClip:
   m_GenerateMotionCurves: 0
   m_Events:
   - time: 0
-    functionName: Slow_After_Jump
+    functionName: slowOnLanding
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.23333333
-    functionName: Check_Finished_Aimation
+    functionName: landingFinished
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

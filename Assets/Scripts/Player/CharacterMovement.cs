@@ -8,7 +8,7 @@ using System.Collections.Generic;
  * Does not control any of the player's abilities.
 */
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(AnimationSelector))]
+[RequireComponent(typeof(Animator))]
 public class CharacterMovement : MonoBehaviour
 {
     [SerializeField] [Range(0, 100f)]
@@ -17,8 +17,8 @@ public class CharacterMovement : MonoBehaviour
     private float jumpForce = 8f;
     [SerializeField] [Range(0, 1f)]
     private float airSpeedFactor = 0.7f;
-    [SerializeField] [Range(0.5f,2f)]
-    private float SlowAfterJump =1f; 
+    [SerializeField] [Range(0f, 1f)]
+    private float landingSlownessFactor = 0.2f;
 
     public bool facingRight { get; private set; }
 
@@ -27,10 +27,7 @@ public class CharacterMovement : MonoBehaviour
 	private bool jump = false;
     private Rigidbody2D rb2d;
     private Transform cachedTransform;
-    private AnimationSelector animSelector;
-
-    private bool was_jumping = false;
-    private bool check_finished = false;
+    private Animator anim;
 
     void Start()
     {
@@ -163,32 +160,23 @@ public class CharacterMovement : MonoBehaviour
     // Select played animation
     private void handleAnimation(float input)
     {
-        if (grounded)
-        {
-            if (was_jumping)
-            {
-                animSelector.playAnimation("jump_finished");
-                was_jumping = false;
-                check_finished = false;
-            }
+		if (grounded)
+		{
+			anim.SetBool("in_air", false);
+		}
+		else
+		{
+			anim.SetBool("in_air", true);
+		}
 
-            if (check_finished)
-            {
-                if (input == 0)
-                {
-                    animSelector.playAnimation("idle");
-                }
-                else
-                {
-                    animSelector.playAnimation("run");
-                }
-            }
-        }
-        else if (!grounded)
-        {
-            was_jumping = true;
-			animSelector.playAnimation("jump_on_air");
-        }
+		if (input == 0)
+		{
+			anim.SetBool("run", false);
+		}
+		else
+		{
+			anim.SetBool("run", true);
+		}
     }
 
 	private void initComponents()
@@ -217,18 +205,25 @@ public class CharacterMovement : MonoBehaviour
                 Debug.LogError("Error: CharacterMovement class can't find any child Transforms tagged 'GroundCheck'.");
             }
         }
-		animSelector = GetComponent<AnimationSelector>();
+
+		anim = GetComponent<Animator>();
+		if (anim == null)
+        {
+            Debug.LogError("Error: No Animator found on the player from CharacterMovement script! Please attach it.");
+        }
     }
 
 
-    void Check_Finished_Aimation()
+
+    // Animations call these:
+
+    public void landingFinished()
     {
-        check_finished = true;
-        maxSpeed = 5f;
+		maxSpeed = maxSpeed / (1-landingSlownessFactor);
     }
 
-    void Slow_After_Jump()
+    public void slowOnLanding()
     {
-        maxSpeed = maxSpeed - SlowAfterJump;
+		maxSpeed = maxSpeed * (1-landingSlownessFactor);
     }
 }

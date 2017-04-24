@@ -8,7 +8,7 @@ using UnityEngine;
 */
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CharacterMovement))]
-[RequireComponent(typeof(AnimationSelector))]
+[RequireComponent(typeof(Animator))]
 public class Dash : PlayerAbility
 {
 	public override string ABILITY_NAME
@@ -27,10 +27,11 @@ public class Dash : PlayerAbility
 
 	private float timer = 0f;
 	private float doDash = 0f;
+	private bool triggeredDash = false;
 
 	private Rigidbody2D rb2d;
 	private CharacterMovement charMov;
-	private AnimationSelector animSelector;
+	private Animator anim;
 
     private void Start()
 	{
@@ -75,17 +76,26 @@ public class Dash : PlayerAbility
         if (doDash < 0f)
         {
             rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
+			triggeredDash = false;
         }
-		else if (charMov.facingRight)
+        else
         {
-            rb2d.velocity = new Vector2(dashVelocity, rb2d.velocity.y);
-            animSelector.playAnimation("dash");
+			if (charMov.facingRight)
+	        {
+	            rb2d.velocity = new Vector2(dashVelocity, rb2d.velocity.y);
+			}
+			else
+			{
+	            rb2d.velocity = new Vector2(dashVelocity * (-1), rb2d.velocity.y);
+			}
+
+			if (!triggeredDash)
+	        {
+				anim.SetTrigger("dash");
+				triggeredDash = true;
+			}
 		}
-		else
-		{
-            rb2d.velocity = new Vector2(dashVelocity * (-1), rb2d.velocity.y);
-			animSelector.playAnimation("dash");
-		}
+		Debug.Log(anim.GetCurrentAnimatorStateInfo(0).length);
 	}
 
 
@@ -104,10 +114,10 @@ public class Dash : PlayerAbility
             Debug.LogError("Error: No Rigidbody2D found on the player from Dash script! Please attach it.");
         }
 
-		animSelector = GetComponent<AnimationSelector>();
-		if (animSelector == null)
+		anim = GetComponent<Animator>();
+		if (anim == null)
         {
-			Debug.LogError("Error: AnimationSelector found on the player from Dash script! Please attach it.");
+			Debug.LogError("Error: Animator found on the player from Dash script! Please attach it.");
         }
 
     }
