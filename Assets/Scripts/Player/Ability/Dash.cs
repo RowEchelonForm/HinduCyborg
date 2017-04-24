@@ -32,10 +32,13 @@ public class Dash : PlayerAbility
 	private Rigidbody2D rb2d;
 	private CharacterMovement charMov;
 	private Animator anim;
+    private GameObject Effect_Dash;
 
     private void Start()
 	{
 		findComponents();
+
+        Effect_Dash.SetActive(true);
 	}
 
 	private void Update()
@@ -118,6 +121,12 @@ public class Dash : PlayerAbility
 		if (anim == null)
         {
 			Debug.LogError("Error: Animator found on the player from Dash script! Please attach it.");
+        }
+
+        Effect_Dash = transform.Find("Sprites").gameObject.transform.Find("Effect_Dash").gameObject;
+        if (Effect_Dash == null)
+        {
+            Debug.LogError("Error: no GameObject found");
         }
 
     }

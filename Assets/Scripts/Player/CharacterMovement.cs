@@ -29,6 +29,8 @@ public class CharacterMovement : MonoBehaviour
     private Transform cachedTransform;
     private Animator anim;
 
+    private GameObject Effect_Dash;
+
     void Start()
     {
 		facingRight = true;
@@ -210,6 +212,12 @@ public class CharacterMovement : MonoBehaviour
 		if (anim == null)
         {
             Debug.LogError("Error: No Animator found on the player from CharacterMovement script! Please attach it.");
+        }
+
+        Effect_Dash = transform.Find("Sprites").gameObject.transform.Find("Effect_Dash").gameObject;
+        if (Effect_Dash == null)
+        {
+            Debug.LogError("Error: no GameObject found");
         }
     }
 
