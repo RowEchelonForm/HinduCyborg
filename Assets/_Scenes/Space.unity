@@ -1516,6 +1516,16 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: staticGravity.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: nonStaticGravity.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4473551827281202, guid: 20844768cd3ffbf4d968f7ab27dd2af7, type: 2}
       propertyPath: m_LocalPosition.x
       value: -3.8
@@ -1648,6 +1658,46 @@ Prefab:
     - target: {fileID: 136214815846177496, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
         type: 2}
       propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: divByDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: staticGravity.Array.data[0].other
+      value: 
+      objectReference: {fileID: 1019660264}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: staticGravity.Array.data[0].gravity
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: nonStaticGravity.Array.data[0].gravity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: nonStaticGravity.Array.data[0].other
+      value: 
+      objectReference: {fileID: 406107142}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: staticGravity.Array.data[0].maxDistance
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: nonStaticGravity.Array.data[0].maxDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: divByDistance2
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

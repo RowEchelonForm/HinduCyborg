@@ -6,9 +6,31 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody))]
 public class Ship : MonoBehaviour
 {
+    [System.Serializable]
+    public struct gravityTransform
+    {
+        public float gravity;
+        public Transform other;
+        public float maxDistance;
+    };
+
+    [System.Serializable]
+    struct gravityRigid
+    {
+        public float gravity;
+        public Rigidbody other;
+        public float maxDistance;
+    };
+
 
     [SerializeField]
-    private GameObject sun;
+    private gravityTransform[] staticGravity;
+    [SerializeField]
+    private gravityRigid[] nonStaticGravity;
+    [SerializeField]
+    private bool divByDistance;
+    [SerializeField]
+    private bool divByDistance2;
 
     [SerializeField]
     private double bufferTime = 0.01;
@@ -97,6 +119,56 @@ public class Ship : MonoBehaviour
         return (float)(avgSpeed / div);
     }
 
+    private void gravityTick()
+    {
+        foreach (gravityTransform i in staticGravity)
+        {
+            Vector3 angleVector = i.other.position - rb.position;
+            float distance = angleVector.magnitude;
+            if (distance < i.maxDistance)
+            {
+                angleVector.z = 0;
+                angleVector.Normalize();
+                angleVector = angleVector * i.gravity * Time.deltaTime;
+                if (divByDistance && divByDistance2)
+                {
+                    rb.AddForce(angleVector / (distance * distance));
+                }
+                else if (divByDistance || divByDistance2)
+                {
+                    rb.AddForce(angleVector / distance);
+                }
+                else
+                {
+                    rb.AddForce(angleVector);
+                }
+            }
+        }
+        foreach (gravityRigid i in nonStaticGravity)
+        {
+            Vector3 angleVector = i.other.position - rb.position;
+            float distance = angleVector.magnitude;
+            if (distance < i.maxDistance)
+            {
+                angleVector.z = 0;
+                angleVector.Normalize();
+                angleVector = angleVector * i.gravity * Time.deltaTime;
+                if (divByDistance && divByDistance2)
+                {
+                    rb.AddForce(angleVector / (distance * distance));
+                }
+                else if (divByDistance || divByDistance2)
+                {
+                    rb.AddForce(angleVector / distance);
+                }
+                else
+                {
+                    rb.AddForce(angleVector);
+                }
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -132,6 +204,7 @@ public class Ship : MonoBehaviour
             {
                 rb.AddTorque(0, 0, -h * Time.deltaTime);
             }
+            gravityTick();
         }
         else
         {
