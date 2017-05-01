@@ -2556,8 +2556,8 @@ MonoBehaviour:
   jumpForce: 8
   airSpeedFactor: 0.75
   landingSlownessFactor: 0.2
-  groundToAirForgiveTime: 0.1
-  jumpCooldown: 0.1
+  groundToAirForgiveTime: 0.07
+  jumpCooldown: 0.08
 --- !u!114 &114624730153644184
 MonoBehaviour:
   m_ObjectHideFlags: 1
