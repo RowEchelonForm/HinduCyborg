@@ -7,20 +7,18 @@ using UnityEngine;
  * Manages the PlayerAbility abilities that the player has.
  * Do not turn the abilites on or off manually, this class will handle it.
  * The ability scripts should be enabled at start, this script will disable them.
+ * Does not manage the visual parts object(s) of the ability.
 */
-[RequireComponent(typeof(SpritePartManager))]
 public class PlayerAbilityManager : MonoBehaviour
 {
 
 	// <abilityName, ability>
 	private Dictionary<string, PlayerAbility> abilities;
-    private SpritePartManager partManager;
 	
 	// Use this for initialization
 	void Start()
 	{
 		findPlayerAbilityComponents();
-        findSpritePartManager();
 	}
 
 	void OnTriggerEnter2D(Collider2D col)
@@ -52,10 +50,6 @@ public class PlayerAbilityManager : MonoBehaviour
 		Debug.Log("Enabling ability: " + abilityName);
 		ability.enabled = true; // enable component
 		ability.enableAbility(); // enable internally
-        if (partManager != null)
-        {
-            partManager.enableAbilitySprites(abilityName);
-        }
 	}
 
 
@@ -81,15 +75,5 @@ public class PlayerAbilityManager : MonoBehaviour
 		Debug.Log("The player has " + abilities.Count + " abilities in total. " + 
 				  (abilities.Count - disabledAbilities) + " of those abilities are enabled");
 	}
-
-    private void findSpritePartManager()
-    {
-        partManager = gameObject.GetComponent<SpritePartManager>();
-        if (partManager == null)
-        {
-            Debug.LogError("Error: PlayerAbilityManager can't find SpritePartManager script component on the player.");
-        }
-    }
-
 
 }

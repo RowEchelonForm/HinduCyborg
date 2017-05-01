@@ -4,8 +4,9 @@ using UnityEngine;
 
 /*
  * The base class for player's unlockable abilities.
- * Now a bit of a stub, maybe gets some functionality regarding the logic for sprites etc.
+ * Requires the PlayerPartManager component.
 */
+[RequireComponent(typeof(PlayerPartManager))]
 public abstract class PlayerAbility : MonoBehaviour
 {
 	
@@ -22,6 +23,8 @@ public abstract class PlayerAbility : MonoBehaviour
 
 	protected bool hasAbility_ = false;
 
+	protected PlayerPartManager partManager;
+
 
 	// This should be called once the player has the ability and the script component is enabled, too.
 	public void enableAbility()
@@ -32,6 +35,26 @@ public abstract class PlayerAbility : MonoBehaviour
 			return;
 		}
 		hasAbility_ = true;
+	}
+
+
+
+
+	protected virtual void Start()
+	{
+		partManager = GetComponent<PlayerPartManager>();
+	}
+
+	// Enables the visual part objects of this ability
+	protected void enableAbilityParts()
+	{
+		partManager.enableAbilityParts(ABILITY_NAME);
+	}
+
+	// Disables the visual part objects of this ability
+	protected void disableAbilityParts()
+	{
+		partManager.disableAbilityParts(ABILITY_NAME);
 	}
 
 }

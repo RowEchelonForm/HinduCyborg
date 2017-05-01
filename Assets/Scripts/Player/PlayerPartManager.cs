@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
- * Manages changing the visual sprite parts on the player.
+ * Manages (sets active and not-active) the visual parts of the different abilities on the player.
+ * Should only manage the parts of the player that are controlled in scripts (not animation).
  * Should be attached to the player GameObject.
  * 
  * The parts should be the childern of a child object called 'Sprites' on the player.
@@ -12,15 +13,16 @@ using UnityEngine;
  *   Sprites
  *     head
  *     torso
+ *     Effect_Dash
  *     ...
 */
-public class SpritePartManager : MonoBehaviour
+public class PlayerPartManager : MonoBehaviour
 {
     [System.Serializable]
     public struct CyborgPart // the name of the part GameObject on the player and the Sprite for the part
     {
-        public string partName; // e.g. head, torso
-        public Sprite sprite; // the sprite for the part
+        public string partName; // e.g. head, torso, Effect_Dash
+		public GameObject partObject; // the  for the part
 
     }
 
@@ -37,14 +39,14 @@ public class SpritePartManager : MonoBehaviour
     // <abilityName, parts>
     private Dictionary<string, List<CyborgPart>> abilityParts; // the parts for all the abilities
 
-    // <partName, partSpriteRenderer>
-    private Dictionary<string, SpriteRenderer> playerPartObjects; // the child GameObjects on the player
+    // <partName, partObject>
+    private Dictionary<string, GameObject> playerPartObjects; // the child GameObjects on the player
 
 
 	void Start()
     {
-        playerPartObjects = new Dictionary<string, SpriteRenderer>();
-        findPlayerSpriteParts();
+        playerPartObjects = new Dictionary<string, GameObject>();
+        findPlayerParts();
 
         abilityParts = new Dictionary<string, List<CyborgPart>>();
         fillAbilityParts();
@@ -52,53 +54,70 @@ public class SpritePartManager : MonoBehaviour
 	}
 
 
-    // Enables the visual sprites associated with the abilityName
-    public void enableAbilitySprites(string abilityName)
-    {
-        /*if ( !abilityParts.ContainsKey(abilityName) )
-        {
-            Debug.LogWarning("SpritePartManager does not know an ability with the name '" + abilityName + "'.");
-            return;
-        }
 
-        List<CyborgPart> parts = abilityParts[abilityName];
-        for (int i = 0; i < parts.Count; ++i)
-        {
-            playerPartObjects[parts[i].partName].sprite = parts[i].sprite;
-        }*/
+    // Enables the visual parts associated with the abilityName
+    public void enableAbilityParts(string abilityName)
+    {
+		if ( checkAbilityNameExistance(abilityName) )
+		{
+	        List<CyborgPart> parts = abilityParts[abilityName];
+	        for (int i = 0; i < parts.Count; ++i)
+	        {
+	            playerPartObjects[parts[i].partName].SetActive(true);
+	        }
+        }
     }
 
+	// Disables the visual parts associated with the abilityName
+	public void disableAbilityParts(string abilityName)
+	{
+		if ( checkAbilityNameExistance(abilityName) )
+        {
+			List<CyborgPart> parts = abilityParts[abilityName];
+	        for (int i = 0; i < parts.Count; ++i)
+	        {
+	            playerPartObjects[parts[i].partName].SetActive(false);
+	        }
+        }
+	}
+
+
+
+	// Checks that an ability with the name abilityName exists here
+	private bool checkAbilityNameExistance(string abilityName)
+	{
+		if ( !abilityParts.ContainsKey(abilityName) )
+        {
+			Debug.LogWarning(this.GetType().ToString() + " does not know an ability with the name '" + abilityName + "'.");
+            return false;
+        }
+        return true;
+	}
 
     // Call at Start first.
-    // Fills playerPartObjects Dictionary with the sprite parts that the player has.
-    private void findPlayerSpriteParts()
-    {/*
-        Transform sprites = transform.FindChild("Sprites");
-        if (sprites == null)
+    // Fills playerPartObjects Dictionary with the parts that the player has.
+    private void findPlayerParts()
+    {
+        Transform partParent = transform.FindChild("Sprites");
+        if (partParent == null)
         {
-            Debug.LogError("Error: SpritePartManager can't find a child object on the player called 'Sprites'.");
+			Debug.LogError("Error: " + this.GetType().ToString() + " can't find a child object on the player called 'Sprites'.");
             return;
         }
 
-        for (int i = 0; i < sprites.childCount; ++i)
+        for (int i = 0; i < partParent.childCount; ++i)
         {
-            SpriteRenderer bodyPart = sprites.GetChild(i).GetComponent<SpriteRenderer>();
-            if (!bodyPart)
+			GameObject partObject = partParent.GetChild(i).gameObject;
+			if (playerPartObjects.ContainsKey(partObject.name))
             {
-                Debug.LogWarning("Error: The player has a child GameObject under the 'Sprites' object that doesn't have a SpriteRenderer component. " +
-                    "A SpriteRenderer component was attached to it now.");
-                sprites.GetChild(i).gameObject.AddComponent<SpriteRenderer>();
-            }
-            else if (playerPartObjects.ContainsKey(bodyPart.gameObject.name))
-            {
-                Debug.LogError("Error: The player has more than one sprite parts with the name '" + bodyPart.name + "'.");
+                Debug.LogError("Error: The player has more than one parts with the name '" + partObject.name + "'.");
                 continue;
             }
-            playerPartObjects.Add(bodyPart.name, bodyPart);
-        }*/
+			playerPartObjects.Add(partObject.name, partObject);
+        }
     }
 
-    // Call at Start after calling findPlayerSpriteParts.
+    // Call at Start after calling findPlayerParts.
     // Fills abilityParts Dictionary with the ability parts in abilityPartsArray and checks their validity.
     private void fillAbilityParts()
     {
@@ -109,12 +128,12 @@ public class SpritePartManager : MonoBehaviour
             List<CyborgPart> partList = new List<CyborgPart>();
             if ( abilityName == "" ) // needs to have an actual name
             {
-                Debug.LogError("Error: abilityPartsArray in SpritePartManager contains an empty/incorrect entry on index " + i );
+                Debug.LogError("Error: abilityPartsArray in PlayerPartManager contains an empty/incorrect entry on index " + i );
             }
             else if ( abilityParts.ContainsKey( abilityName ) ) // ability with the same name already exists
             {
                 Debug.LogError("Error: Two abilities have the name '" + abilityName + "' in abilityPartsArray " + 
-                          "in the SpritePartManager class. See entry with index " + i);
+                          "in the PlayerPartManager class. See entry with index " + i);
             }
             else // ability is fine
             {
@@ -122,19 +141,19 @@ public class SpritePartManager : MonoBehaviour
                 for (int j = 0; j < abilityPartsArray[i].parts.Length; ++j) // go thorugh all the parts of an ability
                 {
                     cPart = abilityPartsArray[i].parts[j];
-                    if (cPart.partName == "" || !cPart.sprite) // invalid CyborgPart
+                    if (cPart.partName == "" || !cPart.partObject) // invalid CyborgPart
                     {
-                        Debug.LogError("Error: abilityPartsArray in SpritePartManager contains an ability '" + abilityName + "' " +
+                        Debug.LogError("Error: abilityPartsArray in PlayerPartManager contains an ability '" + abilityName + "' " +
                             "with parts that have an empty/incorrect entry on index " + j);
                     }
                     else if (!playerPartObjects.ContainsKey(cPart.partName)) // no part with the name is on the player
                     {
-                        Debug.LogError("Error: abilityPartsArray in SpritePartManager contains an ability '" + abilityName + "' " +
+                        Debug.LogError("Error: abilityPartsArray in PlayerPartManager contains an ability '" + abilityName + "' " +
                             "with the part '" + cPart.partName + "' but the player doesn't have that part.");
                     }
                     else if (containsName(cPart.partName, partList)) // this ability already has a part with the same name
                     {
-                        Debug.LogError("Error: The ability '" + abilityName + "' in abilityPartsArray on SpritePartManager " +
+                        Debug.LogError("Error: The ability '" + abilityName + "' in abilityPartsArray on PlayerPartManager " +
                             "has more than one parts with the same name '" + cPart.partName + "'.");
                     }
                     else // success

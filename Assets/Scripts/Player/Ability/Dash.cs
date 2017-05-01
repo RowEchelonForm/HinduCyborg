@@ -4,7 +4,7 @@ using UnityEngine;
 
 /*
  * The Dash ability that the player has.
- * Needs the Rigidbody2D and CharacterMovement components of the player.
+ * Needs the Rigidbody2D, Animator and CharacterMovement components of the player.
 */
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CharacterMovement))]
@@ -32,13 +32,12 @@ public class Dash : PlayerAbility
 	private Rigidbody2D rb2d;
 	private CharacterMovement charMov;
 	private Animator anim;
-    private GameObject Effect_Dash;
 
-    private void Start()
+    protected override void Start()
 	{
+		base.Start();
 		findComponents();
-
-        Effect_Dash.SetActive(true);
+		enableAbilityParts();
 	}
 
 	private void Update()
@@ -65,7 +64,7 @@ public class Dash : PlayerAbility
         }
         else
         {
-            Effect_Dash.SetActive(true);
+			enableAbilityParts();
         }
 	}
 
@@ -85,14 +84,13 @@ public class Dash : PlayerAbility
         {
             rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
 			triggeredDash = false;
-            Effect_Dash.SetActive(false);
+			disableAbilityParts();
         }
         else
         {
 			if (charMov.facingRight)
 	        {
 	            rb2d.velocity = new Vector2(dashVelocity, rb2d.velocity.y);
-                Effect_Dash.SetActive(false);
             }
 			else
 			{
@@ -105,7 +103,6 @@ public class Dash : PlayerAbility
 				triggeredDash = true;
 			}
 		}
-		Debug.Log(anim.GetCurrentAnimatorStateInfo(0).length);
 	}
 
 
@@ -128,12 +125,6 @@ public class Dash : PlayerAbility
 		if (anim == null)
         {
 			Debug.LogError("Error: Animator found on the player from Dash script! Please attach it.");
-        }
-
-        Effect_Dash = transform.Find("Sprites").gameObject.transform.Find("Effect_Dash").gameObject;
-        if (Effect_Dash == null)
-        {
-            Debug.LogError("Error: no GameObject found");
         }
 
     }

@@ -2,30 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Punch : MonoBehaviour {
+public class Punch : PlayerAbility
+{
 
-    [SerializeField]
-    private string abilityName = "Punch";
+	public override string ABILITY_NAME
+	{
+		get { return abilityName; }
+	}
+
+	[SerializeField]
+	private string abilityName = "Punch";
 
     private CharacterMovement charMov;
     private Animator anim;
-    
+
     // Use this for initialization
-    void Start () {
+    protected override void Start()
+    {
+    	base.Start();
         findComponents();
     }
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update()
+	{
+		// TODO
 	}
 
+	// TODO: do we need these?
     private void findComponents()
     {
         charMov = GetComponent<CharacterMovement>();
         if (charMov == null)
         {
-            Debug.LogError("Error: Dash ability can't find CharacterMovement component, disabling Dash.");
+            Debug.LogError("Error: Punch ability can't find CharacterMovement component, disabling Punch.");
             this.enabled = false;
         }
 

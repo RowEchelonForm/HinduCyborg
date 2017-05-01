@@ -19,29 +19,35 @@ public class CharacterMovement : MonoBehaviour
     private float airSpeedFactor = 0.7f;
     [SerializeField] [Range(0f, 1f)]
     private float landingSlownessFactor = 0.2f;
+    [SerializeField] [Range(0f, 1f)]
+    private float groundToAirForgiveTime = 0.1f; // How long (seconds) can the player be in the air and can still be considered to be grounded
+	[SerializeField] [Range(0f, 1f)]
+	private float jumpCooldown = 0.11f; // should be > groundToAirForgiveTime
 
     public bool facingRight { get; private set; }
 
 	private List<Transform> groundChecks;
     private bool grounded = false;
+    private float groundedTimer; // the actual timer for grounded forgiveness
+    private float jumpTimer; // the actual timer for jumping
 	private bool jump = false;
     private Rigidbody2D rb2d;
     private Transform cachedTransform;
     private Animator anim;
 
-    private GameObject Effect_Dash;
-
     void Start()
     {
 		facingRight = true;
+		groundedTimer = groundToAirForgiveTime;
+		jumpTimer = 0f;
 		initComponents();
     }
 
     // Update is called once per frame
     void Update() 
     {
-        grounded = checkGroundedStatus();
-		setJumpFlag();
+        grounded = checkGroundedStatus(Time.deltaTime);
+		setJumpFlag(Time.deltaTime);
     }
 
 
@@ -56,25 +62,37 @@ public class CharacterMovement : MonoBehaviour
         handleJumping();
     }
 
-    private bool checkGroundedStatus()
+    private bool checkGroundedStatus(float deltaTime)
     {
         // Only casting on the 'Ground' layer. Casts rays towards the all the GroundCheck tagged objects.
+        bool onGround = false;
         for (int i = 0; i < groundChecks.Count; ++i)
         {
             if (Physics2D.Linecast(transform.position, groundChecks[i].position, 1 << LayerMask.NameToLayer("Ground")))
             {
-                return true;
+                onGround = true;
+                groundedTimer = groundToAirForgiveTime;
             }
         }
-        return false;
+		if (!onGround && groundedTimer > 0)
+        {
+			groundedTimer -= deltaTime;
+			onGround = true;
+        }
+        return onGround;
     }
 
-	private void setJumpFlag()
+	private void setJumpFlag(float deltaTime)
     {
-        if (Input.GetButtonDown("Jump") && grounded)
+        if (Input.GetButtonDown("Jump") && grounded && jumpTimer <= 0)
         {
             jump = true;
+            jumpTimer = jumpCooldown;
         }
+		else if (jumpTimer > 0) // can't jump if just jumped
+		{
+			jumpTimer -= deltaTime;
+		}
     }
 
 	private void applyMovementVelocity(float horizontalInput)
