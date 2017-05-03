@@ -14,7 +14,9 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] [Range(0, 100f)]
     private float maxSpeed = 5f;
     [SerializeField] [Range(0, 100f)]
-    private float jumpForce = 8f;
+    private float jumpForce = 8f; // impulse
+    [SerializeField] [Range(0, 20f)]
+    private float jumpBoostForce = 20f; // continuous force, that's why it's higher than jumpForce
     [SerializeField] [Range(0, 1f)]
     private float airSpeedFactor = 0.7f;
     [SerializeField] [Range(0f, 1f)]
@@ -23,14 +25,18 @@ public class CharacterMovement : MonoBehaviour
     private float groundToAirForgiveTime = 0.1f; // How long (seconds) can the player be in the air and can still be considered to be grounded
 	[SerializeField] [Range(0f, 1f)]
 	private float jumpCooldown = 0.11f; // should be > groundToAirForgiveTime
+    [SerializeField] [Range(0f, 1f)]
+    private float jumpBoostTime = 0.3f; // how long can jump key be pressed after jump to boost jump
 
     public bool facingRight { get; private set; }
 
 	private List<Transform> groundChecks;
     private bool grounded = false;
     private float groundedTimer; // the actual timer for grounded forgiveness
-    private float jumpTimer; // the actual timer for jumping
+    private float jumpTimer; // the actual timer for allowing jumping
+    private float jumpBoostTimer; // the actual timer for the jump boost
 	private bool jump = false;
+    private bool jumpBoost = false;
     private Rigidbody2D rb2d;
     private Transform cachedTransform;
     private Animator anim;
@@ -40,6 +46,7 @@ public class CharacterMovement : MonoBehaviour
 		facingRight = true;
 		groundedTimer = groundToAirForgiveTime;
 		jumpTimer = 0f;
+        jumpBoostTimer = 0f;
 		initComponents();
     }
 
@@ -84,12 +91,23 @@ public class CharacterMovement : MonoBehaviour
 
 	private void setJumpFlag(float deltaTime)
     {
-        if (Input.GetButtonDown("Jump") && grounded && jumpTimer <= 0)
+        if (Input.GetButtonDown("Jump") && grounded && jumpTimer <= 0) // start jump
         {
             jump = true;
             jumpTimer = jumpCooldown;
+            jumpBoostTimer = jumpBoostTime;
         }
-		else if (jumpTimer > 0) // can't jump if just jumped
+        else if (Input.GetButton("Jump") && jumpBoostTimer > 0) // boost jump
+        {
+            jumpBoost = true;
+            jumpBoostTimer -= deltaTime;
+        }
+        else if (jumpBoostTimer > 0) // held up jump button
+        {
+            jumpBoostTimer = 0f;
+        }
+
+		if (jumpTimer > 0) // can't jump if just jumped
 		{
 			jumpTimer -= deltaTime;
 		}
@@ -160,6 +178,11 @@ public class CharacterMovement : MonoBehaviour
         {
             rb2d.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             jump = false;
+        }
+        else if (jumpBoost)
+        {
+            rb2d.AddForce(new Vector2(0f, jumpBoostForce), ForceMode2D.Force);
+            jumpBoost = false;
         }
     }
 

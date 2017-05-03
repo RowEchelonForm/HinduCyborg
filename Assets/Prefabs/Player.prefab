@@ -661,6 +661,7 @@ GameObject:
   - component: {fileID: 114010619971950808}
   - component: {fileID: 114459872504116532}
   - component: {fileID: 114535347782188234}
+  - component: {fileID: 114360507960851898}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2016,7 +2017,7 @@ MonoBehaviour:
   m_Length: 2.1469195
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4679902277878286}
-  m_AttachedIK: {fileID: 114730151846905222}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114154560071450634
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2085,7 +2086,7 @@ MonoBehaviour:
   m_Length: 1.3590306
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4326090764387218}
-  m_AttachedIK: {fileID: 114865434858973184}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114240482410183006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2177,7 +2178,7 @@ MonoBehaviour:
   m_Length: 2.9611607
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4367404485751190}
-  m_AttachedIK: {fileID: 114213060766534026}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114330293210791408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2213,7 +2214,19 @@ MonoBehaviour:
   m_Length: 3.901548
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4095024202305492}
-  m_AttachedIK: {fileID: 114730151846905222}
+  m_AttachedIK: {fileID: 0}
+--- !u!114 &114360507960851898
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590722844646362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d542e21f7a0a93d41a0c329888bc426d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityName: Punch
 --- !u!114 &114364989942335840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2318,7 +2331,7 @@ MonoBehaviour:
   m_Length: 2.917837
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4954999458953600}
-  m_AttachedIK: {fileID: 114213060766534026}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114459872504116532
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2382,7 +2395,7 @@ MonoBehaviour:
   m_Length: 1.1923547
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4475429613832716}
-  m_AttachedIK: {fileID: 114865434858973184}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114535347782188234
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2452,7 +2465,7 @@ MonoBehaviour:
   m_Length: 1.3753549
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4115302158154010}
-  m_AttachedIK: {fileID: 114865434858973184}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114568275425504704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2488,7 +2501,7 @@ MonoBehaviour:
   m_Length: 1.1776639
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4211798136713592}
-  m_AttachedIK: {fileID: 114865434858973184}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114592859102540992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2540,7 +2553,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0073b0815330fc1499d152f604deefb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityPartsArray: []
+  abilityPartsArray:
+  - abilityName: Dash
+    parts:
+    - partName: Effect_Dash
+      partObject: {fileID: 1858677610841164}
 --- !u!114 &114614756595531308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2554,10 +2571,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 6
   jumpForce: 8
+  jumpBoostForce: 15.4
   airSpeedFactor: 0.75
   landingSlownessFactor: 0.2
   groundToAirForgiveTime: 0.07
   jumpCooldown: 0.08
+  jumpBoostTime: 0.3
 --- !u!114 &114624730153644184
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2593,7 +2612,7 @@ MonoBehaviour:
   m_Length: 1
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 0}
-  m_AttachedIK: {fileID: 114865434858973184}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114680990532270406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2699,7 +2718,7 @@ MonoBehaviour:
   m_Length: 0.751704
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4642307918066476}
-  m_AttachedIK: {fileID: 114865434858973184}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114776196261611948
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2715,7 +2734,7 @@ MonoBehaviour:
   m_Length: 5.568847
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4337675203797228}
-  m_AttachedIK: {fileID: 114680990532270406}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114781022897753024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2751,7 +2770,7 @@ MonoBehaviour:
   m_Length: 3.7855213
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4794511707986890}
-  m_AttachedIK: {fileID: 114263896136864242}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114825404128003192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2787,7 +2806,7 @@ MonoBehaviour:
   m_Length: 3.8100085
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4592429441795068}
-  m_AttachedIK: {fileID: 114680990532270406}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114831432345706960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2956,7 +2975,7 @@ MonoBehaviour:
   m_Length: 5.4491563
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4071815220445532}
-  m_AttachedIK: {fileID: 114263896136864242}
+  m_AttachedIK: {fileID: 0}
 --- !u!114 &114927150071642712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3040,7 +3059,7 @@ MonoBehaviour:
   m_Length: 1.0000035
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4314534273799662}
-  m_AttachedIK: {fileID: 114865434858973184}
+  m_AttachedIK: {fileID: 0}
 --- !u!137 &137071162178707856
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
