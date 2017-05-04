@@ -74,6 +74,14 @@ public class PlayerAbilityManager : MonoBehaviour
 		findPlayerAbilityComponents();
 	}
 
+    private void Update() // TODO delete
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            enableAbility("Punch");
+        }
+    }
+
 	private void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.CompareTag("AbilityTrigger"))
