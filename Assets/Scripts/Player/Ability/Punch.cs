@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(Animator))]
 public class Punch : PlayerAbility
 {
 
@@ -13,7 +15,7 @@ public class Punch : PlayerAbility
 	[SerializeField]
 	private string abilityName = "Punch";
 
-    private CharacterMovement charMov;
+    private bool punchTriggered;
     private Animator anim;
 
     // Use this for initialization
@@ -26,20 +28,15 @@ public class Punch : PlayerAbility
 	// Update is called once per frame
 	void Update()
 	{
-		// TODO
+        if (Input.GetButtonDown("Punch")) // TODO delete
+        {
+            anim.SetTrigger("punch");
+        }
 	}
 
 	// TODO: do we need these?
     private void findComponents()
     {
-        charMov = GetComponent<CharacterMovement>();
-        if (charMov == null)
-        {
-            Debug.LogError("Error: Punch ability can't find CharacterMovement component, disabling Punch.");
-            this.enabled = false;
-        }
-
-
         anim = GetComponent<Animator>();
         if (anim == null)
         {
