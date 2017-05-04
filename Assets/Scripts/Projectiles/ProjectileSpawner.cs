@@ -150,7 +150,7 @@ public abstract class ProjectileSpawner : MonoBehaviour
 
 
     // For editor: draws the arrows that point to the shooting direction
-	private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
 	{
 		// Starting position:
 		Vector3 startingPosition = transform.position;
@@ -179,6 +179,8 @@ public abstract class ProjectileSpawner : MonoBehaviour
 		float leftAngle = directionAngle - arrowHeadAngleDiff*radianConversion;
 		float lengthFactor = projectileSpeed/20;
 		float arrowHeadLenghtFactor = 0.25f * lengthFactor;
+
+        Gizmos.color = Color.white;
 
 		// Base ray:
 		float xDir = Mathf.Cos(directionAngle) * lengthFactor;
