@@ -13,15 +13,68 @@ public class PlayerAbilityManager : MonoBehaviour
 {
 
 	// <abilityName, ability>
-	private Dictionary<string, PlayerAbility> abilities;
-	
+    private Dictionary<string, PlayerAbility> enabledAbilities = new Dictionary<string, PlayerAbility>();
+    private Dictionary<string, PlayerAbility> disabledAbilities = new Dictionary<string, PlayerAbility>();
+
+
+    public void enableAbility(string abilityName)
+    {
+        PlayerAbility ability;
+        if (enabledAbilities.ContainsKey(abilityName))
+        {
+            ability = enabledAbilities[abilityName];
+            enabledAbilities.Remove(abilityName);
+            Debug.LogWarning("The ability '" + abilityName + "' has already been enabled. Enabling again.");
+        }
+        else if (disabledAbilities.ContainsKey(abilityName))
+        {
+            ability = disabledAbilities[abilityName];
+            disabledAbilities.Remove(abilityName);
+        }
+        else
+        {
+            Debug.LogError("PlayerAbilityManager does not have an ability with the name '" + abilityName + "'.");
+            return;
+        }
+        Debug.Log("Enabling ability: " + abilityName);
+        ability.enabled = true; // enable component
+        ability.enableAbility(); // enable internally
+        enabledAbilities.Add(abilityName, ability);
+    }
+
+    public void disableAbility(string abilityName)
+    {
+        PlayerAbility ability;
+        if (disabledAbilities.ContainsKey(abilityName))
+        {
+            ability = disabledAbilities[abilityName];
+            disabledAbilities.Remove(abilityName);
+            Debug.LogWarning("The ability '" + abilityName + "' has already been disabled. Disabling again.");
+        }
+        else if (enabledAbilities.ContainsKey(abilityName))
+        {
+            ability = enabledAbilities[abilityName];
+            enabledAbilities.Remove(abilityName);
+        }
+        else
+        {
+            Debug.LogError("PlayerAbilityManager does not have an ability with the name '" + abilityName + "'.");
+            return;
+        }
+        Debug.Log("Disabling ability: " + abilityName);
+        ability.disableAbility(); // disable internally
+        ability.enabled = false; // disable component
+        disabledAbilities.Add(abilityName, ability);
+    }
+
+
 	// Use this for initialization
-	void Start()
+	private void Start()
 	{
 		findPlayerAbilityComponents();
 	}
 
-	void OnTriggerEnter2D(Collider2D col)
+	private void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.CompareTag("AbilityTrigger"))
 		{
@@ -36,44 +89,28 @@ public class PlayerAbilityManager : MonoBehaviour
 			}
 			col.gameObject.SetActive(false);
 		}
-	}
-
-
-	private void enableAbility(string abilityName)
-	{
-		PlayerAbility ability = abilities[abilityName];
-		if (ability == null)
-		{
-			Debug.LogError("PlayerAbilityManager does not have an ability with the name '" + abilityName + "'.");
-			return;
-		}
-		Debug.Log("Enabling ability: " + abilityName);
-		ability.enabled = true; // enable component
-		ability.enableAbility(); // enable internally
-	}
-
+    }
 
 	private void findPlayerAbilityComponents()
 	{
-		abilities = new Dictionary<string, PlayerAbility>();
 		List<PlayerAbility> tempAbilityList = new List<PlayerAbility>();
 		gameObject.GetComponents<PlayerAbility>(tempAbilityList);
-		int disabledAbilities = 0;
+		int abilityCount = 0;
 		for (int i = 0; i < tempAbilityList.Count; ++i)
 		{
-			if ( !abilities.ContainsKey(tempAbilityList[i].ABILITY_NAME) )
+            if ( !disabledAbilities.ContainsKey(tempAbilityList[i].ABILITY_NAME) )
 			{
-				abilities.Add(tempAbilityList[i].ABILITY_NAME, tempAbilityList[i]);
+				disabledAbilities.Add(tempAbilityList[i].ABILITY_NAME, tempAbilityList[i]);
 				tempAbilityList[i].enabled = false;
-				++disabledAbilities;
+                ++abilityCount;
 			}
 			else
 			{
 				Debug.LogError("Error: PlayerAbilityManager found two PlayerAbility components with the same name on the player");
 			}
 		}
-		Debug.Log("The player has " + abilities.Count + " abilities in total. " + 
-				  (abilities.Count - disabledAbilities) + " of those abilities are enabled");
+        Debug.Log("The player has " + disabledAbilities.Count + " abilities in total. " + 
+            (disabledAbilities.Count - abilityCount) + " of those abilities are enabled");
 	}
 
 }

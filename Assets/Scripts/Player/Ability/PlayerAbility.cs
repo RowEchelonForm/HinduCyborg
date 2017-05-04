@@ -26,7 +26,8 @@ public abstract class PlayerAbility : MonoBehaviour
 	protected PlayerPartManager partManager;
 
 
-	// This should be called once the player has the ability and the script component is enabled, too.
+	// This should be called once the player has the ability and the script component is enabled, too. Does not enbale ability parts.
+    // Should be called from PlayerAbilityManager.
 	public void enableAbility()
 	{
 		if (hasAbility_)
@@ -36,6 +37,19 @@ public abstract class PlayerAbility : MonoBehaviour
 		}
 		hasAbility_ = true;
 	}
+
+    // Disables the ability. Will also disable ability parts.
+    // Should be called from PlayerAbilityManager.
+    public void disableAbility()
+    {
+        if (!hasAbility_)
+        {
+            Debug.LogError("Error: Trying to disable an ability '" + this.GetType().ToString() + "' even though it's already disabled!");
+            return;
+        }
+        hasAbility_ = false;
+        disableAbilityParts();
+    }
 
 
 
