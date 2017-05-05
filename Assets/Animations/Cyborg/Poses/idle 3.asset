@@ -14,7 +14,7 @@ MonoBehaviour:
   m_PoseEntries:
   - path: bones/hip
     localPosition: {x: -0.0103966, y: 0.05627823, z: 0}
-    localRotation: {x: 0, y: 0, z: 0.6978233, w: 0.71627}
+    localRotation: {x: 0, y: 0, z: 0.6427876, w: 0.7660445}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/thigh back
     localPosition: {x: -1.16553, y: 0.7621343, z: 0}
@@ -25,7 +25,7 @@ MonoBehaviour:
     localRotation: {x: 0, y: 0, z: -0.41095752, w: 0.91165453}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/thigh back/lower leg back/foot back
-    localPosition: {x: 3.8100019, y: 0.0000034142286, z: 0}
+    localPosition: {x: 3.8100061, y: -0.00000011920929, z: 0}
     localRotation: {x: 0, y: 0, z: 0.7002679, w: 0.7138802}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/thigh front
@@ -41,11 +41,11 @@ MonoBehaviour:
     localRotation: {x: 0, y: 0, z: 0.55475724, w: 0.8320123}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso
-    localPosition: {x: 1.4200001, y: -0.00000011920929, z: 0}
+    localPosition: {x: 1.4200009, y: 0, z: 0}
     localRotation: {x: 0, y: 0, z: 0.08765999, w: 0.9961505}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head
-    localPosition: {x: 4.9105377, y: 0.00000030559022, z: 0}
+    localPosition: {x: 4.9105725, y: -0.000000007246854, z: 0}
     localRotation: {x: 0, y: -0, z: 0.034419756, w: -0.9994075}
     localScale: {x: 1, y: 1, z: 1}
   - path: bones/hip/torso/Head/hair
@@ -120,4 +120,8 @@ MonoBehaviour:
   - path: bones/hip/cloth 4
     localPosition: {x: 0.17714454, y: 0.91259295, z: 0}
     localRotation: {x: 0, y: 0, z: -0.68256617, w: 0.7308239}
+    localScale: {x: 1, y: 1, z: 1}
+  - path: Dash_Effect/dash bone
+    localPosition: {x: -78.61921, y: 0.98254395, z: 0}
+    localRotation: {x: 0, y: 0, z: 0.13614328, w: -0.9906892}
     localScale: {x: 1, y: 1, z: 1}

@@ -23,6 +23,7 @@ public class Punch : PlayerAbility
     {
     	base.Start();
         findComponents();
+        enableAbilityParts();
     }
 	
 	// Update is called once per frame
