@@ -83,6 +83,11 @@ public class Ship : MonoBehaviour
         inGui = false;
     }
 
+    public void Reload()
+    {
+        Awake();
+    }
+
     // Use this for initialization
     void Awake()
     {

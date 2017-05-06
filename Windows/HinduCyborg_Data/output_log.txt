@@ -1,0 +1,76 @@
+Initialize engine version: 5.5.2f1 (3829d7f588f3)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1070 (ID=0x1b81)
+    Vendor:   NVIDIA
+    VRAM:     3072 MB
+    Driver:   21.21.13.7653
+Begin MonoManager ReloadAssembly
+Platform assembly: D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+- Completed reload, in  0.026 seconds
+Platform assembly: D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: D:\HinduCyborg\Windows\HinduCyborg_Data\Managed\System.dll (this message is harmless)
+desktop: 2560x1440 59Hz; virtual: 2560x1440 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.737851 ms
+No music track with the name: track_name
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+schorhed by sun
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.322937 ms
+
+Unloading 2 unused Assets to reduce memory usage. Loaded Objects now: 925.
+Total: 0.143329 ms (FindLiveObjects: 0.050586 ms CreateObjectMapping: 0.014307 ms MarkObjects: 0.075369 ms  DeleteObjects: 0.002554 ms)
+
+landed on planet
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.342610 ms
+
+Unloading 11 unused Assets to reduce memory usage. Loaded Objects now: 304.
+Total: 0.186506 ms (FindLiveObjects: 0.032191 ms CreateObjectMapping: 0.008942 ms MarkObjects: 0.080989 ms  DeleteObjects: 0.064127 ms)
+
+The player has 1 abilities in total. 0 of those abilities are enabled
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Enabling ability: Dash
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Killed player
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 6.981999 ms
+
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 306.
+Total: 0.259832 ms (FindLiveObjects: 0.029125 ms CreateObjectMapping: 0.027592 ms MarkObjects: 0.196215 ms  DeleteObjects: 0.006387 ms)
+
+The player has 1 abilities in total. 0 of those abilities are enabled
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 2a08 -> priority: 1 
+  Thread -> id: 1008 -> priority: 1 
