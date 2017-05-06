@@ -56,6 +56,10 @@ public class SaveLoad : MonoBehaviour {
         GameObject[] obj = GameObject.FindObjectsOfType<GameObject>();
         foreach (GameObject o in obj)
         {
+            if (o.transform.root.name == "Player" && o.name != "Player")
+            {
+                continue;
+            }
             ObjectStats stats = new ObjectStats();
 
             stats.name = o.name;
