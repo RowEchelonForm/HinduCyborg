@@ -42,6 +42,7 @@ public class SaveLoad : MonoBehaviour {
     //save scene
     public static void Save(string scene)
     {
+        Time.timeScale = 0;
         bool space = (scene == "Space");
         game.scene = scene;
         if (space)
@@ -97,12 +98,14 @@ public class SaveLoad : MonoBehaviour {
                 game.sceneObjects.Add(stats);
             }
         }
+        Time.timeScale = 1;
     }
 
 
     //load scene and then set objects
     public static void Load()
     {
+        Time.timeScale = 0;
         LevelManager.loadLevel(game.scene);
         load = true;
     }
@@ -151,6 +154,7 @@ public class SaveLoad : MonoBehaviour {
                 }
             }
         }
+        Time.timeScale = 1;
     }
 
     public static void SaveToFile(string filename)
