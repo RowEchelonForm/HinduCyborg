@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.SceneManagement;
+using Anima2D;
 
 [System.Serializable]
 public class ObjectStats
 {
     public string name;
+
+    public bool active;
 
     //vector3
     public float posX;
@@ -39,6 +43,53 @@ public class SaveLoad : MonoBehaviour {
 
     public static bool load = false;
 
+    public static List<GameObject> FindAllObjects()
+    {
+        List<GameObject> result = new List<GameObject>();
+        List<Transform> transforms = new List<Transform>();
+        var s = SceneManager.GetActiveScene();
+        if (s.isLoaded)
+        {
+            var allGameObjects = s.GetRootGameObjects();
+            foreach (GameObject go in allGameObjects)
+            {
+                transforms.AddRange(go.GetComponentsInChildren<Transform>(true));
+            }
+            foreach (Transform tr in transforms)
+            {
+                if (tr.parent != null)
+                {
+                    if (!tr.name.Contains("Bone") && !tr.name.Contains("bone") &&
+                        !tr.parent.name.Contains("Bone") && !tr.parent.name.Contains("bone") &&
+                        !tr.name.Contains("Sprite") && !tr.name.Contains("sprite") &&
+                        !tr.parent.name.Contains("Sprite") && !tr.parent.name.Contains("sprite"))
+                    {
+                        bool amIGettingReallyAnnoyedWithThisShit =
+                            tr.parent || tr.GetComponentInChildren<Sprite>() || (Anima2D.Bone2D)null;
+                        bool yesReallyAnnoyed = tr.name.Contains("srpite");
+                        Debug.Log(tr.name);
+                        if (!tr.gameObject.GetComponent<Bone2D>() &&
+                            !tr.gameObject.GetComponent<IkLimb2D>() &&
+                            !tr.gameObject.GetComponent<IkCCD2D>() &&
+                            !tr.gameObject.GetComponent<Animator>() &&
+                            !tr.gameObject.GetComponent<SpriteMeshInstance>() &&
+                            !tr.gameObject.GetComponent<SkinnedMeshRenderer>())
+                        {
+                            result.Add(tr.gameObject);
+                            if (yesReallyAnnoyed) Debug.LogError("amIGettingReallyAnnoyedWithThisShit = " + amIGettingReallyAnnoyedWithThisShit);
+                        }
+                        else Debug.LogWarning("only 3h extra work");
+                    }
+                }
+                else
+                {
+                    result.Add(tr.gameObject);
+                }
+            }
+        }
+        return result;
+    }
+
     //save scene
     public static void Save(string scene)
     {
@@ -53,9 +104,11 @@ public class SaveLoad : MonoBehaviour {
         {
             game.sceneObjects.Clear();
         }
-        GameObject[] obj = GameObject.FindObjectsOfType<GameObject>();
+        List<GameObject> obj = FindAllObjects();
+        //GameObject[] obj = GameObject.FindObjectsOfType<GameObject>();
         foreach (GameObject o in obj)
         {
+            //and even with that excessive object filtering this is needed
             if (o.transform.root.name == "Player" && o.name != "Player")
             {
                 continue;
@@ -63,6 +116,8 @@ public class SaveLoad : MonoBehaviour {
             ObjectStats stats = new ObjectStats();
 
             stats.name = o.name;
+
+            stats.active = o.activeSelf;
 
             stats.posX = o.transform.position.x;
             stats.posY = o.transform.position.y;
@@ -117,6 +172,7 @@ public class SaveLoad : MonoBehaviour {
     //only set objects
     public static void Reload()
     {
+        Time.timeScale = 0;
         List<ObjectStats> objs;
         if (game.scene == "Space")
         {
@@ -131,6 +187,7 @@ public class SaveLoad : MonoBehaviour {
             GameObject real = GameObject.Find(obj.name);
             if (real)
             {
+                real.SetActive(obj.active);
                 real.transform.position = new Vector3(obj.posX, obj.posY, obj.posZ);
                 real.transform.rotation = new Quaternion(obj.rotX, obj.rotY, obj.rotZ, obj.rotW);
                 if (game.scene == "Space")
