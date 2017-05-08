@@ -15,9 +15,9 @@ public abstract class ProjectileSpawner : MonoBehaviour
     protected GameObject projectilePrefab;
     [SerializeField]
     protected Transform projectileSpawnPoint;
-    [SerializeField] [Range(0, 360)]
+    [SerializeField] [Range(0f, 360f)]
     protected float projectileAngle = 0f;  // degrees; 0 is shooting in +x direction, 90 in +y direction
-    [SerializeField] [Range(0, 100f)]
+    [SerializeField] [Range(0.1f, 100f)]
     protected float projectileSpeed = 30f;
 
     [SerializeField]
@@ -178,6 +178,10 @@ public abstract class ProjectileSpawner : MonoBehaviour
 		float rightAngle = directionAngle + arrowHeadAngleDiff*radianConversion;
 		float leftAngle = directionAngle - arrowHeadAngleDiff*radianConversion;
 		float lengthFactor = projectileSpeed/20;
+		if (lengthFactor < 0.33f)
+		{
+			lengthFactor = 0.33f;
+		}
 		float arrowHeadLenghtFactor = 0.25f * lengthFactor;
 
         Gizmos.color = Color.white;

@@ -18,11 +18,14 @@ public class Projectile : MonoBehaviour
     private int damage_ = 1;
     [SerializeField]
     private float despawnDistance = 1000f;
+	[SerializeField] [Range(0f, 60f)]
+    private float despawnTimer = 30f; // seconds
     [SerializeField] [Range(0, 300)]
     private float angularVelocity = 50f;  // basically just a visual effect
     [SerializeField]
     private Rigidbody2D rb2d;
 
+    private float internalDespawnTimer; // the actual timer
     private bool initStatus = false;  // true after init() is called
     private Transform cachedTransform;
     private Vector3 spawnPosition;
@@ -71,19 +74,24 @@ public class Projectile : MonoBehaviour
         cachedTransform = transform;
         spawnPosition = cachedTransform.position;
         initStatus = true;
+		internalDespawnTimer = despawnTimer;
         return true;
     }
 
     private void despawn()
     {
-        initStatus = false;
-        spawner.recycleProjectile(this);
+    	if (initStatus) // not despawned already
+    	{
+	        initStatus = false;
+	        spawner.recycleProjectile(this);
+        }
     }
 
     private void Update()
     {
         float distance = Mathf.Abs(Vector3.Distance(spawnPosition, cachedTransform.position));
-        if (distance >= despawnDistance)
+        internalDespawnTimer -= Time.deltaTime;
+		if (distance >= despawnDistance || internalDespawnTimer <= 0)
         {
             despawn();
         }

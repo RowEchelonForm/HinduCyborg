@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /*
@@ -17,6 +18,8 @@ public class PlayerAbilityManager : MonoBehaviour
     private Dictionary<string, PlayerAbility> disabledAbilities = new Dictionary<string, PlayerAbility>();
 
 
+    // Call this to enable a certain ability.
+    // Nothing else should be called from 'the outside'.
     public void enableAbility(string abilityName)
     {
         PlayerAbility ability;
@@ -42,6 +45,8 @@ public class PlayerAbilityManager : MonoBehaviour
         enabledAbilities.Add(abilityName, ability);
     }
 
+	// Call this to disable a certain ability.
+    // Nothing else should be called from 'the outside'.
     public void disableAbility(string abilityName)
     {
         PlayerAbility ability;
@@ -65,6 +70,19 @@ public class PlayerAbilityManager : MonoBehaviour
         ability.disableAbility(); // disable internally
         ability.enabled = false; // disable component
         disabledAbilities.Add(abilityName, ability);
+    }
+
+
+	// Returns a list of the ability names that the player has enabled.
+    public List<string> getEnabledAbilities()
+    {
+    	return enabledAbilities.Keys.ToList();
+    }
+
+	// Returns a list of the ability names that the player has disabled.
+	public List<string> getDisabledAbilities()
+    {
+    	return disabledAbilities.Keys.ToList();
     }
 
 

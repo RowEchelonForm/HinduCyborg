@@ -8,12 +8,14 @@ using UnityEngine;
 public class Turret : ProjectileSpawner
 {
 
-    [SerializeField] [Range(0f, 10f)]
+    [SerializeField] [Range(0.01f, 10f)]
     private float shootTimer = 1f;
-    [SerializeField] [Range(0f, 3600f)]
+    [SerializeField] [Range(-3600f, 3600f)]
     private float rotationPerSecond = 20f;
     [SerializeField] [Range(0f, 359f)]
     private float maxAngleDiff = 0f;
+    [SerializeField]
+    private bool loopRotationOverride = false; // the turret only rotates one way and loops that
 
 	// How much shooting is delayed initially (from 0 to 1 => 0 to 100 %).
 	// Used to "desync" turrets.
@@ -36,51 +38,83 @@ public class Turret : ProjectileSpawner
 	
 	protected void Update()
     {
+		updateRotation(Time.deltaTime);
+		internalShootTimer -= Time.deltaTime;
         if (internalShootTimer <= 0)
         {
-            base.spawnProjectile();
+			fireProjectiles(Time.deltaTime);
             internalShootTimer = shootTimer;
         }
-        internalShootTimer -= Time.deltaTime;
-        updateRotation(Time.deltaTime);
 	}
 
 
+
+	private void fireProjectiles(float deltaTime)
+	{
+		base.spawnProjectile();
+		int extraShootTimes = (int)(deltaTime / shootTimer) - 1;
+        while (extraShootTimes > 0)
+        {
+			base.spawnProjectile();
+        	--extraShootTimes;
+        }
+	}
+
     private void updateRotation(float deltaTime)
     {
-        if (rotationPerSecond <= 0f || maxAngleDiff == 0f)
+		if (loopRotationOverride) // only loop rotation
+        {
+			loopRotationUpdate(deltaTime);
+			return;
+        }
+        if (rotationPerSecond == 0f || maxAngleDiff == 0f) // no need to rotate
         {
             return;
         }
+
+        // Rotate
         if (rotationDirection)
         {
-            if (projectileAngle < originalAngle + maxAngleDiff)
-            {
-                projectileAngle += rotationPerSecond * deltaTime;
-            }
-            else // change direction
-            {
-                rotationDirection = false;
-            }
+			projectileAngle += rotationPerSecond * deltaTime;
         }
         else if (!rotationDirection)
         {
-            if (projectileAngle >= originalAngle)
-            {
-                projectileAngle -= rotationPerSecond * deltaTime;
-            }
-            else // change direction
-            {
-                rotationDirection = true;
-            }
+			projectileAngle -= rotationPerSecond * deltaTime;
         }
+
+        // Change rotation direction
+		if (projectileAngle >= originalAngle + maxAngleDiff) // change direction
+        {
+			projectileAngle = originalAngle + maxAngleDiff; // no more than max angle
+			rotationDirection = !rotationDirection;
+        }
+		else if (projectileAngle <= originalAngle) // change direction
+        {
+			projectileAngle = originalAngle; // no less than max angle
+			rotationDirection = !rotationDirection;
+        }
+    }
+
+    private void loopRotationUpdate(float deltaTime)
+    {
+		projectileAngle += rotationPerSecond * deltaTime;
+
+		// avoid overflow (not really needed but ehh)
+		if (projectileAngle >= 360f)
+		{
+			projectileAngle -= 360f;
+		}
+		else if (projectileAngle < 0f)
+		{
+			projectileAngle += 360f;
+		}
     }
 
 
 
 
 
-
+    // Draws the editor gizmo arrows etc.
     protected override void OnDrawGizmos()
     {
         // Starting position:
@@ -111,6 +145,10 @@ public class Turret : ProjectileSpawner
         float radianConversion = Mathf.PI/180;
         float directionAngle = (originalAngle + maxAngleDiff + transform.rotation.eulerAngles.z)*radianConversion;
         float lengthFactor = projectileSpeed/20;
+		if (lengthFactor < 0.33f)
+		{
+			lengthFactor = 0.33f;
+		}
 
         Gizmos.color = Color.red;
 

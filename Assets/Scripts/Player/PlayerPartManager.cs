@@ -37,18 +37,15 @@ public class PlayerPartManager : MonoBehaviour
     private AbilityParts[] abilityPartsArray; // for editor
 
     // <abilityName, parts>
-    private Dictionary<string, List<CyborgPart>> abilityParts; // the parts for all the abilities
+	private Dictionary<string, List<CyborgPart>> abilityParts = new Dictionary<string, List<CyborgPart>>(); // the parts for all the abilities
 
     // <partName, partObject>
-    private Dictionary<string, GameObject> playerPartObjects; // the child GameObjects on the player
+	private Dictionary<string, GameObject> playerPartObjects = new Dictionary<string, GameObject>(); // the child GameObjects on the player
 
 
 	void Start()
     {
-        playerPartObjects = new Dictionary<string, GameObject>();
         findPlayerParts();
-
-        abilityParts = new Dictionary<string, List<CyborgPart>>();
         fillAbilityParts();
         abilityPartsArray = null;
 	}
