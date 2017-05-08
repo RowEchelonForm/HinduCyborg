@@ -29,7 +29,7 @@ public class ObjectStats
 [System.Serializable]
 public class PlayerStats : ObjectStats
 {
-	public List<string> enabledAbilities;
+	public List<string> enabledAbilities = new List<string>();
 
 	public PlayerStats(ObjectStats objStats)
 	{
@@ -282,7 +282,6 @@ public class SaveLoad : MonoBehaviour {
     private static PlayerStats SavePlayerStats(ObjectStats stats, GameObject player)
     {
 		PlayerStats plStats = new PlayerStats(stats);
-		plStats.enabledAbilities = new List<string>();
     	PlayerAbilityManager abilityManager = player.GetComponent<PlayerAbilityManager>();
 		if (abilityManager != null)
     	{
