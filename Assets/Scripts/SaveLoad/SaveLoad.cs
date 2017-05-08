@@ -25,6 +25,26 @@ public class ObjectStats
     public float rotW;
 }
 
+
+[System.Serializable]
+public class PlayerStats : ObjectStats
+{
+	public List<string> enabledAbilities;
+
+	public PlayerStats(ObjectStats objStats)
+	{
+		name = objStats.name;
+		active = objStats.active;
+		posX = objStats.posX;
+		posY = objStats.posY;
+		posZ = objStats.posZ;
+		rotX = objStats.rotX;
+		rotY = objStats.rotY;
+		rotZ = objStats.rotZ;
+		rotW = objStats.rotW;
+	}
+}
+
 [System.Serializable]
 public class Game
 {
@@ -41,7 +61,6 @@ public class SaveLoad : MonoBehaviour {
 
     public static Game game = null;
 
-    public static bool load = false;
 
     public static List<GameObject> FindAllObjects()
     {
@@ -67,7 +86,7 @@ public class SaveLoad : MonoBehaviour {
                         bool amIGettingReallyAnnoyedWithThisShit =
                             tr.parent || tr.GetComponentInChildren<Sprite>() || (Anima2D.Bone2D)null;
                         bool yesReallyAnnoyed = tr.name.Contains("srpite");
-                        Debug.Log(tr.name);
+                        //Debug.Log(tr.name);
                         if (!tr.gameObject.GetComponent<Bone2D>() &&
                             !tr.gameObject.GetComponent<IkLimb2D>() &&
                             !tr.gameObject.GetComponent<IkCCD2D>() &&
@@ -76,9 +95,9 @@ public class SaveLoad : MonoBehaviour {
                             !tr.gameObject.GetComponent<SkinnedMeshRenderer>())
                         {
                             result.Add(tr.gameObject);
-                            if (yesReallyAnnoyed) Debug.LogError("amIGettingReallyAnnoyedWithThisShit = " + amIGettingReallyAnnoyedWithThisShit);
+                            //if (yesReallyAnnoyed); Debug.LogError("amIGettingReallyAnnoyedWithThisShit = " + amIGettingReallyAnnoyedWithThisShit);
                         }
-                        else Debug.LogWarning("only 3h extra work");
+                        //else; Debug.LogWarning("only 3h extra work");
                     }
                 }
                 else
@@ -114,7 +133,6 @@ public class SaveLoad : MonoBehaviour {
                 continue;
             }
             ObjectStats stats = new ObjectStats();
-
             stats.name = o.name;
 
             stats.active = o.activeSelf;
@@ -142,7 +160,6 @@ public class SaveLoad : MonoBehaviour {
                     stats.rotZ = rb.rotation.z;
                     stats.rotW = rb.rotation.w;
                 }
-                game.spaceObjects.Add(stats);
             }
             else
             {
@@ -154,7 +171,16 @@ public class SaveLoad : MonoBehaviour {
                     
                     stats.rotZ = rb.rotation;
                 }
-                game.sceneObjects.Add(stats);
+            }
+
+			if (o.tag == "Player")
+            {
+            	PlayerStats playerStats = SavePlayerStats(stats, o);
+				game.sceneObjects.Add(playerStats);
+            }
+            else
+            {
+            	game.sceneObjects.Add(stats);
             }
         }
         Time.timeScale = 1;
@@ -166,7 +192,6 @@ public class SaveLoad : MonoBehaviour {
     {
         Time.timeScale = 0;
         LevelManager.loadLevel(game.scene);
-        load = true;
     }
 
     //only set objects
@@ -182,9 +207,21 @@ public class SaveLoad : MonoBehaviour {
         {
             objs = game.sceneObjects;
         }
+
+		List<GameObject> allObjs = FindAllObjects();
         foreach (ObjectStats obj in objs)
         {
-            GameObject real = GameObject.Find(obj.name);
+            //GameObject real = GameObject.Find(obj.name);
+            GameObject real = null;
+            foreach(GameObject go in allObjs) // This will ensure the same order for the objects
+            {
+            	if (go.name == obj.name)
+            	{
+            		real = go;
+            		allObjs.Remove(go);
+            		break;
+            	}
+            }
             if (real)
             {
                 real.SetActive(obj.active);
@@ -212,6 +249,10 @@ public class SaveLoad : MonoBehaviour {
                         rb.position = new Vector3(obj.posX, obj.posY, obj.posZ);
                         rb.rotation = obj.rotZ;
                     }
+                    if (real.tag == "Player")
+                    {
+                    	LoadPlayerStats((PlayerStats)obj, real);
+                    }
                 }
             }
         }
@@ -234,6 +275,38 @@ public class SaveLoad : MonoBehaviour {
         file.Close();
     }
 
+
+
+    // Returns a PlayerStats object containing the extra stats that the player has. 
+    // The regular ObjectStats should be in 'stats' already.
+    private static PlayerStats SavePlayerStats(ObjectStats stats, GameObject player)
+    {
+		PlayerStats plStats = new PlayerStats(stats);
+		plStats.enabledAbilities = new List<string>();
+    	PlayerAbilityManager abilityManager = player.GetComponent<PlayerAbilityManager>();
+		if (abilityManager != null)
+    	{
+    		plStats.enabledAbilities = abilityManager.getEnabledAbilities();
+    	}
+    	return plStats;
+    }
+
+	// Returns a PlayerStats object containing the extra stats that the player has. 
+    // The regular ObjectStats should be in 'stats' already.
+    private static void LoadPlayerStats(PlayerStats stats, GameObject player)
+    {
+    	PlayerAbilityManager abilityManager = player.GetComponent<PlayerAbilityManager>();
+		if (abilityManager != null)
+    	{
+    		for (int i = 0; i < stats.enabledAbilities.Count; ++i)
+    		{
+				abilityManager.enableAbility( stats.enabledAbilities[i] );
+    		}
+    	}
+    }
+
+
+
     void Awake()
     {
         if (instance == null)
@@ -245,12 +318,22 @@ public class SaveLoad : MonoBehaviour {
         else if (instance != null)
         {
             Destroy(gameObject);
-            if (load)
-            {
-                Reload();
-                load = false;
-            }
         }
+    }
+
+    void sceneWasLoaded(Scene scene, LoadSceneMode mode)
+    {
+    	Reload();
+    }
+
+    void OnEnable()
+    {
+		SceneManager.sceneLoaded += sceneWasLoaded;
+    }
+
+    void OnDisable()
+    {
+		SceneManager.sceneLoaded -= sceneWasLoaded;
     }
     
 }

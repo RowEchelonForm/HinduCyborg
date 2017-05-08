@@ -7,7 +7,7 @@ public class SaveLoadHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        SaveLoad.Save(SceneManager.GetActiveScene().name);
+		SaveLoad.Save(LevelManager.currentLevelName);
 	}
 	
 	// Update is called once per frame
@@ -19,7 +19,7 @@ public class SaveLoadHandler : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            SaveLoad.Save(SceneManager.GetActiveScene().name);
+			SaveLoad.Save(LevelManager.currentLevelName);
             SaveLoad.SaveToFile("test");
         }
 

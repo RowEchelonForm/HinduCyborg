@@ -191,12 +191,14 @@ public class CharacterMovement : MonoBehaviour
 		if ( collider.CompareTag("Kill") )
         {
 			Debug.Log("Killed player");
-            LevelManager.reloadCurrentLevel(); // TODO should load a checkpoint
+			SaveLoad.LoadFromFile("checkpoint");
+            SaveLoad.Load();
         }
 		else if ( collider.CompareTag("Projectile") )
 		{
 			Debug.Log("Player hit projectile");
-			LevelManager.reloadCurrentLevel(); // TODO should load a checkpoint
+			SaveLoad.LoadFromFile("checkpoint"); // TODO shouldn't be done in this script!
+			SaveLoad.Load();
 		}
     }
 

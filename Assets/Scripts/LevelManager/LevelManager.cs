@@ -8,20 +8,41 @@ using UnityEngine.SceneManagement;
 
 public static class LevelManager
 {
-	
+
+	public static string currentLevelName
+	{ 
+		get 		{ return _currentLevelName;  }
+		private set	{ _currentLevelName = value; }
+	}
+	public static int currentLevelIndex
+	{ 
+		get 		{ return _currentLevelIndex;  }
+		private set { _currentLevelIndex = value; }
+	}
+
+	private static string _currentLevelName = SceneManager.GetActiveScene().name;
+	private static int _currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
+
+
 	// Loads level 'levelName'
 	public static void loadLevel(string levelName)
 	{
+		Scene newScene = SceneManager.GetSceneByName(levelName);
 		SceneManager.LoadScene(levelName);
+		currentLevelName = levelName;
+		currentLevelIndex = newScene.buildIndex;
 	}
 
 	// Loads the next level
 	public static void loadNextLevel()
 	{
 		// Load next scene if not in last scene already
-		if ( SceneManager.GetActiveScene().buildIndex + 1 < SceneManager.sceneCountInBuildSettings )
+		if ( currentLevelIndex + 1 < SceneManager.sceneCountInBuildSettings )
 		{
-			SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex + 1 );
+			Scene newScene = SceneManager.GetSceneAt(currentLevelIndex + 1);
+			SceneManager.LoadScene( currentLevelIndex + 1 );
+			currentLevelName = newScene.name;
+			currentLevelIndex = newScene.buildIndex;
 		}
 		else
 		{

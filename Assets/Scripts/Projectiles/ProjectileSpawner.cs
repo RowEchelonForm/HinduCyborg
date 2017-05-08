@@ -126,7 +126,15 @@ public abstract class ProjectileSpawner : MonoBehaviour
     {
         if (projectileSpawnPoint != null)
         {
-            return;
+			if ( !projectileSpawnPoint.IsChildOf(transform) ) // not set correctly (not child)
+        	{
+				Debug.LogError("Error: The projectileSpawnPoint variable of class '" + this.GetType().ToString() + 
+							   "' (object name: " + gameObject.name + ") is not a child of the Transform of '" 
+							   + gameObject.name + ". Changing the projectileSpawnPoint to be the  Transform of '" + gameObject.name +
+							   ". If this isn't what you want, please give " + gameObject.name + " a child object and tag it 'SpawnPoint'.");
+				projectileSpawnPoint = transform;
+				return;
+            }
         }
         for (int i = 0; i < cachedTransform.childCount; ++i)
         {
@@ -140,7 +148,8 @@ public abstract class ProjectileSpawner : MonoBehaviour
         if (projectileSpawnPoint == null)
         {
             string className = this.GetType().ToString();
-            Debug.LogError("Error: The projectileSpawnPoint variable of " + className + "  is null, the Transform of " 
+			Debug.LogError("Error: The projectileSpawnPoint variable of " + className + 
+						   "' (object name: " + gameObject.name + ")  is null, the Transform of " 
                            + className + " will be used as the spawn point for its projectiles.");
             projectileSpawnPoint = cachedTransform;
         }

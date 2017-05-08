@@ -87,7 +87,7 @@ public class PlayerAbilityManager : MonoBehaviour
 
 
 	// Use this for initialization
-	private void Start()
+	private void Awake()
 	{
 		findPlayerAbilityComponents();
 	}
