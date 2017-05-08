@@ -150,7 +150,7 @@ public class Turret : ProjectileSpawner
 			lengthFactor = 0.33f;
 		}
 
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.yellow;
 
         // Max:
         float xDir = Mathf.Cos(directionAngle) * lengthFactor;
