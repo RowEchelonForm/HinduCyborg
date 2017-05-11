@@ -27,9 +27,9 @@ public class Punch : PlayerAbility
     }
 	
 	// Update is called once per frame
-	void Update()
+	private void Update()
 	{
-        if (Input.GetButtonDown("Punch")) // TODO delete
+        if (hasAbility && Input.GetButtonDown("Punch")) // TODO delete
         {
             anim.SetTrigger("punch");
         }
@@ -41,7 +41,7 @@ public class Punch : PlayerAbility
         anim = GetComponent<Animator>();
         if (anim == null)
         {
-            Debug.LogError("Error: Animator found on the player from Dash script! Please attach it.");
+			Debug.LogError("Error: No Animator found on the player from " + this.GetType().ToString() + " script! Please attach it.");
         }
 
     }

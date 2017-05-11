@@ -37,7 +37,6 @@ public class Dash : PlayerAbility
 	{
 		base.Start();
 		findComponents();
-		enableAbilityParts();
 	}
 
 	private void Update()
@@ -111,20 +110,22 @@ public class Dash : PlayerAbility
 		charMov = GetComponent<CharacterMovement>();
 		if (charMov == null)
 		{
-			Debug.LogError("Error: Dash ability can't find CharacterMovement component, disabling Dash.");
+			Debug.LogError("Error: No CharacterMovement found on the player from" + this.GetType().ToString() + "script! Please attach it.");
 			this.enabled = false;
 		}
 
 		rb2d = GetComponent<Rigidbody2D>();
 		if (rb2d == null)
         {
-            Debug.LogError("Error: No Rigidbody2D found on the player from Dash script! Please attach it.");
+			Debug.LogError("Error: No Rigidbody2D found on the player from " + this.GetType().ToString() + " script! Please attach it.");
+            this.enabled = false;
         }
 
 		anim = GetComponent<Animator>();
 		if (anim == null)
         {
-			Debug.LogError("Error: Animator found on the player from Dash script! Please attach it.");
+			Debug.LogError("Error: No Animator found on the player from " + this.GetType().ToString() + " script! Please attach it.");
+			this.enabled = false;
         }
 
     }

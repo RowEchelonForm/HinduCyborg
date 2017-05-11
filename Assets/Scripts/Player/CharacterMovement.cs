@@ -186,22 +186,6 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-		if ( collider.CompareTag("Kill") )
-        {
-			Debug.Log("Killed player");
-			SaveLoad.LoadFromFile("checkpoint");
-            SaveLoad.Load();
-        }
-		else if ( collider.CompareTag("Projectile") )
-		{
-			Debug.Log("Player hit projectile");
-			SaveLoad.LoadFromFile("checkpoint"); // TODO shouldn't be done in this script!
-			SaveLoad.Load();
-		}
-    }
-
     // Select played animation
     private void handleAnimation(float input)
     {

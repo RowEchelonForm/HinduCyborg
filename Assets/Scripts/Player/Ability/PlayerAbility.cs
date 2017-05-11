@@ -28,7 +28,7 @@ public abstract class PlayerAbility : MonoBehaviour
 
 	// This should be called once the player has the ability and the script component is enabled, too. Does not enbale ability parts.
     // Should be called from PlayerAbilityManager.
-	public void enableAbility()
+	public virtual void enableAbility()
 	{
 		if (hasAbility_)
 		{
@@ -40,7 +40,7 @@ public abstract class PlayerAbility : MonoBehaviour
 
     // Disables the ability. Will also disable ability parts.
     // Should be called from PlayerAbilityManager.
-    public void disableAbility()
+    public virtual void disableAbility()
     {
         if (!hasAbility_)
         {
