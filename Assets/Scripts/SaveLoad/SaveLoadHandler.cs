@@ -7,7 +7,7 @@ public class SaveLoadHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SaveLoad.Save(LevelManager.currentLevelName);
+		//SaveLoad.Save(LevelManager.currentLevelName);
 	}
 	
 	// Update is called once per frame

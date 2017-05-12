@@ -73,6 +73,7 @@ public class Ship : MonoBehaviour
     void yesClick()
     {
         exitGui();
+        SaveLoad.Save("Space");
         LevelManager.loadLevel(level);
     }
 
