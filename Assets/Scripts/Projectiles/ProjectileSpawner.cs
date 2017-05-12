@@ -35,10 +35,11 @@ public abstract class ProjectileSpawner : MonoBehaviour
         findProjectileSpawnPoint();
 	}
 
-    // Spawns a projectile.
+    // Spawns a projectile. The z-angle is the same as projectileAngle + transform.rotation.
     protected Projectile spawnProjectile()
     {
         Projectile proj = getProjectileObject();
+        proj.transform.eulerAngles = new Vector3(0f, 0f, projectileAngle + cachedTransform.eulerAngles.z);
         return proj;
     }
 

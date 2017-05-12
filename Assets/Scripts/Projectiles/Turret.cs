@@ -135,6 +135,8 @@ public class Turret : ProjectileSpawner
         {
             startingPosition = projectileSpawnPoint.position;
         }
+        Gizmos.color = Color.white;
+        Gizmos.DrawSphere(startingPosition, 0.1f);
 
         if (!isOriginalAngleSet)
         {
