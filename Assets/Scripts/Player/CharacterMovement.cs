@@ -134,41 +134,17 @@ public class CharacterMovement : MonoBehaviour
     {
         grounded = checkGroundedStatus(Time.deltaTime);
 		setJumpFlag(Time.deltaTime);
-        handleMovementInput();
+        handleMovementInput(); // sets hInput
     }
 
     private void FixedUpdate()
     {
+        applyMovementVelocity(hInput, Time.fixedDeltaTime);
         handleAnimationParameters(hInput); // select played animation
-        applyMovementVelocity(hInput);
         handleFlipping(hInput);
         handleJumping();
     }
-	
-    // In order to not get stuck on walls when applying force.
-	private bool finalCollisionCheck()
-	{
-		// Get the velocity
-		Vector2 moveDirection = new Vector2(rb2d.velocity.x*Time.fixedDeltaTime, 0.3f);
-	 
-		// Get bounds of Collider
-		Vector2 bottomRight = new Vector2(playerCollider.bounds.max.x, playerCollider.bounds.min.y);
-		Vector2 topLeft = new Vector2(playerCollider.bounds.min.x, playerCollider.bounds.max.y);
-        
-		// Move collider in direction that we are moving
-		bottomRight += moveDirection;
-		topLeft += moveDirection;
-        
-		// Check if the body's current velocity will result in a collision
-		if (Physics2D.OverlapArea(topLeft, bottomRight, 1 << LayerMask.NameToLayer("Ground")))
-		{
-			// If so, stop the movement
-            Debug.Log("asd");
-            return true;
-		}
-        return false;
-	}
-
+    
 
     private bool checkGroundedStatus(float deltaTime)
     {
@@ -229,8 +205,9 @@ public class CharacterMovement : MonoBehaviour
     {
         hInput = Input.GetAxis("Horizontal");
     }
-
-	private void applyMovementVelocity(float horizontalInput)
+    
+    // Applies the movement force.
+	private void applyMovementVelocity(float horizontalInput, float deltaTime)
     {
     	if (horizontalInput == 0 || !actionHandler.isActionAllowed(PlayerActionHandler.Action.move))
     	{
@@ -264,17 +241,20 @@ public class CharacterMovement : MonoBehaviour
         }
 
 		// Calculate the maximum force that we can apply so that we never go over maxSpeed
-		float forceToApply = rb2d.mass * deltaVelocity / Time.fixedDeltaTime;
+		float forceToApply = rb2d.mass * deltaVelocity / deltaTime;
 
 		// Don't artificially slow down if already going faster than maxSpeed (high speed could be caused by a dash etc.)
         if ( (curVelocityX > maxSpeed && forceToApply < 0f) || (curVelocityX < maxSpeed*(-1) && forceToApply > 0f) )
         {
         	forceToApply = 0f;
         }
-        //if (!finalCollisionCheck())
+        
+        Vector2 finalForce = Vector2.right * Mathf.Abs(horizontalInput) * forceToApply;
+        if (checkWallCollision(finalForce, deltaTime))
         {
-		    rb2d.AddForce(Vector2.right * Mathf.Abs(horizontalInput) * forceToApply);
+            return;
         }
+        rb2d.AddForce(finalForce);
     }
 
     private void handleFlipping(float horizontalInput)
@@ -336,6 +316,34 @@ public class CharacterMovement : MonoBehaviour
 		{
 			anim.SetBool("run", true);
 		}
+    }
+    
+    // In order to not get stuck on walls when applying force.
+    // Checks, if with the force that is to be added, we will be hitting a wall (on the 'Ground' layer)
+    // and we're not grounded. Returns true if will hit a wall.
+    private bool checkWallCollision(Vector2 force, float deltaTime)
+    {
+        // Get the position change based on the force, mass and delta time
+        Vector2 posChange = new Vector2((force.x / rb2d.mass) * deltaTime*deltaTime, (force.y / rb2d.mass) * deltaTime*deltaTime);
+        
+        // Raise y pos by % of the player collider's height (not needed because of grounded check at the end of this function)
+        // float yCompensaation = Mathf.Abs(playerCollider.bounds.max.y - playerCollider.bounds.min.y) * 0.00f;
+        // posChange.y += yCompensaation;
+        
+        // Get the bounds of the collider.
+        Vector2 bottomRight = new Vector2(playerCollider.bounds.max.x, playerCollider.bounds.min.y);
+        Vector2 topLeft = new Vector2(playerCollider.bounds.min.x, playerCollider.bounds.max.y);
+        
+        // Move collider in direction that we are moving in.
+        bottomRight += posChange;
+        topLeft += posChange;
+        
+        // Check if the body's current velocity will result in a collision and not grounded.
+        if (Physics2D.OverlapArea(topLeft, bottomRight, 1 << LayerMask.NameToLayer("Ground")) && !grounded)
+        {
+            return true;
+        }
+        return false;
     }
     
     // factor has to be > 0 and <= 1
@@ -419,4 +427,5 @@ public class CharacterMovement : MonoBehaviour
             }
         }
     }
+    
 }
