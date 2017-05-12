@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 54758353652970972}
   - component: {fileID: 136557883421952008}
   - component: {fileID: 114722815843643218}
+  - component: {fileID: 114622132210179846}
   m_Layer: 0
   m_Name: Meteor
   m_TagString: Untagged
@@ -74,6 +75,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &33704063608333532
 MeshFilter:
@@ -97,6 +99,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 8
   m_CollisionDetection: 0
+--- !u!114 &114622132210179846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1549277446884984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f866a835e35c2594bb9f7dc79a43454f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114722815843643218
 MonoBehaviour:
   m_ObjectHideFlags: 1

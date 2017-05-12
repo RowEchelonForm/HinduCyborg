@@ -76,6 +76,13 @@ public class SaveLoad : MonoBehaviour {
             }
             foreach (Transform tr in transforms)
             {
+                if (tr.gameObject.GetComponent<ShouldSave>())
+                {
+                    result.Add(tr.gameObject);
+                    //Debug.Log(tr.name);
+                }
+                /*
+                 * older implementation
                 if (tr.parent != null)
                 {
                     if (!tr.name.Contains("Bone") && !tr.name.Contains("bone") &&
@@ -104,6 +111,7 @@ public class SaveLoad : MonoBehaviour {
                 {
                     result.Add(tr.gameObject);
                 }
+                */
             }
         }
         return result;
@@ -117,6 +125,7 @@ public class SaveLoad : MonoBehaviour {
         game.scene = scene;
         if (space)
         {
+            //Debug.Log("saving space");
             game.spaceObjects.Clear();
         }
         else
@@ -130,6 +139,7 @@ public class SaveLoad : MonoBehaviour {
             //and even with that excessive object filtering this is needed
             if (o.transform.root.name == "Player" && o.name != "Player")
             {
+                //Debug.Log(o.name + " ignored");
                 continue;
             }
             ObjectStats stats = new ObjectStats();
@@ -160,6 +170,7 @@ public class SaveLoad : MonoBehaviour {
                     stats.rotZ = rb.rotation.z;
                     stats.rotW = rb.rotation.w;
                 }
+                game.spaceObjects.Add(stats);
             }
             else
             {
@@ -171,16 +182,15 @@ public class SaveLoad : MonoBehaviour {
                     
                     stats.rotZ = rb.rotation;
                 }
-            }
-
-			if (o.tag == "Player")
-            {
-            	PlayerStats playerStats = SavePlayerStats(stats, o);
-				game.sceneObjects.Add(playerStats);
-            }
-            else
-            {
-            	game.sceneObjects.Add(stats);
+                if (o.tag == "Player")
+                {
+                    PlayerStats playerStats = SavePlayerStats(stats, o);
+                    game.sceneObjects.Add(playerStats);
+                }
+                else
+                {
+                    game.sceneObjects.Add(stats);
+                }
             }
         }
         Time.timeScale = 1;
@@ -201,6 +211,7 @@ public class SaveLoad : MonoBehaviour {
         List<ObjectStats> objs;
         if (game.scene == "Space")
         {
+            //Debug.Log("loading space");
             objs = game.spaceObjects;
         }
         else
@@ -215,12 +226,12 @@ public class SaveLoad : MonoBehaviour {
             GameObject real = null;
             foreach(GameObject go in allObjs) // This will ensure the same order for the objects
             {
-            	if (go.name == obj.name)
-            	{
-            		real = go;
-            		allObjs.Remove(go);
-            		break;
-            	}
+                if (go.name == obj.name)
+                {
+                    real = go;
+                    allObjs.Remove(go);
+                    break;
+                }
             }
             if (real)
             {
@@ -304,8 +315,6 @@ public class SaveLoad : MonoBehaviour {
     	}
     }
 
-
-
     void Awake()
     {
         if (instance == null)
@@ -319,7 +328,7 @@ public class SaveLoad : MonoBehaviour {
             Destroy(gameObject);
         }
     }
-
+    
     void sceneWasLoaded(Scene scene, LoadSceneMode mode)
     {
     	Reload();

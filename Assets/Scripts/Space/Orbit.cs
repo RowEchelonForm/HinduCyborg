@@ -25,7 +25,7 @@ public class Orbit : MonoBehaviour
     {
         rotation += randomRotation < 0 ? Random.Range(randomRotation, 0) : Random.Range(0, randomRotation);
         rotation /= (minDistance + maxDistance)/2;
-        randomSelfRotation += randomSelfRotation < 0 ? Random.Range(randomSelfRotation, 0) : Random.Range(0, randomSelfRotation);
+        selfRotation += randomSelfRotation < 0 ? Random.Range(randomSelfRotation, 0) : Random.Range(0, randomSelfRotation);
     }
     // Use this for initialization
     void Awake()
