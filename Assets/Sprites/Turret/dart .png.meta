@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 721209ee7845d494ba60066e3ce58894
-timeCreated: 1490860232
+guid: 347333f461a65724b8300514441542e1
+timeCreated: 1494592150
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: cyb_0
+    21300000: dart _0
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -40,7 +40,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 1233, y: 640, z: 1419, w: 620}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -71,15 +71,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: cyb_0
+      name: dart _0
       rect:
         serializedVersion: 2
-        x: 1222
-        y: 640
-        width: 354
-        height: 740
+        x: 367
+        y: 252
+        width: 221
+        height: 360
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
