@@ -4,9 +4,10 @@ using UnityEngine;
 
 /*
  * The base class for player's unlockable abilities.
- * Requires the PlayerPartManager component.
+ * Requires the PlayerPartManager and PlayerActionHandler components.
 */
 [RequireComponent(typeof(PlayerPartManager))]
+[RequireComponent(typeof(PlayerActionHandler))]
 public abstract class PlayerAbility : MonoBehaviour
 {
 	
@@ -16,14 +17,15 @@ public abstract class PlayerAbility : MonoBehaviour
 		protected set { hasAbility_ = value; }
 	}
 
-	public virtual string ABILITY_NAME
-	{
-		get { return ""; }
-	}
+	public abstract string ABILITY_NAME { get; }
+
+	// All abilities must have a correcponding PlayerActionHandler.Action
+	protected abstract PlayerActionHandler.Action action { get; }
 
 	protected bool hasAbility_ = false;
 
 	protected PlayerPartManager partManager;
+	protected PlayerActionHandler actionHandler;
 
 
 	// This should be called once the player has the ability and the script component is enabled, too. Does not enbale ability parts.
@@ -53,10 +55,11 @@ public abstract class PlayerAbility : MonoBehaviour
 
 
 
-
+    // !!! Call this ( base.Start() ) from the child class !!!
 	protected virtual void Start()
 	{
 		partManager = GetComponent<PlayerPartManager>();
+		actionHandler = GetComponent<PlayerActionHandler>();
 	}
 
 	// Enables the visual part objects of this ability

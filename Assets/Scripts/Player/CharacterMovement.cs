@@ -9,8 +9,11 @@ using System.Collections.Generic;
 */
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerActionHandler))]
+[RequireComponent(typeof(Collider2D))]
 public class CharacterMovement : MonoBehaviour
 {
+
     [SerializeField] [Range(0, 100f)]
     private float maxSpeed = 5f;
     [SerializeField] [Range(0, 100f)]
@@ -19,7 +22,7 @@ public class CharacterMovement : MonoBehaviour
     private float jumpBoostForce = 20f; // continuous force, that's why it's higher than jumpForce
     [SerializeField] [Range(0, 1f)]
     private float airSpeedFactor = 0.7f;
-    [SerializeField] [Range(0f, 1f)]
+    [SerializeField] [Range(0f, 0.999f)]
     private float landingSlownessFactor = 0.2f;
     [SerializeField] [Range(0f, 1f)]
     private float groundToAirForgiveTime = 0.1f; // How long (seconds) can the player be in the air and can still be considered to be grounded
@@ -31,43 +34,141 @@ public class CharacterMovement : MonoBehaviour
     public bool facingRight { get; private set; }
 
 	private List<Transform> groundChecks;
+    private float hInput;
     private bool grounded = false;
     private float groundedTimer; // the actual timer for grounded forgiveness
     private float jumpTimer; // the actual timer for allowing jumping
     private float jumpBoostTimer; // the actual timer for the jump boost
 	private bool jump = false;
     private bool jumpBoost = false;
+    private float originalMaxSpeed;
+    private float originalJumpForce;
+    private float originalJumpBoostForce;
     private Rigidbody2D rb2d;
     private Transform cachedTransform;
     private Animator anim;
-
-    void Start()
+    private PlayerActionHandler actionHandler;
+    private Collider2D playerCollider;
+    
+    // Slows down the general movement speed for 'time' seconds.
+    // factor should be ]0...1] and time should be [0...60].
+    public void slowDownMovement(float factor, float time)
+    {
+        if (factor <= 0f)
+        {
+            factor = 0.001f;
+        }
+        else if (factor > 1f)
+        {
+            factor = 1f;
+        }
+        if (time > 60f)
+        {
+            time = 60f;
+        }
+        maxSpeed = maxSpeed * (factor);
+        StartCoroutine(restoreMovementSpeed(factor, time));
+    }
+    
+    // Reduces jumping forces for 'time' seconds.
+    // factor should be ]0...1] and time should be [0...60].
+    public void slowDownJumping(float factor, float time)
+    {
+        if (factor <= 0f)
+        {
+            factor = 0.001f;
+        }
+        else if (factor > 1f)
+        {
+            factor = 1f;
+        }
+        if (time > 60f)
+        {
+            time = 60f;
+        }
+        jumpForce = jumpForce * (factor);
+        jumpBoostForce = jumpBoostForce * (factor);
+        StartCoroutine(restoreJumpingForce(factor, time));
+    }
+    
+    // Resets movement speed
+    public void resetMaxSpeed()
+    {
+        maxSpeed = originalMaxSpeed;
+    }
+    
+    // Resets the jumping forces
+    public void resetJumpForces()
+    {
+        jumpForce = originalJumpForce;
+        jumpBoostForce = originalJumpBoostForce;
+    }
+    
+    
+    // Animations call these:
+    public void slowOnLanding()
+    {
+        maxSpeed = maxSpeed * (1 - landingSlownessFactor);
+    }
+    
+    public void landingFinished()
+    {
+        maxSpeed = maxSpeed / (1 - landingSlownessFactor);
+    }
+    
+    
+    private void Start()
     {
 		facingRight = true;
 		groundedTimer = groundToAirForgiveTime;
 		jumpTimer = 0f;
         jumpBoostTimer = 0f;
+        originalMaxSpeed = maxSpeed;
+        originalJumpForce = jumpForce;
+        originalJumpBoostForce = jumpBoostForce;
 		initComponents();
     }
 
     // Update is called once per frame
-    void Update() 
+    private void Update() 
     {
         grounded = checkGroundedStatus(Time.deltaTime);
 		setJumpFlag(Time.deltaTime);
+        handleMovementInput();
     }
 
-
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-
-        handleAnimation(horizontalInput); //select played animation
-
-        applyMovementVelocity(horizontalInput);
-        handleFlipping(horizontalInput);
+        handleAnimationParameters(hInput); // select played animation
+        applyMovementVelocity(hInput);
+        handleFlipping(hInput);
         handleJumping();
     }
+	
+    // In order to not get stuck on walls when applying force.
+	private bool finalCollisionCheck()
+	{
+		// Get the velocity
+		Vector2 moveDirection = new Vector2(rb2d.velocity.x*Time.fixedDeltaTime, 0.3f);
+	 
+		// Get bounds of Collider
+		Vector2 bottomRight = new Vector2(playerCollider.bounds.max.x, playerCollider.bounds.min.y);
+		Vector2 topLeft = new Vector2(playerCollider.bounds.min.x, playerCollider.bounds.max.y);
+        
+		// Move collider in direction that we are moving
+		bottomRight += moveDirection;
+		topLeft += moveDirection;
+        
+		// Check if the body's current velocity will result in a collision
+		if (Physics2D.OverlapArea(topLeft, bottomRight, 1 << LayerMask.NameToLayer("Ground")))
+		{
+			// If so, stop the movement
+            Debug.Log("asd");
+            return true;
+		}
+        return false;
+	}
+
 
     private bool checkGroundedStatus(float deltaTime)
     {
@@ -81,17 +182,28 @@ public class CharacterMovement : MonoBehaviour
                 groundedTimer = groundToAirForgiveTime;
             }
         }
-		if (!onGround && groundedTimer > 0)
+		if (!onGround)
         {
-			groundedTimer -= deltaTime;
-			onGround = true;
+			if (groundedTimer > 0)
+			{
+				groundedTimer -= deltaTime;
+				if (groundedTimer > 0)
+				{
+					onGround = true;
+				}
+			}
         }
+		if (jumpBoostTimer > 0) // just jumped => don't need forgiveness
+		{
+			onGround = false;
+		}
         return onGround;
     }
 
 	private void setJumpFlag(float deltaTime)
     {
-        if (Input.GetButtonDown("Jump") && grounded && jumpTimer <= 0) // start jump
+		if (Input.GetButtonDown("Jump") && grounded && jumpTimer <= 0 && 
+			actionHandler.isActionAllowed(PlayerActionHandler.Action.jump)) // start jump
         {
             jump = true;
             jumpTimer = jumpCooldown;
@@ -102,7 +214,7 @@ public class CharacterMovement : MonoBehaviour
             jumpBoost = true;
             jumpBoostTimer -= deltaTime;
         }
-        else if (jumpBoostTimer > 0) // held up jump button
+        else if (jumpBoostTimer > 0) // lifted jump button up (not boosting anymore)
         {
             jumpBoostTimer = 0f;
         }
@@ -112,9 +224,19 @@ public class CharacterMovement : MonoBehaviour
 			jumpTimer -= deltaTime;
 		}
     }
+    
+    private void handleMovementInput()
+    {
+        hInput = Input.GetAxis("Horizontal");
+    }
 
 	private void applyMovementVelocity(float horizontalInput)
     {
+    	if (horizontalInput == 0 || !actionHandler.isActionAllowed(PlayerActionHandler.Action.move))
+    	{
+    		return; // no input or not allowed to move
+    	}
+
         float curVelocityX = rb2d.velocity.x;
 
         float deltaVelocity; // the difference in velocity to get to maxSpeed
@@ -149,11 +271,19 @@ public class CharacterMovement : MonoBehaviour
         {
         	forceToApply = 0f;
         }
-		rb2d.AddForce(Vector2.right * Mathf.Abs(horizontalInput) * forceToApply);
+        //if (!finalCollisionCheck())
+        {
+		    rb2d.AddForce(Vector2.right * Mathf.Abs(horizontalInput) * forceToApply);
+        }
     }
 
     private void handleFlipping(float horizontalInput)
     {
+    	if (!actionHandler.isActionAllowed(PlayerActionHandler.Action.flip))
+    	{
+    		return; // flipping not allowed
+    	}
+
         if (horizontalInput > 0 && !facingRight)
         {
             flip();
@@ -186,8 +316,8 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    // Select played animation
-    private void handleAnimation(float input)
+    // Set correct animation triggers
+    private void handleAnimationParameters(float input)
     {
 		if (grounded)
 		{
@@ -207,6 +337,42 @@ public class CharacterMovement : MonoBehaviour
 			anim.SetBool("run", true);
 		}
     }
+    
+    // factor has to be > 0 and <= 1
+    private IEnumerator restoreMovementSpeed(float factor, float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (maxSpeed != originalMaxSpeed) // make sure we haven't reset this already
+        {
+            maxSpeed = maxSpeed / (factor);
+            if (maxSpeed > originalMaxSpeed) // safety check
+            {
+                maxSpeed = originalMaxSpeed;
+            }
+        }
+    }
+    
+    // factor has to be > 0 and <= 1
+    private IEnumerator restoreJumpingForce(float factor, float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (jumpForce != originalJumpForce) // make sure we haven't reset this already
+        {
+            jumpForce = jumpForce / (factor);
+            if (jumpForce > originalJumpForce) // safety check
+            {
+                jumpForce = originalJumpForce;
+            }
+        }
+        if (jumpBoostForce != originalJumpBoostForce) // make sure we haven't reset this already
+        {
+            jumpBoostForce = jumpBoostForce / (factor);
+            if (jumpBoostForce > originalJumpBoostForce) // safety check
+            {
+                jumpBoostForce = originalJumpBoostForce;
+            }
+        }
+    }
 
 	private void initComponents()
     {
@@ -215,7 +381,25 @@ public class CharacterMovement : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         if (rb2d == null)
         {
-            Debug.LogError("Error: No Rigidbody2D found on the player from CharacterMovement script! Please attach it.");
+            Debug.LogError("Error: No Rigidbody2D found on the player in CharacterMovement script! Please attach it.");
+        }
+
+		anim = GetComponent<Animator>();
+		if (anim == null)
+        {
+            Debug.LogError("Error: No Animator found on the player in CharacterMovement script! Please attach it.");
+        }
+
+		actionHandler = GetComponent<PlayerActionHandler>();
+		if (actionHandler == null)
+        {
+			Debug.LogError("Error: No PlayerActionHandler found on the player in CharacterMovement script! Please attach it.");
+        }
+        
+        playerCollider = GetComponent<Collider2D>();
+        if (playerCollider == null)
+        {
+            Debug.LogError("Error: No Collider2D found on the player in CharacterMovement script! Please attach it.");
         }
 
 		groundChecks = new List<Transform>();
@@ -234,27 +418,5 @@ public class CharacterMovement : MonoBehaviour
                 Debug.LogError("Error: CharacterMovement class can't find any child Transforms tagged 'GroundCheck'.");
             }
         }
-
-		anim = GetComponent<Animator>();
-		if (anim == null)
-        {
-            Debug.LogError("Error: No Animator found on the player from CharacterMovement script! Please attach it.");
-        }
-
-
-    }
-
-
-
-    // Animations call these:
-
-    public void landingFinished()
-    {
-		maxSpeed = maxSpeed / (1-landingSlownessFactor);
-    }
-
-    public void slowOnLanding()
-    {
-		maxSpeed = maxSpeed * (1-landingSlownessFactor);
     }
 }

@@ -44,7 +44,7 @@ public class PlayerHealth : MonoBehaviour
     	{
     		return;
     	}
-    	if (shield != null && shield.hasAbility && shield.isShieldOn)
+    	if (shield != null && shield.hasAbility)
     	{
 			damage = shield.hitShield(damage);
 			if (damage <= 0)

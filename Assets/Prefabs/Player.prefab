@@ -259,6 +259,7 @@ GameObject:
   - component: {fileID: 114848642836855378}
   - component: {fileID: 114498963569361008}
   - component: {fileID: 114843874956190478}
+  - component: {fileID: 114313279088323468}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2313,7 +2314,10 @@ MonoBehaviour:
   abilityName: Shield
   shieldStrength: 1
   shieldTimer: 1.5
-  shieldCooldown: 3
+  shieldCooldown: 0
+  shieldForgivenessTime: 0.1
+  shieldMovementSpeedFactor: 0.5
+  shieldJumpFactor: 0.3
 --- !u!114 &114242627149792148
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2436,6 +2440,17 @@ MonoBehaviour:
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 0}
   m_AttachedIK: {fileID: 0}
+--- !u!114 &114313279088323468
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1183795697220702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d156984391e1e4648b833e909b37e0af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114315725901220116
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2790,7 +2805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityName: Dash
-  cooldownTime: 2
+  cooldownTime: 0
   dashVelocity: 25
   dashTime: 0.3
 --- !u!114 &114678162664406816

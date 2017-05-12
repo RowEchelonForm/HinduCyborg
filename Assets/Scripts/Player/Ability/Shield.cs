@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/*
+ * The shield ability.
+ * Requires the Animator component. Having CharacterMovement component is recommended.
+*/
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(CharacterMovement))]
 public class Shield : PlayerAbility
 {
 	
@@ -12,7 +16,10 @@ public class Shield : PlayerAbility
 		get { return abilityName; }
 	}
 
-	public bool isShieldOn { get; private set; }
+	protected override PlayerActionHandler.Action action
+	{
+		get { return PlayerActionHandler.Action.shield; }
+	}
 
 	[SerializeField]
 	private string abilityName = "Shield";
@@ -22,12 +29,21 @@ public class Shield : PlayerAbility
 	private float shieldTimer = 1f;
 	[SerializeField] [Range(0f, 60f)]
 	private float shieldCooldown = 5f;
+    [SerializeField] [Range(0f, 1f)]
+    private float shieldForgivenessTime = 0.1f; // how long after turning off the shield will protect (only if didn't break)
+    [SerializeField] [Range(0f, 0.999f)]
+    private float shieldMovementSpeedFactor = 0.5f; // for moving while shield is on
+    [SerializeField] [Range(0f, 0.999f)]
+    private float shieldJumpFactor = 0.75f; // for jumping while shield is on
 
 	private int originalShieldStrength;
 	private float originalShieldTimer;
 	private float originalShieldCooldown;
+    private float originalShieldForgivenessTime;
+    private bool isShieldOn = false;
 
 	private Animator anim;
+    private CharacterMovement charMov;
 
 
 	// Hits the shield with damage. Damage has to be > 1.
@@ -40,7 +56,7 @@ public class Shield : PlayerAbility
 		{
 			return 0;
 		}
-		if (!isShieldOn || !hasAbility) // shield not on / no ability
+		if (!hasAbility || (!isShieldOn && shieldForgivenessTime <= 0)) // shield not on / no ability
 		{
 			return damage;
 		}
@@ -48,7 +64,7 @@ public class Shield : PlayerAbility
 		if (shieldStrength <= 0)
 		{
 			Debug.LogError("Error: Shield doesn't have strength but is still on, turning it off.");
-			turnOffShield();
+			turnOffShield(true);
 			return damage;
 		}
 		int oldShieldStrength = shieldStrength;
@@ -56,7 +72,10 @@ public class Shield : PlayerAbility
 		if (shieldStrength <= 0)
 		{
 			shieldStrength = 0;
-			turnOffShield();
+            if (shieldForgivenessTime <= 0)
+            {
+			    turnOffShield(true);
+            }
 		}
 		else
 		{
@@ -101,22 +120,31 @@ public class Shield : PlayerAbility
 	}
 
 
+	// isShieldOn must be true
 	private void handleOnUpdate(float deltaTime)
 	{
 		shieldTimer -= deltaTime;
-		if (shieldTimer <= 0)
+		if (shieldTimer <= 0 || Input.GetButtonDown("Shield"))
 		{
 			turnOffShield();
+            charMov.resetMaxSpeed();
+            charMov.resetJumpForces();
 		}
 	}
 
+	// isShieldOn must be false
 	private void handleOffUpdate(float deltaTime)
 	{
 		if (shieldCooldown > 0)
 		{
 			shieldCooldown -= deltaTime;
 		}
-		if (shieldCooldown <= 0 && Input.GetButtonDown("Shield"))
+        if (shieldForgivenessTime > 0)
+        {
+            shieldForgivenessTime -= deltaTime;
+        }
+		if ((shieldCooldown <= 0 && Input.GetButtonDown("Shield")) && 
+			actionHandler.isActionAllowed(action))
 		{
 			turnOnShield();
 		}
@@ -131,26 +159,33 @@ public class Shield : PlayerAbility
 			enableAbilityParts();
 			return;
 		}
-		Debug.Log("Shield on");
 		isShieldOn = true;
 		anim.SetBool("shield", true);
 		shieldTimer = originalShieldTimer;
 		shieldStrength = originalShieldStrength;
+        shieldForgivenessTime = 0f;
+        charMov.slowDownJumping(shieldJumpFactor, shieldTimer);
+        charMov.slowDownMovement(shieldMovementSpeedFactor, shieldTimer);
 		enableAbilityParts();
 	}
 
-	private void turnOffShield()
+	private void turnOffShield(bool wasHit = false)
 	{
-		if (!isShieldOn)
+		if (!isShieldOn && shieldForgivenessTime <= 0)
 		{
 			Debug.LogWarning("Trying to turn off Shield although it is already off.");
 			disableAbilityParts();
 			return;
 		}
-		if (shieldTimer > 0) // off because of damage
+		if (wasHit) // because of damage
 		{
 			// Could play 'break' effects here
+            shieldForgivenessTime = 0f;
 		}
+        else if (shieldForgivenessTime <= 0)
+        {
+            shieldForgivenessTime = originalShieldForgivenessTime;
+        }
 		isShieldOn = false;
 		anim.SetBool("shield", false);
 		shieldCooldown = originalShieldCooldown;
@@ -163,6 +198,8 @@ public class Shield : PlayerAbility
 		isShieldOn = false;
 		originalShieldStrength = shieldStrength;
 		originalShieldTimer = shieldTimer;
+        originalShieldForgivenessTime = shieldForgivenessTime;
+        shieldForgivenessTime = 0f;
 		if (originalShieldCooldown == 0f)
 		{
 			originalShieldCooldown = shieldCooldown;
@@ -176,6 +213,12 @@ public class Shield : PlayerAbility
 		if (anim == null)
         {
 			Debug.LogError("Error: No Animator found on the player from " + this.GetType().ToString() + " script! Please attach it.");
+        }
+        
+        charMov = GetComponent<CharacterMovement>();
+        if (charMov == null)
+        {
+            Debug.LogError("Error: No CharacterMovement found on the player from " + this.GetType().ToString() + " script! Please attach it.");
         }
     }
 

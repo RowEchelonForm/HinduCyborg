@@ -16,6 +16,11 @@ public class Dash : PlayerAbility
 		get { return abilityName; }
 	}
 
+	protected override PlayerActionHandler.Action action
+	{
+		get { return PlayerActionHandler.Action.dash; }
+	}
+
 	[SerializeField]
 	private string abilityName = "Dash";
     [SerializeField] [Range(0, 60f)]
@@ -69,7 +74,8 @@ public class Dash : PlayerAbility
 
 	private void handleDashInput()
 	{
-		if (Input.GetButtonDown("Dash") && hasAbility_ && (timer <= 0f) )
+		if (Input.GetButtonDown("Dash") && hasAbility_ && (timer <= 0f) && 
+			actionHandler.isActionAllowed(action))
 		{
             doDash = dashTime;
 			timer = cooldownTime;

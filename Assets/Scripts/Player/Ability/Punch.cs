@@ -12,13 +12,18 @@ public class Punch : PlayerAbility
 		get { return abilityName; }
 	}
 
+	protected override PlayerActionHandler.Action action 
+	{
+		get { return PlayerActionHandler.Action.punch; }
+	}
+
 	[SerializeField]
 	private string abilityName = "Punch";
 
     private bool punchTriggered;
     private Animator anim;
 
-    // Use this for initialization
+
     protected override void Start()
     {
     	base.Start();
@@ -26,10 +31,10 @@ public class Punch : PlayerAbility
         enableAbilityParts();
     }
 	
-	// Update is called once per frame
 	private void Update()
 	{
-        if (hasAbility && Input.GetButtonDown("Punch")) // TODO delete
+        if (hasAbility && Input.GetButtonDown("Punch") && 
+        	actionHandler.isActionAllowed(action)) // TODO do the proper punch mechanic!!
         {
             anim.SetTrigger("punch");
         }
