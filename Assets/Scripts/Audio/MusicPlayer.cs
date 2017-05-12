@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 /*
  * Plays music. Has a few different ways to play.
  * Supports fade in/fade out and changing the volume.
- * Doesn't support layered music.
+ * Doesn't support layered music. Plays the AudioClip parameter given to each function.
 */
 
 [RequireComponent(typeof(AudioSource))]
@@ -14,22 +15,26 @@ public class MusicPlayer : MonoBehaviour
 	enum PlayingState { NotPlaying, Playing, FadeIn, FadeOut };
 
 	public static MusicPlayer instance = null; // singleton
-
-	[System.Serializable]
-	public struct NamedMusicTrack
-	{
-		public string name;
-		public AudioClip musicTrack;
-	}
-
-	[SerializeField]
-	private NamedMusicTrack[] musicTrackArray;
+    
+    [System.Serializable]
+    public class LevelMusic
+    {
+        public string levelName;
+        public AudioClip levelMusicClip;
+        [Range(0f, 1f)]
+        public float trackVolume = 1f;
+        public bool loop = true;
+    }
+    
+    [SerializeField]
+    private List<LevelMusic> levelMusicList = new List<LevelMusic>();
+    
+    private Dictionary<string, LevelMusic> levelMusicHTable = new Dictionary<string, LevelMusic>();
 
 	private AudioSource audioSource;
 	private float maxVolume;
-	private Dictionary<string, AudioClip> musicTrackDictionary;
 
-	private string lastPlayingTrackName;
+	private AudioClip lastPlayingTrack;
 	private float lastPlayingTrackTime;
 	private bool lastLoopStatus;
 
@@ -43,19 +48,13 @@ public class MusicPlayer : MonoBehaviour
 		{
 			instance = this;
 			GameObject.DontDestroyOnLoad(gameObject);
-			fillMusicHashtable();
 			initVariables();
-			musicTrackArray = null;
+            fillLevelMusicHTable();
 		}
 		else if (instance != null)
 		{
 			Destroy(gameObject);
 		}
-	}
-
-	void Start()
-	{
-		playMusicOnLoop("track_name", 0f); // TODO delete
 	}
 
 
@@ -79,56 +78,56 @@ public class MusicPlayer : MonoBehaviour
 
 	// Plays music on loop. If the same music is already playing,
 	// just continues playing it (doesn't reset).
-	public void playMusicOnLoop( string musicName, float fadeInTime = 1.0f, float fadeOutTime = 1.0f )
+	public void playMusicOnLoop( AudioClip musicClip, float fadeInTime = 1.0f, float fadeOutTime = 1.0f )
 	{
-		if ( musicTrackDictionary.ContainsKey(musicName) &&  audioSource.clip != null )
+		if ( musicClip != null &&  audioSource.clip != null )
 		{
-			if ( lastPlayingTrackName != musicName || !audioSource.isPlaying ) // different track or current one isn't playing
+			if ( lastPlayingTrack != musicClip || !audioSource.isPlaying ) // different track or current one isn't playing
 			{
 				stopPlayingMusic(fadeOutTime);
-				startFadeIn(fadeInTime, musicName, true, 0f);
+				startFadeIn(fadeInTime, musicClip, true, 0f);
 			}
 		}
-		else if ( musicTrackDictionary.ContainsKey(musicName) && audioSource.clip == null  )
+		else if ( musicClip != null && audioSource.clip == null  )
 		{
-			startFadeIn(fadeInTime, musicName, true, 0f);
+			startFadeIn(fadeInTime, musicClip, true, 0f);
 		}
 		else
 		{
-			Debug.Log("No music track with the name: " + musicName);
+			Debug.LogError("Music AudioClip is null");
 		}
 	}
 
 	// Plays music on loop. If the same music is already playing,
 	// starts playing it again from start.
-	public void playMusicOnLoopFromStart( string musicName, float fadeInTime = 1.0f, float fadeOutTime = 1.0f )
+	public void playMusicOnLoopFromStart( AudioClip musicClip, float fadeInTime = 1.0f, float fadeOutTime = 1.0f )
 	{
-		if ( musicTrackDictionary.ContainsKey(musicName) )
+		if ( musicClip != null )
 		{
 			stopPlayingMusic(fadeOutTime);
-			startFadeIn(fadeInTime, musicName, true, 0f);
+			startFadeIn(fadeInTime, musicClip, true, 0f);
 		}
 		else
 		{
-			Debug.Log("No music track with the name: " + musicName);
+			Debug.LogError("Music AudioClip is null");
 		}
 	}
 
 	// Plays music non-looped
-	public void playMusicNoLoop( string musicName, float fadeInTime = 1.0f, float fadeOutTime = 1.0f )
+	public void playMusicNoLoop( AudioClip musicClip, float fadeInTime = 1.0f, float fadeOutTime = 1.0f )
 	{
-		if (lastPlayingTrackName == musicName && audioSource.isPlaying)
+		if (lastPlayingTrack == musicClip && audioSource.isPlaying)
 		{
 			audioSource.loop = false;
 		}
-		else if ( musicTrackDictionary.ContainsKey(musicName) )
+		else if ( musicClip != null )
 		{
 			stopPlayingMusic(fadeOutTime);
-			startFadeIn(fadeInTime, musicName, false, 0f);
+			startFadeIn(fadeInTime, musicClip, false, 0f);
 		}
 		else
 		{
-			Debug.Log("No music track with the name: " + musicName);
+			Debug.LogError("Music AudioClip is null");
 		}
 	}
 
@@ -154,37 +153,37 @@ public class MusicPlayer : MonoBehaviour
     // Continues playing music (after stopping)
 	public void continuePlayingMusic(float fadeInTime = 1.0f)
 	{
-		if ( audioSource.isPlaying || state == PlayingState.Playing || !musicTrackDictionary.ContainsKey(lastPlayingTrackName) )
+		if ( audioSource.isPlaying || state == PlayingState.Playing || lastPlayingTrack == null )
 		{
 			return;
 		}
-		startFadeIn(fadeInTime, lastPlayingTrackName, lastLoopStatus, lastPlayingTrackTime);
+		startFadeIn(fadeInTime, lastPlayingTrack, lastLoopStatus, lastPlayingTrackTime);
 	}
 
 
-	// musicName must be valid!
-	private void startFadeIn(float fadeInTime, string musicName, bool loop, float startPlayTime)
+
+	private void startFadeIn(float fadeInTime, AudioClip musicClip, bool loop, float startPlayTime)
 	{
 		if (fadeInCoroutine != null)
 		{
 			StopCoroutine( fadeInCoroutine );
 		}
-		fadeInCoroutine = audioFadeIn(fadeInTime, musicName, loop, startPlayTime);
+		fadeInCoroutine = audioFadeIn(fadeInTime, musicClip, loop, startPlayTime);
 		StartCoroutine( fadeInCoroutine );
 	}
 
 
-	private IEnumerator audioFadeIn(float fadeTime, string musicName, bool loop, float startPlayTime)
+	private IEnumerator audioFadeIn(float fadeTime, AudioClip musicClip, bool loop, float startPlayTime)
 	{
 		while (state == PlayingState.FadeIn || state == PlayingState.FadeOut)
 		{
 			yield return null;
 		}
-		audioSource.clip = musicTrackDictionary[musicName];
+		audioSource.clip = musicClip;
 		audioSource.time = startPlayTime;
 		audioSource.loop = loop;
 		lastLoopStatus = loop;
-		lastPlayingTrackName = musicName;
+		lastPlayingTrack = musicClip;
 		if (fadeTime > 0)
 		{
 			state = PlayingState.FadeIn;
@@ -234,31 +233,6 @@ public class MusicPlayer : MonoBehaviour
 		state = PlayingState.NotPlaying;
 	}
 
-
-
-	// Call this on start; creates the hashtable and fills it with the values in soundEffectsArray
-	private void fillMusicHashtable()
-	{
-		musicTrackDictionary = new Dictionary<string, AudioClip>();
-		string musicName;
-		for (int i=0; i<musicTrackArray.Length; ++i)
-		{
-			musicName = musicTrackArray[i].name;
-			if ( !musicTrackArray[i].musicTrack || musicName == "" ) // needs to have an actual sound and name
-			{
-				Debug.Log("musicTrackArray in MusicPlayer contains an empty/incorrect entry on index " + i );
-			}
-			else if ( musicTrackDictionary.ContainsKey( musicName ) ) // sound with the same name already exists
-			{
-				Debug.Log("Two music tracks have the name '" + musicName + "' in musicTrackArray in MusicPlayer class. See entry with index " + i);
-			}
-			else // successfully add new sound
-			{
-				musicTrackDictionary.Add( musicName, musicTrackArray[i].musicTrack );
-			}
-		}
-	}
-
 	// Call this on start.
 	private void initVariables()
 	{
@@ -271,9 +245,74 @@ public class MusicPlayer : MonoBehaviour
             audioSource.spread = 0;
         }
 		maxVolume = audioSource.volume;
-		lastPlayingTrackName = "";
+		lastPlayingTrack = null;
 		lastPlayingTrackTime = 0f;
 		state = PlayingState.NotPlaying;
 	}
+    
+    private void fillLevelMusicHTable()
+    {
+        for (int i = 0; i < levelMusicList.Count; ++i)
+        {
+            if (levelMusicList[i].levelName == "")
+            {
+                Debug.LogError("Error: levelName is invalid at the index " + i + " in levelMusicList in MusicPlayer class.");
+                continue;
+            }
+            if (levelMusicList[i].levelMusicClip == null)
+            {
+                Debug.LogError("Error: levelMusicClip is invalid at the index " + i + " with the name " +
+                               levelMusicList[i].levelName + " in levelMusicList in MusicPlayer class.");
+                continue;
+            }
+            if (levelMusicList[i].trackVolume <= 0 || levelMusicList[i].trackVolume > 1)
+            {
+                Debug.LogWarning("trackVolume of a level music should be [0...1]. (Index " + i + " with the name " +
+                               levelMusicList[i].levelName + " in levelMusicList in MusicPlayer class.)");
+            }
+            levelMusicHTable.Add(levelMusicList[i].levelName, levelMusicList[i]);
+        }
+        levelMusicList.Clear();
+    }
+    
+    
+    //////////////////////////////////
+    // Scene loading related stuff: //
+    //////////////////////////////////
+    
+    private void playLevelMusic(string levelName)
+    {
+        if (!levelMusicHTable.ContainsKey(levelName))
+        {
+            Debug.LogWarning("No music for the level " + levelName);
+            return;
+        }
+        
+        LevelMusic lvlm = levelMusicHTable[levelName];
+        if (lvlm.loop)
+        {
+            playMusicOnLoop(lvlm.levelMusicClip);
+        }
+        else
+        {
+            playMusicNoLoop(lvlm.levelMusicClip);
+        }
+        changeVolume(lvlm.trackVolume);
+    }
+    
+    void sceneWasLoaded(Scene scene, LoadSceneMode mode)
+    {
+        playLevelMusic(scene.name);
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += sceneWasLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= sceneWasLoaded;
+    }
 
 }

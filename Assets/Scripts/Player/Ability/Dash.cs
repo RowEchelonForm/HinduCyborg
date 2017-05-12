@@ -29,6 +29,8 @@ public class Dash : PlayerAbility
     private float dashVelocity = 30f;
     [SerializeField] [Range(0, 1)]
     private float dashTime = 0.2f;
+    [SerializeField] [Range(0f, 300f)]
+    private float dashMomentum = 100f;
 
 	private float timer = 0f;
 	private float doDash = 0f;
@@ -90,6 +92,15 @@ public class Dash : PlayerAbility
             rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
 			triggeredDash = false;
 			disableAbilityParts();
+            if (charMov.facingRight)
+            {
+                rb2d.AddForce(new Vector2(dashMomentum, 0f));
+            }
+            else
+            {
+                rb2d.AddForce(new Vector2(-dashMomentum, 0f));
+            }
+            
         }
         else
         {

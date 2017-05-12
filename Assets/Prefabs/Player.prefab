@@ -1586,7 +1586,7 @@ Transform:
   m_GameObject: {fileID: 1183795697220702}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.68, y: -5.77, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.125, y: 0.125, z: 1}
   m_Children:
   - {fileID: 4992569501027798}
   - {fileID: 4207103408913694}
@@ -2125,7 +2125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.42
+  m_Length: 1.419999
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4350550575553050}
   m_AttachedIK: {fileID: 0}
@@ -2141,7 +2141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 2.9611626
+  m_Length: 2.9611619
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4087452304854370}
   m_AttachedIK: {fileID: 0}
@@ -2247,7 +2247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 5.449153
+  m_Length: 5.449156
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4390469594755058}
   m_AttachedIK: {fileID: 0}
@@ -2314,10 +2314,10 @@ MonoBehaviour:
   abilityName: Shield
   shieldStrength: 1
   shieldTimer: 1.5
-  shieldCooldown: 0
+  shieldCooldown: 3
   shieldForgivenessTime: 0.1
   shieldMovementSpeedFactor: 0.5
-  shieldJumpFactor: 0.3
+  shieldJumpFactor: 0.6
 --- !u!114 &114242627149792148
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2420,7 +2420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.1776656
+  m_Length: 1.1776649
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4356738460285974}
   m_AttachedIK: {fileID: 0}
@@ -2582,7 +2582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 3.7855222
+  m_Length: 3.7855198
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4921556871614664}
   m_AttachedIK: {fileID: 0}
@@ -2656,7 +2656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.192359
+  m_Length: 1.1923592
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4523943048238554}
   m_AttachedIK: {fileID: 0}
@@ -2720,7 +2720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.7517023
+  m_Length: 0.7517001
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4371733343719904}
   m_AttachedIK: {fileID: 0}
@@ -2736,7 +2736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 2.9178357
+  m_Length: 2.9178362
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4715404169985294}
   m_AttachedIK: {fileID: 0}
@@ -2752,7 +2752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 3.8100078
+  m_Length: 3.8100095
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4719202110193268}
   m_AttachedIK: {fileID: 0}
@@ -2768,7 +2768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 4.9105744
+  m_Length: 4.910573
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4908567839691504}
   m_AttachedIK: {fileID: 0}
@@ -2805,9 +2805,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityName: Dash
-  cooldownTime: 0
-  dashVelocity: 25
+  cooldownTime: 2
+  dashVelocity: 30
   dashTime: 0.3
+  dashMomentum: 100
 --- !u!114 &114678162664406816
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2935,7 +2936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 2.1469212
+  m_Length: 2.1469193
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4536622100872332}
   m_AttachedIK: {fileID: 0}
@@ -2971,7 +2972,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.4799945
+  m_Length: 1.4799957
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4554037735200466}
   m_AttachedIK: {fileID: 0}
@@ -3038,7 +3039,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 5.568843
+  m_Length: 5.5688443
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4046995343137334}
   m_AttachedIK: {fileID: 0}
@@ -3094,7 +3095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.0000019
+  m_Length: 1.0000012
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4795454518795350}
   m_AttachedIK: {fileID: 0}
@@ -3160,7 +3161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.3590266
+  m_Length: 1.3590269
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4875627147396106}
   m_AttachedIK: {fileID: 0}
@@ -3231,7 +3232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23cf09eba15f0a147b76385a7c2cf1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 6
+  maxSpeed: 7
   jumpForce: 8
   jumpBoostForce: 15.4
   airSpeedFactor: 0.75
@@ -3251,7 +3252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 3.9015498
+  m_Length: 3.901548
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4042884972481054}
   m_AttachedIK: {fileID: 0}
@@ -3407,7 +3408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.3753529
+  m_Length: 1.3753533
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4927127675437178}
   m_AttachedIK: {fileID: 0}

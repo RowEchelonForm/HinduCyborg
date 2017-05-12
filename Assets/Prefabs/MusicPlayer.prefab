@@ -132,4 +132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b669c98d2f9562d44a738bf6ef8c09a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicTrackArray: []
+  levelMusicList:
+  - levelName: Space
+    levelMusicClip: {fileID: 8300000, guid: 6ff571e94cd700e43bcb1aff4a5b030f, type: 3}
+    trackVolume: 1
+    loop: 1
