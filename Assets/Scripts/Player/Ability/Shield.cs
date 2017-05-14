@@ -101,7 +101,8 @@ public class Shield : PlayerAbility
 	{
 		base.Start();
 		findComponents();
-	}
+        enableAbilityParts();
+    }
 
 	private void Update()
 	{
