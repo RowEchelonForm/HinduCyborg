@@ -106,6 +106,7 @@ public class Shield : PlayerAbility
 
 	private void Update()
 	{
+        
 		if (!hasAbility)
 		{
 			return;
@@ -139,7 +140,12 @@ public class Shield : PlayerAbility
 		if (shieldCooldown > 0)
 		{
 			shieldCooldown -= deltaTime;
-		}
+        }
+        else
+        {
+            enableAbilityParts();
+        }
+
         if (shieldForgivenessTime > 0)
         {
             shieldForgivenessTime -= deltaTime;
