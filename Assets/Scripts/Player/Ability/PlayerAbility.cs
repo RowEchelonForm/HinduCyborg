@@ -28,7 +28,8 @@ public abstract class PlayerAbility : MonoBehaviour
 	protected PlayerActionHandler actionHandler;
 
 
-	// This should be called once the player has the ability and the script component is enabled, too. Does not enbale ability parts.
+	// This should be called once the player has the ability and the script component is enabled, too.
+    // Does not enable ability parts.
     // Should be called from PlayerAbilityManager.
 	public virtual void enableAbility()
 	{
@@ -62,13 +63,14 @@ public abstract class PlayerAbility : MonoBehaviour
 		actionHandler = GetComponent<PlayerActionHandler>();
 	}
 
-	// Enables the visual part objects of this ability
+	// Enables the visual part objects of this ability.
+    // If you want the parts to be turned on when the player gets the ability, call this at Start()
 	protected void enableAbilityParts()
 	{
 		partManager.enableAbilityParts(ABILITY_NAME);
 	}
 
-	// Disables the visual part objects of this ability
+	// Disables the visual part objects of this ability.
 	protected void disableAbilityParts()
 	{
 		partManager.disableAbilityParts(ABILITY_NAME);

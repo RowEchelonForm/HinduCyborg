@@ -104,6 +104,7 @@ public class Shield : PlayerAbility
 	{
 		base.Start();
 		findComponents();
+        enableAbilityParts();
     }
 
 	private void Update()
@@ -140,10 +141,10 @@ public class Shield : PlayerAbility
 		if (shieldCooldown > 0)
 		{
 			shieldCooldown -= deltaTime;
-        }
-        else
-        {
-            enableAbilityParts();
+            if (shieldCooldown <= 0)
+            {
+                enableAbilityParts();
+            }
         }
 
         if (shieldForgivenessTime > 0)
@@ -173,6 +174,7 @@ public class Shield : PlayerAbility
         shieldForgivenessTime = 0f;
         charMov.slowDownJumping(shieldJumpFactor, shieldTimer);
         charMov.slowDownMovement(shieldMovementSpeedFactor, shieldTimer);
+        shieldOnSoundSource = SoundFXPlayer.instance.playClipContinuosly(shieldOnSound);
 	}
 
 	private void turnOffShield(bool wasHit = false)
@@ -197,6 +199,8 @@ public class Shield : PlayerAbility
 		shieldCooldown = originalShieldCooldown;
         charMov.resetMaxSpeed();
         charMov.resetJumpForces();
+        SoundFXPlayer.instance.recycleAudioSource(shieldOnSoundSource, 0.05f);
+        shieldOnSoundSource = null;
 		disableAbilityParts();
 	}
 

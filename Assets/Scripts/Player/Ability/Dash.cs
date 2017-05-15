@@ -31,10 +31,12 @@ public class Dash : PlayerAbility
     private float dashTime = 0.2f;
     [SerializeField] [Range(0f, 300f)]
     private float dashMomentum = 100f;
+    [SerializeField]
+    private AudioClip dashSound;
 
 	private float timer = 0f;
 	private float doDash = 0f;
-	private bool triggeredDash = false;
+	private bool triggeredDash = false; // to know if animation should be triggered
 
 	private Rigidbody2D rb2d;
 	private CharacterMovement charMov;
@@ -44,6 +46,7 @@ public class Dash : PlayerAbility
 	{
 		base.Start();
 		findComponents();
+        enableAbilityParts();
 	}
 
 	private void Update()
@@ -54,7 +57,6 @@ public class Dash : PlayerAbility
 
 	private void FixedUpdate()
 	{
-        //Debug.Log(timer);
         if (doDash > 0)
 		{
             applyDashing();
@@ -67,10 +69,10 @@ public class Dash : PlayerAbility
 		if (timer > 0f)
 		{
 			timer -= Time.deltaTime;
-        }
-        else
-        {
-			enableAbilityParts();
+            if (timer <= 0f)
+            {
+                enableAbilityParts();
+            }
         }
 	}
 
@@ -113,10 +115,11 @@ public class Dash : PlayerAbility
 	            rb2d.velocity = new Vector2(dashVelocity * (-1), rb2d.velocity.y);
 			}
 
-			if (!triggeredDash)
+			if (!triggeredDash) // starting dash
 	        {
 				anim.SetTrigger("dash");
 				triggeredDash = true;
+                SoundFXPlayer.instance.playClipOnce(dashSound);
 			}
 		}
 	}

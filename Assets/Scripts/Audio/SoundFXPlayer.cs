@@ -77,14 +77,11 @@ public class SoundFXPlayer : MonoBehaviour
     // Call to manually recycle and disable a GameObject with an AudioSource component.
     // Call this when you want to completely stop playing a continuous AudioSource.
     // DO NOT TRY TO USE THE AUDIOSOURCE OR THE GAMEOBJECT IT IS ATTACHED TO AFTER CALLING THIS.
-    public void recycleAudioSource(AudioSource aSource)
+    public void recycleAudioSource(AudioSource aSource, float fadeOutTime = 0f)
     {
         if (aSource.CompareTag(audioObjectTag))
         {
-            aSource.Stop();
-            aSource.clip = null;
-            aSource.gameObject.SetActive(false);
-            disabledAudioSources.Push(aSource);
+            StartCoroutine(audioFadeOut(aSource, fadeOutTime));
         }
         else
         {
@@ -189,7 +186,32 @@ public class SoundFXPlayer : MonoBehaviour
             }
         }
     }
-
+    
+    private IEnumerator audioFadeOut(AudioSource audioSource, float fadeTime)
+    {
+        if (fadeTime > 0)
+        {
+            float timer = fadeTime;
+            float startVolume = audioSource.volume;
+            while ( audioSource.volume > 0 )
+            {
+                audioSource.volume = startVolume*timer/fadeTime;
+                timer -= Time.deltaTime;
+                if (timer < 0)
+                {
+                    timer = 0;
+                }
+                yield return null;
+            }
+            audioSource.volume = startVolume;
+        }
+        audioSource.Stop();
+        audioSource.clip = null;
+        audioSource.gameObject.SetActive(false);
+        disabledAudioSources.Push(audioSource);
+    }
+    
+    
     private void verifyTag(ref string tag)
     {
         try
