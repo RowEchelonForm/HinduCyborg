@@ -30,6 +30,8 @@ public class CharacterMovement : MonoBehaviour
 	private float jumpCooldown = 0.11f; // should be > groundToAirForgiveTime
     [SerializeField] [Range(0f, 1f)]
     private float jumpBoostTime = 0.3f; // how long can jump key be pressed after jump to boost jump
+    [SerializeField] [Range(0f, 1f)]
+    private float spikeThreshold = 0.3f; // how large spikes can the player walk over
 
     public bool facingRight { get; private set; }
 
@@ -49,6 +51,8 @@ public class CharacterMovement : MonoBehaviour
     private Animator anim;
     private PlayerActionHandler actionHandler;
     private Collider2D playerCollider;
+    private List<ContactPoint2D> leftContactPoints; // the left side contact points the player hits per frame
+    private List<ContactPoint2D> rightContactPoints; // the right side contact points the player hits per frame
     
     // Slows down the general movement speed for 'time' seconds.
     // factor should be ]0...1] and time should be [0...60].
@@ -126,6 +130,8 @@ public class CharacterMovement : MonoBehaviour
         originalMaxSpeed = maxSpeed;
         originalJumpForce = jumpForce;
         originalJumpBoostForce = jumpBoostForce;
+        leftContactPoints = new List<ContactPoint2D>();
+        rightContactPoints = new List<ContactPoint2D>();
 		initComponents();
     }
 
@@ -143,6 +149,18 @@ public class CharacterMovement : MonoBehaviour
         handleAnimationParameters(hInput); // select played animation
         handleFlipping(hInput);
         handleJumping();
+        leftContactPoints.Clear();
+        rightContactPoints.Clear();
+    }
+    
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        collectContactPoints(col);
+    }
+    
+    void OnCollisionStay2D(Collision2D col)
+    {
+        collectContactPoints(col);
     }
     
 
@@ -254,6 +272,16 @@ public class CharacterMovement : MonoBehaviour
         {
             return;
         }
+        
+        if (finalForce.x < 0 && leftContactPoints.Count > 0) // left side
+        {
+            overcomeSmallSpikes(ref leftContactPoints);
+        }
+        else if (finalForce.x > 0 && rightContactPoints.Count > 0) // right side
+        {
+            overcomeSmallSpikes(ref rightContactPoints);
+        }
+        
         rb2d.AddForce(finalForce);
     }
 
@@ -327,23 +355,67 @@ public class CharacterMovement : MonoBehaviour
         Vector2 posChange = new Vector2((force.x / rb2d.mass) * deltaTime*deltaTime, (force.y / rb2d.mass) * deltaTime*deltaTime);
         
         // Raise y pos by % of the player collider's height (not needed because of grounded check at the end of this function)
-        // float yCompensaation = Mathf.Abs(playerCollider.bounds.max.y - playerCollider.bounds.min.y) * 0.00f;
-        // posChange.y += yCompensaation;
+        // float yCompensation = Mathf.Abs(playerCollider.bounds.max.y - playerCollider.bounds.min.y) * 0.00f;
+        // posChange.y += yCompensation;
         
         // Get the bounds of the collider.
         Vector2 bottomRight = new Vector2(playerCollider.bounds.max.x, playerCollider.bounds.min.y);
         Vector2 topLeft = new Vector2(playerCollider.bounds.min.x, playerCollider.bounds.max.y);
         
-        // Move collider in direction that we are moving in.
+        // Move collider in direction that we are moving in
         bottomRight += posChange;
         topLeft += posChange;
         
-        // Check if the body's current velocity will result in a collision and not grounded.
+        // Check if the body's current velocity will result in a collision and not grounded
         if (Physics2D.OverlapArea(topLeft, bottomRight, 1 << LayerMask.NameToLayer("Ground")) && !grounded)
         {
             return true;
         }
         return false;
+    }
+    
+    // Checks the contact points to see if the player is stuck on a tiny spike/"wall".
+    // Be sure to check for both left and right contact points.
+    // Uses leftContactPoints and rightContactPoints.
+    // The player will be raised up a bit in this case.
+    private void overcomeSmallSpikes(ref List<ContactPoint2D> contactPoints)
+    {
+        // check min/max contact points
+        float minWallPoint = playerCollider.bounds.max.y;
+        float maxWallPoint = playerCollider.bounds.min.y;
+        for (int i = 0; i < contactPoints.Count; ++i)
+        {
+            if (contactPoints[i].point.y < minWallPoint)
+            {
+                minWallPoint = contactPoints[i].point.y;
+            }
+            if (contactPoints[i].point.y > maxWallPoint)
+            {
+                maxWallPoint = contactPoints[i].point.y;
+            }
+        }
+        if (minWallPoint <= playerCollider.bounds.min.y && maxWallPoint > minWallPoint &&
+            maxWallPoint <= minWallPoint + spikeThreshold)
+        {
+            rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + maxWallPoint - minWallPoint);
+        }
+    }
+    
+    // Collects the contact points in collision to leftContactPoints and rightContactPoints
+    private void collectContactPoints(Collision2D col)
+    {
+        ContactPoint2D[] colPoints = col.contacts;
+        for (int i = 0; i < colPoints.Length; ++i)
+        {
+            if (colPoints[i].normal.x > 0.1f) // player moving in negative direction and hitting a wall
+            {
+                leftContactPoints.Add(colPoints[i]);
+            }
+            else if (colPoints[i].normal.x < -0.1f) // player moving in positive direction and hitting a wall
+            {
+                rightContactPoints.Add(colPoints[i]);
+            }
+        }
     }
     
     // factor has to be > 0 and <= 1

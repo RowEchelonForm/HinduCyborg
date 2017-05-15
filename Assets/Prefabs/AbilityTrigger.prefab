@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityName_: Punch
+  getAbilitySound: {fileID: 8300000, guid: 593933d34a3ba8c499df7fd72ff46566, type: 3}
 --- !u!114 &114952400731031412
 MonoBehaviour:
   m_ObjectHideFlags: 1

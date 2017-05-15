@@ -15,6 +15,15 @@ public class AbilityTrigger : MonoBehaviour
 
 	[SerializeField]
     private string abilityName_ = "";
+    [SerializeField]
+    private AudioClip getAbilitySound;
+    
+    
+    // Plays the getAbilitySound
+    public void playGetSound()
+    {
+        SoundFXPlayer.instance.playClipOnce(getAbilitySound);
+    }
     
     
     private void Start()

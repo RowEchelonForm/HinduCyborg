@@ -104,6 +104,7 @@ public class PlayerAbilityManager : MonoBehaviour
 			else
 			{
 				enableAbility(aTrigger.abilityName);
+                aTrigger.playGetSound();
 			}
 			col.gameObject.SetActive(false);
 		}
