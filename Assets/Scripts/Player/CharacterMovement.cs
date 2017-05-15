@@ -146,6 +146,11 @@ public class CharacterMovement : MonoBehaviour
     private void FixedUpdate()
     {
         applyMovementVelocity(hInput, Time.fixedDeltaTime);
+        if (Mathf.Abs(rb2d.velocity.x) <= maxSpeed)
+        {
+            // only stabilize if not moving faster than maxSpeed (so that won't interfere with abilities)
+            stabilizeDownhillMovement(rb2d.velocity, Time.fixedDeltaTime);
+        }
         handleAnimationParameters(hInput); // select played animation
         handleFlipping(hInput);
         handleJumping();
@@ -398,6 +403,47 @@ public class CharacterMovement : MonoBehaviour
             maxWallPoint <= minWallPoint + spikeThreshold)
         {
             rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + maxWallPoint - minWallPoint);
+        }
+    }
+    
+    // Stabilizes movement downhill.
+    // Works for right and left downhills.
+    // Should be called AFTER applying movement velocity.
+    // curVelocity is the velocity right now.
+    private void stabilizeDownhillMovement(Vector2 curVelocity, float deltaTime)
+    {
+        if (curVelocity.x > 0 && leftContactPoints.Count > 0) // moving right
+        {
+            Vector2 maxNormal = new Vector2(0, 0); // the gentler the slope, the higher normal.x
+            for (int i = 0; i < leftContactPoints.Count; ++i)
+            {
+                if (leftContactPoints[i].normal.x > maxNormal.x && maxNormal.x < 0.7f) // 0.7f corresponds to ~45 DEG
+                {
+                    maxNormal = leftContactPoints[i].normal;
+                }
+            }
+            if (maxNormal.x > 0.05f && maxNormal.x < 0.95f)
+            {
+                rb2d.position = new Vector2(rb2d.position.x - rb2d.velocity.x * maxNormal.x * deltaTime,
+                                            rb2d.position.y - rb2d.velocity.x * maxNormal.y * deltaTime);
+            }
+        }
+        
+        if (curVelocity.x < 0 && rightContactPoints.Count > 0) // moving left
+        {
+            Vector2 minNormal = new Vector2(0, 0); // the gentler the slope, the smaller normal.x (negative)
+            for (int i = 0; i < rightContactPoints.Count; ++i)
+            {
+                if (rightContactPoints[i].normal.x < minNormal.x && minNormal.x > -0.7f) // 0.7f corresponds to ~45 DEG
+                {
+                    minNormal = rightContactPoints[i].normal;
+                }
+            }
+            if (minNormal.x < -0.05f && minNormal.x > -0.95f)
+            {
+                rb2d.position = new Vector2(rb2d.position.x + rb2d.velocity.x * minNormal.x * deltaTime,
+                                            rb2d.position.y + rb2d.velocity.x * minNormal.y * deltaTime);
+            }
         }
     }
     

@@ -118,6 +118,7 @@ public class Dash : PlayerAbility
 			if (!triggeredDash) // starting dash
 	        {
 				anim.SetTrigger("dash");
+                rb2d.AddForce(new Vector2(0, dashMomentum));
 				triggeredDash = true;
                 SoundFXPlayer.instance.playClipOnce(dashSound);
 			}
