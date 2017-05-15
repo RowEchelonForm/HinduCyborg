@@ -35,12 +35,15 @@ public class Shield : PlayerAbility
     private float shieldMovementSpeedFactor = 0.5f; // for moving while shield is on
     [SerializeField] [Range(0f, 0.999f)]
     private float shieldJumpFactor = 0.75f; // for jumping while shield is on
+    [SerializeField]
+    private AudioClip shieldOnSound;
 
 	private int originalShieldStrength;
 	private float originalShieldTimer;
 	private float originalShieldCooldown;
     private float originalShieldForgivenessTime;
     private bool isShieldOn = false;
+    private AudioSource shieldOnSoundSource;
 
 	private Animator anim;
     private CharacterMovement charMov;
@@ -101,7 +104,6 @@ public class Shield : PlayerAbility
 	{
 		base.Start();
 		findComponents();
-        enableAbilityParts();
     }
 
 	private void Update()
@@ -129,8 +131,6 @@ public class Shield : PlayerAbility
 		if (shieldTimer <= 0 || Input.GetButtonDown("Shield"))
 		{
 			turnOffShield();
-            charMov.resetMaxSpeed();
-            charMov.resetJumpForces();
 		}
 	}
 
@@ -173,7 +173,6 @@ public class Shield : PlayerAbility
         shieldForgivenessTime = 0f;
         charMov.slowDownJumping(shieldJumpFactor, shieldTimer);
         charMov.slowDownMovement(shieldMovementSpeedFactor, shieldTimer);
-		enableAbilityParts();
 	}
 
 	private void turnOffShield(bool wasHit = false)
@@ -196,6 +195,8 @@ public class Shield : PlayerAbility
 		isShieldOn = false;
 		anim.SetBool("shield", false);
 		shieldCooldown = originalShieldCooldown;
+        charMov.resetMaxSpeed();
+        charMov.resetJumpForces();
 		disableAbilityParts();
 	}
 
