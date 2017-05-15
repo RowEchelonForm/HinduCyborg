@@ -146,11 +146,7 @@ public class CharacterMovement : MonoBehaviour
     private void FixedUpdate()
     {
         applyMovementVelocity(hInput, Time.fixedDeltaTime);
-        if (Mathf.Abs(rb2d.velocity.x) <= maxSpeed)
-        {
-            // only stabilize if not moving faster than maxSpeed (so that won't interfere with abilities)
-            stabilizeDownhillMovement(rb2d.velocity, Time.fixedDeltaTime);
-        }
+        stabilizeDownhillMovement(rb2d.velocity, Time.fixedDeltaTime);
         handleAnimationParameters(hInput); // select played animation
         handleFlipping(hInput);
         handleJumping();
@@ -277,15 +273,7 @@ public class CharacterMovement : MonoBehaviour
         {
             return;
         }
-        
-        if (finalForce.x < 0 && leftContactPoints.Count > 0) // left side
-        {
-            overcomeSmallSpikes(ref leftContactPoints);
-        }
-        else if (finalForce.x > 0 && rightContactPoints.Count > 0) // right side
-        {
-            overcomeSmallSpikes(ref rightContactPoints);
-        }
+        handleSpikes(finalForce);
         
         rb2d.AddForce(finalForce);
     }
@@ -380,9 +368,23 @@ public class CharacterMovement : MonoBehaviour
     }
     
     // Checks the contact points to see if the player is stuck on a tiny spike/"wall".
+    private void handleSpikes(Vector2 forceToApply)
+    {
+        if (forceToApply.x < 0 && leftContactPoints.Count > 0) // left side
+        {
+            overcomeSmallSpikes(ref leftContactPoints);
+        }
+        else if (forceToApply.x > 0 && rightContactPoints.Count > 0) // right side
+        {
+            overcomeSmallSpikes(ref rightContactPoints);
+        }
+    }
+    
+    
     // Be sure to check for both left and right contact points.
+    // First check that minWallPoint 
     // Uses leftContactPoints and rightContactPoints.
-    // The player will be raised up a bit in this case.
+    // The player will be raised up a bit if player is wrongly stuck.
     private void overcomeSmallSpikes(ref List<ContactPoint2D> contactPoints)
     {
         // check min/max contact points
@@ -404,6 +406,10 @@ public class CharacterMovement : MonoBehaviour
         {
             rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + maxWallPoint - minWallPoint);
         }
+        else if (grounded && maxWallPoint <= playerCollider.bounds.min.y + spikeThreshold)
+        {
+            rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + (maxWallPoint - playerCollider.bounds.min.y)*1.05f);
+        }
     }
     
     // Stabilizes movement downhill.
@@ -412,6 +418,12 @@ public class CharacterMovement : MonoBehaviour
     // curVelocity is the velocity right now.
     private void stabilizeDownhillMovement(Vector2 curVelocity, float deltaTime)
     {
+        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+        {
+            // Won't stabilize if moving too fast (could be caused by e.g. dashing)
+            return;
+        }
+        
         if (curVelocity.x > 0 && leftContactPoints.Count > 0) // moving right
         {
             Vector2 maxNormal = new Vector2(0, 0); // the gentler the slope, the higher normal.x
@@ -428,8 +440,7 @@ public class CharacterMovement : MonoBehaviour
                                             rb2d.position.y - rb2d.velocity.x * maxNormal.y * deltaTime);
             }
         }
-        
-        if (curVelocity.x < 0 && rightContactPoints.Count > 0) // moving left
+        else if (curVelocity.x < 0 && rightContactPoints.Count > 0) // moving left
         {
             Vector2 minNormal = new Vector2(0, 0); // the gentler the slope, the smaller normal.x (negative)
             for (int i = 0; i < rightContactPoints.Count; ++i)
