@@ -135,5 +135,13 @@ MonoBehaviour:
   levelMusicList:
   - levelName: Space
     levelMusicClip: {fileID: 8300000, guid: 6ff571e94cd700e43bcb1aff4a5b030f, type: 3}
-    trackVolume: 1
+    trackVolume: 0.1
+    loop: 1
+  - levelName: Planet01
+    levelMusicClip: {fileID: 8300000, guid: fb0791dd377e0f8418411c1c81af7223, type: 3}
+    trackVolume: 0.1
+    loop: 1
+  - levelName: Planet02
+    levelMusicClip: {fileID: 8300000, guid: 33a633064d9fb7342b692995e0aed50a, type: 3}
+    trackVolume: 0.1
     loop: 1
