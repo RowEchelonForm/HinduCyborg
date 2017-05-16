@@ -30,6 +30,8 @@ public class ObjectStats
 public class PlayerStats : ObjectStats
 {
 	public List<string> enabledAbilities = new List<string>();
+    public int health;
+    public string scene;
 
 	public PlayerStats(ObjectStats objStats)
 	{
@@ -184,7 +186,7 @@ public class SaveLoad : MonoBehaviour {
                 }
                 if (o.tag == "Player")
                 {
-                    PlayerStats playerStats = SavePlayerStats(stats, o);
+                    PlayerStats playerStats = SavePlayerStats(stats, o, scene);
                     game.sceneObjects.Add(playerStats);
                 }
                 else
@@ -290,7 +292,7 @@ public class SaveLoad : MonoBehaviour {
 
     // Returns a PlayerStats object containing the extra stats that the player has. 
     // The regular ObjectStats should be in 'stats' already.
-    private static PlayerStats SavePlayerStats(ObjectStats stats, GameObject player)
+    private static PlayerStats SavePlayerStats(ObjectStats stats, GameObject player, string scene)
     {
 		PlayerStats plStats = new PlayerStats(stats);
     	PlayerAbilityManager abilityManager = player.GetComponent<PlayerAbilityManager>();
@@ -298,6 +300,12 @@ public class SaveLoad : MonoBehaviour {
     	{
     		plStats.enabledAbilities = abilityManager.getEnabledAbilities();
     	}
+        PlayerHealth plHealth = player.GetComponent<PlayerHealth>();
+        if (plHealth != null)
+        {
+            plStats.health = plHealth.getHealth();
+        }
+        plStats.scene = scene;
     	return plStats;
     }
 
@@ -313,6 +321,11 @@ public class SaveLoad : MonoBehaviour {
 				abilityManager.enableAbility( stats.enabledAbilities[i] );
     		}
     	}
+        PlayerHealth plHealth = player.GetComponent<PlayerHealth>();
+        if (plHealth != null && stats.health > 0 && stats.scene == game.scene)
+        {
+            plHealth.setHealth(stats.health);
+        }
     }
 
     void Awake()

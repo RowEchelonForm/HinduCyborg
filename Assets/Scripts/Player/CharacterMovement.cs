@@ -43,7 +43,6 @@ public class CharacterMovement : MonoBehaviour
 
     public bool facingRight { get; private set; }
 
-	private List<Transform> groundChecks;
     private float hInput;
     private bool grounded = false;
     private float groundedTimer; // the actual timer for grounded forgiveness
@@ -149,7 +148,6 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update() 
     {
-        //grounded = checkGroundedStatus(Time.deltaTime);
 		setJumpFlag(Time.deltaTime);
         handleMovementInput(); // sets hInput
     }
@@ -608,23 +606,6 @@ public class CharacterMovement : MonoBehaviour
         if (playerCollider == null)
         {
             Debug.LogError("Error: No Collider2D found on the player in CharacterMovement script! Please attach it.");
-        }
-
-		groundChecks = new List<Transform>();
-        if (groundChecks.Count <= 0)
-        {
-            for (int i = 0; i < cachedTransform.childCount; ++i)
-            {
-                Transform child = cachedTransform.GetChild(i);
-                if (child.CompareTag("GroundCheck"))
-                {
-                    groundChecks.Add(child);
-                }
-            }
-            if (groundChecks.Count <= 0)
-            {
-                Debug.LogError("Error: CharacterMovement class can't find any child Transforms tagged 'GroundCheck'.");
-            }
         }
     }
     

@@ -19,7 +19,7 @@ public class PlayerHealth : MonoBehaviour
 	private Shield shield;
 
 
-	// Restores the players actual health to the original health
+	// Restores the player's actual health to the original health
 	public void restoreHealth()
 	{
 		health = originalHealth;
@@ -35,6 +35,11 @@ public class PlayerHealth : MonoBehaviour
 		}
 		health = hp;
 	}
+    
+    public int getHealth()
+    {
+        return health;
+    }
 
 
 	// Takes damage and takes the Shield into account.
