@@ -234,8 +234,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1582052902858798}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 115.9735, y: -5.2613816, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 109.46, y: 3.55, z: 0}
+  m_LocalScale: {x: 2, y: 4, z: 1}
   m_Children:
   - {fileID: 4083107726465802}
   m_Father: {fileID: 0}
@@ -512,7 +512,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1980202346758462}
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 43538984629156696, guid: 793cb9be1ba6d60419c820a4b3cecb01, type: 2}
 --- !u!33 &33880475839905688
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -551,10 +551,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -1.2565536, y: 3.7382035}
+    - - {x: -0.61107254, y: 3.6825583}
+      - {x: -1.0015411, y: 1.4723969}
       - {x: -1.336731, y: -3.014357}
-      - {x: 0.49073792, y: -3.0084062}
-      - {x: 0.40985107, y: 3.723939}
+      - {x: -0.16536331, y: -3.7000303}
+      - {x: 1.3506432, y: -3.5318282}
+      - {x: 0.52921677, y: -0.9544975}
+      - {x: 0.32081604, y: 1.3423355}
 --- !u!95 &95910389718136780
 Animator:
   serializedVersion: 3
