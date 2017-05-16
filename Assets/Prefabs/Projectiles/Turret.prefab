@@ -112,6 +112,8 @@ MonoBehaviour:
   projectileSpawnPoint: {fileID: 4750150231468416}
   projectileAngle: 90
   projectileSpeed: 20
+  projectileSpawnSound: {fileID: 8300000, guid: 46e71dc51aed78c449ae4cba3bae865a,
+    type: 3}
   projectileTag: Projectile
   shootTimer: 1
   rotationPerSecond: 20

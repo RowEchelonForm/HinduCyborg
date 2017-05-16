@@ -22,7 +22,7 @@ public class AbilityTrigger : MonoBehaviour
     // Plays the getAbilitySound
     public void playGetSound()
     {
-        SoundFXPlayer.instance.playClipOnce(getAbilitySound);
+        SoundFXPlayer.instance.playClipOnce(getAbilitySound, 0.2f);
     }
     
     

@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50afa58e60b73e845bd8f0d725053d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 3b9dd2aef48e26b44a93a1458392fb8a, type: 3}
   damage_: 1
   despawnDistance: 30
   despawnTimer: 30

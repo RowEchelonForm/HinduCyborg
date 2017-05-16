@@ -19,6 +19,8 @@ public abstract class ProjectileSpawner : MonoBehaviour
     protected float projectileAngle = 0f;  // degrees; 0 is shooting in +x direction, 90 in +y direction
     [SerializeField] [Range(0.1f, 100f)]
     protected float projectileSpeed = 30f;
+    [SerializeField]
+    private AudioClip projectileSpawnSound;
 
     [SerializeField]
     private string projectileTag = "Projectile"; // the tag for all the Projectile GameObjects (remember to create this tag in Unity)
@@ -40,6 +42,7 @@ public abstract class ProjectileSpawner : MonoBehaviour
     {
         Projectile proj = getProjectileObject();
         proj.transform.eulerAngles = new Vector3(0f, 0f, projectileAngle + cachedTransform.eulerAngles.z);
+        SoundFXPlayer.instance.playClipOnce(projectileSpawnSound, 1f, 1f, cachedTransform.position, 1, 0, 1, 500);
         return proj;
     }
 

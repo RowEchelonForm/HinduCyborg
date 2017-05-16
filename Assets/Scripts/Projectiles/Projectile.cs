@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
     public int damage {get { return damage_; } private set { damage_ = value; } }  // do we need this?
 
     [SerializeField]
-    private AudioClip spawnSound;
+    private AudioClip hitSound;
     [SerializeField]
     private int damage_ = 1;
     [SerializeField]
@@ -34,7 +34,7 @@ public class Projectile : MonoBehaviour
 	
     public void hit()
     {
-        // TODO play hit effects here (NOT USED RIGHT NOW)
+        SoundFXPlayer.instance.playClipOnce(hitSound, 1f, 1f, cachedTransform.position);
         despawn();
     }
 
@@ -69,7 +69,6 @@ public class Projectile : MonoBehaviour
         {
             return false;
         }
-        playCreationEffects();
 
         cachedTransform = transform;
         spawnPosition = cachedTransform.position;
@@ -103,7 +102,7 @@ public class Projectile : MonoBehaviour
     	{
 			return;
     	}
-		despawn();
+		hit();
     }
 
     // angle is in degrees
@@ -125,16 +124,5 @@ public class Projectile : MonoBehaviour
 		rb2d.angularVelocity = angularVelocity;
         return true;
     }
-
-    private void playCreationEffects()
-    {
-        if (spawnSound == null)
-        {
-            return;
-        }
-
-        SoundFXPlayer.instance.playClipOnce(spawnSound);
-    }
-
 
 }

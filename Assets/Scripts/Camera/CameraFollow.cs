@@ -24,6 +24,8 @@ public class CameraFollow : MonoBehaviour
     private float zoomDefault;
     [SerializeField]
     private float zoomSpeedMulti = 0.75f;
+    [SerializeField]
+    private BackgroundScroller bg;
 
     private Transform mainCamTransform;
     private Transform playerTransform;
@@ -38,6 +40,7 @@ public class CameraFollow : MonoBehaviour
         cacheTransforms();
         initPosition();
         addZoomComponents();
+        findBackgroundScroller();
         prevCamPos = new Vector3 (mainCamTransform.position.x, mainCamTransform.position.y, mainCamTransform.position.z);
 	}
 	
@@ -60,6 +63,10 @@ public class CameraFollow : MonoBehaviour
             {
                 cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, zoomDefault + playerScript.avgSpeed() * zoomSpeedMulti, zoomLerp * Time.deltaTime);
             }
+            if (bg)
+            {
+                bg.scrollBackground(new Vector2(cameraChange.x, cameraChange.y));
+            }
         }
 
         // TODO This should be in some other script!
@@ -78,7 +85,7 @@ public class CameraFollow : MonoBehaviour
             GameObject pl = GameObject.FindGameObjectWithTag("Player");
 			if (pl == null)
 			{
-				Debug.Log("Can't find 'Player' game object");
+				Debug.LogError("Can't find 'Player' game object");
 			}
 			else
 			{
@@ -86,6 +93,26 @@ public class CameraFollow : MonoBehaviour
             }
 		}
 	}
+    
+    // Call at Start after calling addZoomComponents (or otherwise after trying to find playerScript).
+    private void findBackgroundScroller()
+    {
+        if (bg == null && playerScript == null)
+        {
+            GameObject bgObject = GameObject.FindGameObjectWithTag("Background");
+            if (bgObject == null)
+            {
+                Debug.LogWarning("Can't find 'Background' tagged game object.");
+                return;
+            }
+            bg = bgObject.GetComponent<BackgroundScroller>();
+            if (bg == null)
+            {
+                Debug.LogWarning("Can't 'Background' tagged game object doesn't have BackgroundScroller component.");
+                return;
+            }
+        }
+    }
 
     private void addZoomComponents()
     {

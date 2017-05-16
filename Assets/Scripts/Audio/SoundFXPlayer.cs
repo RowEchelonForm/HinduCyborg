@@ -13,6 +13,8 @@ public class SoundFXPlayer : MonoBehaviour
     
     [SerializeField]
     private string audioObjectTag = "SFXObject"; // the tag for all the AudioSource GameObjects (remember to create this tag in Unity)
+    [SerializeField]
+    private bool errorOnNullSound = true;
 
 	private Stack<AudioSource> disabledAudioSources; // contains disabled AudioSources
 	private Transform cachedTransform;
@@ -121,7 +123,10 @@ public class SoundFXPlayer : MonoBehaviour
     {
         if (clip == null)
         {
-            Debug.LogError("Error: The audio clip is invalid or missing.");
+            if (errorOnNullSound)
+            {
+                Debug.LogError("Error: The audio clip is invalid or missing.");
+            }
             return null;
         }
         AudioSource aSource = getAudioSourceObject();
