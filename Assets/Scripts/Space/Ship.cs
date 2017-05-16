@@ -49,12 +49,17 @@ public class Ship : MonoBehaviour
     private Button yes;
     [SerializeField]
     private Button no;
+    [SerializeField]
+    private AudioClip thrusterSound;
+    [SerializeField] [Range(0f, 1f)]
+    private float thrusterVolume = 0.3f;
 
     private Rigidbody rb;
     private bool onPlanet;
     private string level;
     private bool inGui;
     private int shownGui;
+    private AudioSource thrusterAudioSource;
 
 
     private double[] speedParts;
@@ -174,6 +179,23 @@ public class Ship : MonoBehaviour
             }
         }
     }
+    
+    private void playThrusterSound()
+    {
+        if (!thrusterAudioSource)
+        {
+            thrusterAudioSource = SoundFXPlayer.instance.playClipContinuosly(thrusterSound, thrusterVolume);
+        }
+    }
+    
+    private void stopPlayingThrusterSound()
+    {
+        if (thrusterAudioSource)
+        {
+            SoundFXPlayer.instance.recycleAudioSource(thrusterAudioSource, 0.3f);
+            thrusterAudioSource = null;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -205,6 +227,11 @@ public class Ship : MonoBehaviour
                 rb.AddRelativeForce(0, v * Time.deltaTime * 90, 0);
                 Destroy(GetComponent<FixedJoint>());
                 onPlanet = false;
+                playThrusterSound();
+            }
+            else
+            {
+                stopPlayingThrusterSound();
             }
             if (h != 0)
             {
@@ -214,6 +241,7 @@ public class Ship : MonoBehaviour
         }
         else
         {
+            stopPlayingThrusterSound();
             if (Input.GetButton("Jump") && shownGui == 1)
             {
                 planetPanel.SetActive(false);
@@ -258,6 +286,7 @@ public class Ship : MonoBehaviour
                     //some nice game over?
                     gameObject.GetComponent<MeshRenderer>().enabled = false;
                     shownGui = 3;
+                    stopPlayingThrusterSound();
                 }
                 onPlanet = true;
                 inGui = true;
@@ -274,6 +303,7 @@ public class Ship : MonoBehaviour
                 else
                 {
                     //gg, you made it to afterlife
+                    stopPlayingThrusterSound();
                     gameObject.GetComponent<MeshRenderer>().enabled = false;
                     shownGui = 3;
                     onPlanet = true;
