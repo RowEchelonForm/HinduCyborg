@@ -12,7 +12,7 @@ public class SaveLoadHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.R))
+        /*if (Input.GetKeyDown(KeyCode.R))
         {
             SaveLoad.Load();
         }
@@ -28,6 +28,12 @@ public class SaveLoadHandler : MonoBehaviour {
         {
             SaveLoad.LoadFromFile("test");
             SaveLoad.Load();
+        }*/
+        
+        if ( Input.GetKeyDown(KeyCode.Escape) )
+        {
+            LevelManager.loadStart();
         }
     }
+    
 }

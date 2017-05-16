@@ -69,12 +69,6 @@ public class CameraFollow : MonoBehaviour
             }
         }
 
-        // TODO This should be in some other script!
-        if ( Input.GetKeyDown(KeyCode.Escape) )
-        {
-            LevelManager.quitRequest();
-        }
-
 	}
 
 	// Tries to find the player. Call in Start()
