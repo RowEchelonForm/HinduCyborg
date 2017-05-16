@@ -30,8 +30,16 @@ public class CharacterMovement : MonoBehaviour
 	private float jumpCooldown = 0.11f; // should be > groundToAirForgiveTime
     [SerializeField] [Range(0f, 1f)]
     private float jumpBoostTime = 0.3f; // how long can jump key be pressed after jump to boost jump
+    [SerializeField] [Range(0f, 0.5f)]
+    private float airNoLandingTimer = 0.1f; // no need to display landing animation in in the air for this time
     [SerializeField] [Range(0f, 1f)]
     private float spikeThreshold = 0.3f; // how large spikes can the player walk over
+    [SerializeField]
+    private LayerMask groundLayers;
+    [SerializeField]
+    private bool spikeHandling = true;
+    [SerializeField]
+    private bool downhillStabilization = true;
 
     public bool facingRight { get; private set; }
 
@@ -46,13 +54,15 @@ public class CharacterMovement : MonoBehaviour
     private float originalMaxSpeed;
     private float originalJumpForce;
     private float originalJumpBoostForce;
+    private float originalAirNoLandingTimer;
     private Rigidbody2D rb2d;
     private Transform cachedTransform;
     private Animator anim;
     private PlayerActionHandler actionHandler;
     private Collider2D playerCollider;
-    private List<ContactPoint2D> leftContactPoints; // the left side contact points the player hits per frame
-    private List<ContactPoint2D> rightContactPoints; // the right side contact points the player hits per frame
+    private List<ContactPoint2D> leftContactPoints; // the left side contact points the player collider hits per frame
+    private List<ContactPoint2D> rightContactPoints; // the right side contact points the player collider hits per frame
+    private List<ContactPoint2D> bottomContactPoints; // the bottom contact points the player collider hits per frame
     
     // Slows down the general movement speed for 'time' seconds.
     // factor should be ]0...1] and time should be [0...60].
@@ -130,28 +140,34 @@ public class CharacterMovement : MonoBehaviour
         originalMaxSpeed = maxSpeed;
         originalJumpForce = jumpForce;
         originalJumpBoostForce = jumpBoostForce;
+        originalAirNoLandingTimer = airNoLandingTimer;
         leftContactPoints = new List<ContactPoint2D>();
         rightContactPoints = new List<ContactPoint2D>();
+        bottomContactPoints = new List<ContactPoint2D>();
 		initComponents();
     }
 
-    // Update is called once per frame
     private void Update() 
     {
-        grounded = checkGroundedStatus(Time.deltaTime);
+        //grounded = checkGroundedStatus(Time.deltaTime);
 		setJumpFlag(Time.deltaTime);
         handleMovementInput(); // sets hInput
     }
 
     private void FixedUpdate()
     {
+        grounded = checkGroundedStatus(Time.fixedDeltaTime);
         applyMovementVelocity(hInput, Time.fixedDeltaTime);
-        stabilizeDownhillMovement(rb2d.velocity, Time.fixedDeltaTime);
+        if (downhillStabilization)
+        {
+            stabilizeDownhillMovement(rb2d.velocity, Time.fixedDeltaTime);
+        }
         handleAnimationParameters(hInput); // select played animation
         handleFlipping(hInput);
-        handleJumping();
+        handleJumping(Time.fixedDeltaTime);
         leftContactPoints.Clear();
         rightContactPoints.Clear();
+        bottomContactPoints.Clear();
     }
     
     void OnCollisionEnter2D(Collision2D col)
@@ -164,50 +180,20 @@ public class CharacterMovement : MonoBehaviour
         collectContactPoints(col);
     }
     
-
-    private bool checkGroundedStatus(float deltaTime)
-    {
-        // Only casting on the 'Ground' layer. Casts rays towards the all the GroundCheck tagged objects.
-        bool onGround = false;
-        for (int i = 0; i < groundChecks.Count; ++i)
-        {
-            if (Physics2D.Linecast(transform.position, groundChecks[i].position, 1 << LayerMask.NameToLayer("Ground")))
-            {
-                onGround = true;
-                groundedTimer = groundToAirForgiveTime;
-            }
-        }
-		if (!onGround)
-        {
-			if (groundedTimer > 0)
-			{
-				groundedTimer -= deltaTime;
-				if (groundedTimer > 0)
-				{
-					onGround = true;
-				}
-			}
-        }
-		if (jumpBoostTimer > 0) // just jumped => don't need forgiveness
-		{
-			onGround = false;
-		}
-        return onGround;
-    }
-
+    
+    // Sets jump == true if jump input was given and jumpTimer allows jumping.
+    // Sets jumpBoost as well. Should be called from Update().
+    // Also handles counting down jump timer but NOT jumpBoostTimer (should be handled in fixedUpdate()).
+    // Doesn't check grounded status or actionHabdler.isActionAllowed.
 	private void setJumpFlag(float deltaTime)
     {
-		if (Input.GetButtonDown("Jump") && grounded && jumpTimer <= 0 && 
-			actionHandler.isActionAllowed(PlayerActionHandler.Action.jump)) // start jump
+		if (Input.GetButtonDown("Jump") && jumpTimer <= 0) // jump input + timer ok
         {
             jump = true;
-            jumpTimer = jumpCooldown;
-            jumpBoostTimer = jumpBoostTime;
         }
         else if (Input.GetButton("Jump") && jumpBoostTimer > 0) // boost jump
         {
             jumpBoost = true;
-            jumpBoostTimer -= deltaTime;
         }
         else if (jumpBoostTimer > 0) // lifted jump button up (not boosting anymore)
         {
@@ -220,12 +206,55 @@ public class CharacterMovement : MonoBehaviour
 		}
     }
     
+    // Call from Update().
     private void handleMovementInput()
     {
         hInput = Input.GetAxis("Horizontal");
     }
     
+    // Call from FixedUpdate().
+    private bool checkGroundedStatus(float deltaTime)
+    {
+        bool onGround = false;
+        for (int i = 0; i < bottomContactPoints.Count; ++i)
+        {
+            // Check if collider layer is in groundLayers and it's not on the sides
+            if ( groundLayers == (groundLayers | (1 << bottomContactPoints[i].collider.gameObject.layer)) &&
+                 Mathf.Abs(bottomContactPoints[i].normal.x) < 0.8f)
+            {
+                onGround = true;
+                groundedTimer = groundToAirForgiveTime;
+                airNoLandingTimer = originalAirNoLandingTimer;
+                break;
+            }
+        }
+        if (!onGround)
+        {
+            if (jumpBoostTimer > 0) // just jumped => don't need forgiveness
+            {
+                onGround = false;
+                groundedTimer = 0f;
+                airNoLandingTimer = 0f;
+            }
+            if (groundedTimer > 0)
+            {
+                groundedTimer -= deltaTime;
+                if (groundedTimer > 0)
+                {
+                    onGround = true;
+                    airNoLandingTimer = originalAirNoLandingTimer;
+                }
+            }
+            if (!onGround && airNoLandingTimer > 0f)
+            {
+                airNoLandingTimer -= deltaTime;
+            }
+        }
+        return onGround;
+    }
+    
     // Applies the movement force.
+    // Call from FixedUpdate().
 	private void applyMovementVelocity(float horizontalInput, float deltaTime)
     {
     	if (horizontalInput == 0 || !actionHandler.isActionAllowed(PlayerActionHandler.Action.move))
@@ -273,11 +302,15 @@ public class CharacterMovement : MonoBehaviour
         {
             return;
         }
-        handleSpikes(finalForce);
-        
+        if (spikeHandling)
+        {
+            handleSpikes(finalForce);
+        }
         rb2d.AddForce(finalForce);
     }
-
+    
+    // Handles flipping the character if necessary and allowed.
+    // Call from FixedUpdate().
     private void handleFlipping(float horizontalInput)
     {
     	if (!actionHandler.isActionAllowed(PlayerActionHandler.Action.flip))
@@ -294,7 +327,8 @@ public class CharacterMovement : MonoBehaviour
             flip();
         }
     }
-
+    
+    // Fipping the character.
     private void flip()
     {
         facingRight = !facingRight;
@@ -302,22 +336,29 @@ public class CharacterMovement : MonoBehaviour
         theScale.x *= -1;
         transform.localScale = theScale;
     }
-
-    private void handleJumping()
+    
+    // Applies jumpForce if jump == true and grounded == true and jump action is allowed.
+    // Applies jumpBoostForce if jumpBoost == true. Counts down jumpBoostTimer.
+    // Call from FixedUpdate().
+    private void handleJumping(float deltaTime)
     {
-        if (jump)
+        if (jump && grounded && actionHandler.isActionAllowed(PlayerActionHandler.Action.jump))
         {
             rb2d.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-            jump = false;
+            jumpTimer = jumpCooldown;
+            jumpBoostTimer = jumpBoostTime;
         }
         else if (jumpBoost)
         {
             rb2d.AddForce(new Vector2(0f, jumpBoostForce), ForceMode2D.Force);
             jumpBoost = false;
+            jumpBoostTimer -= deltaTime;
         }
+        jump = false;
     }
 
-    // Set correct animation triggers
+    // Set correct animation triggers for running / in_air.
+    // Call from FixedUpdate()
     private void handleAnimationParameters(float input)
     {
 		if (grounded)
@@ -327,7 +368,16 @@ public class CharacterMovement : MonoBehaviour
 		else
 		{
 			anim.SetBool("in_air", true);
+            if (airNoLandingTimer > 0)
+            {
+                anim.SetBool("air_landing_ok", false);
+            }
+            else
+            {
+                anim.SetBool("air_landing_ok", true);
+            }
 		}
+        
 
 		if (input == 0)
 		{
@@ -342,6 +392,7 @@ public class CharacterMovement : MonoBehaviour
     // In order to not get stuck on walls when applying force.
     // Checks, if with the force that is to be added, we will be hitting a wall (on the 'Ground' layer)
     // and we're not grounded. Returns true if will hit a wall.
+    // Call from FixedUpdate().
     private bool checkWallCollision(Vector2 force, float deltaTime)
     {
         // Get the position change based on the force, mass and delta time
@@ -360,7 +411,7 @@ public class CharacterMovement : MonoBehaviour
         topLeft += posChange;
         
         // Check if the body's current velocity will result in a collision and not grounded
-        if (Physics2D.OverlapArea(topLeft, bottomRight, 1 << LayerMask.NameToLayer("Ground")) && !grounded)
+        if (Physics2D.OverlapArea(topLeft, bottomRight, groundLayers) && !grounded)
         {
             return true;
         }
@@ -368,23 +419,25 @@ public class CharacterMovement : MonoBehaviour
     }
     
     // Checks the contact points to see if the player is stuck on a tiny spike/"wall".
+    // Call from FixedUpdate() after calculating movement force but before applying it.
     private void handleSpikes(Vector2 forceToApply)
     {
-        if (forceToApply.x < 0 && leftContactPoints.Count > 0) // left side
+        if (forceToApply.x < 0 && leftContactPoints.Count > 0) // player moving left
         {
             overcomeSmallSpikes(ref leftContactPoints);
         }
-        else if (forceToApply.x > 0 && rightContactPoints.Count > 0) // right side
+        else if (forceToApply.x > 0 && rightContactPoints.Count > 0) // player moving right
         {
             overcomeSmallSpikes(ref rightContactPoints);
         }
     }
     
     
-    // Be sure to check for both left and right contact points.
+    // Check for either left or right contact points (based on the direction of force).
     // First check that minWallPoint 
     // Uses leftContactPoints and rightContactPoints.
     // The player will be raised up a bit if player is wrongly stuck.
+    // Call from FixedUpdate().
     private void overcomeSmallSpikes(ref List<ContactPoint2D> contactPoints)
     {
         // check min/max contact points
@@ -404,25 +457,31 @@ public class CharacterMovement : MonoBehaviour
         if (minWallPoint <= playerCollider.bounds.min.y && maxWallPoint > minWallPoint &&
             maxWallPoint <= minWallPoint + spikeThreshold)
         {
+            // minWallPoint at the bottom of the collider on this side and 
+            // the "highest" contact a bit higher but below minWallPoint + spikeThreshold
             rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + maxWallPoint - minWallPoint);
         }
         else if (grounded && maxWallPoint <= playerCollider.bounds.min.y + spikeThreshold)
         {
+            // Otherwise grounded and the highest contact on this side <= playerCollider.bounds.min.y + spikeThreshold
             rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + (maxWallPoint - playerCollider.bounds.min.y)*1.05f);
         }
     }
     
-    // Stabilizes movement downhill.
+    // Stabilizes movement downhill. While stabilizing, spikeHandling == false.
     // Works for right and left downhills.
     // Should be called AFTER applying movement velocity.
     // curVelocity is the velocity right now.
+    // Call from FixedUpdate().
     private void stabilizeDownhillMovement(Vector2 curVelocity, float deltaTime)
     {
-        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+        if (Mathf.Abs(curVelocity.x) > maxSpeed || Mathf.Abs(curVelocity.x) <= 0.01f)
         {
-            // Won't stabilize if moving too fast (could be caused by e.g. dashing)
+            // Won't stabilize if moving too fast (could be caused by e.g. dashing) or too slow
+            spikeHandling = true;
             return;
         }
+        spikeHandling = true;
         
         if (curVelocity.x > 0 && leftContactPoints.Count > 0) // moving right
         {
@@ -434,10 +493,12 @@ public class CharacterMovement : MonoBehaviour
                     maxNormal = leftContactPoints[i].normal;
                 }
             }
-            if (maxNormal.x > 0.05f && maxNormal.x < 0.95f)
+            if (maxNormal.x > 0.005f && maxNormal.x < 0.95f) // no stabilization needed on near vertical or near horizontal surfaces
             {
-                rb2d.position = new Vector2(rb2d.position.x - rb2d.velocity.x * maxNormal.x * deltaTime,
-                                            rb2d.position.y - rb2d.velocity.x * maxNormal.y * deltaTime);
+                float posChangeX = -curVelocity.x * maxNormal.x * deltaTime;
+                float posChangeY = -curVelocity.x * maxNormal.y * deltaTime + curVelocity.y * deltaTime;
+                spikeHandling = false; // spike handling off if stabilizing
+                rb2d.position = new Vector2(rb2d.position.x + posChangeX, rb2d.position.y + posChangeY);
             }
         }
         else if (curVelocity.x < 0 && rightContactPoints.Count > 0) // moving left
@@ -450,15 +511,19 @@ public class CharacterMovement : MonoBehaviour
                     minNormal = rightContactPoints[i].normal;
                 }
             }
-            if (minNormal.x < -0.05f && minNormal.x > -0.95f)
+            if (minNormal.x < -0.005f && minNormal.x > -0.95f) // no stabilization needed on near vertical or near horizontal surfaces
             {
-                rb2d.position = new Vector2(rb2d.position.x + rb2d.velocity.x * minNormal.x * deltaTime,
-                                            rb2d.position.y + rb2d.velocity.x * minNormal.y * deltaTime);
+                float posChangeX = curVelocity.x * minNormal.x * deltaTime;
+                float posChangeY = curVelocity.x * minNormal.y * deltaTime + curVelocity.y * deltaTime;
+                spikeHandling = false; // spike handling off if stabilizing
+                rb2d.position = new Vector2(rb2d.position.x + posChangeX, rb2d.position.y + posChangeY);
             }
         }
     }
     
-    // Collects the contact points in collision to leftContactPoints and rightContactPoints
+    // Collects the contact points in collision to leftContactPoints, rightContactPoints and bottomCollisionPoints.
+    // Only collects left/right contact points where normal.x > Abs(0.1f).
+    // Should be called from OnCollisionEnter2D and OnCollisionStay2D.
     private void collectContactPoints(Collision2D col)
     {
         ContactPoint2D[] colPoints = col.contacts;
@@ -471,6 +536,11 @@ public class CharacterMovement : MonoBehaviour
             else if (colPoints[i].normal.x < -0.1f) // player moving in positive direction and hitting a wall
             {
                 rightContactPoints.Add(colPoints[i]);
+            }
+            
+            if (colPoints[i].point.y <= playerCollider.bounds.min.y + 0.05f)
+            {
+                bottomContactPoints.Add(colPoints[i]);
             }
         }
     }
@@ -520,6 +590,7 @@ public class CharacterMovement : MonoBehaviour
         {
             Debug.LogError("Error: No Rigidbody2D found on the player in CharacterMovement script! Please attach it.");
         }
+        rb2d.sleepMode = RigidbodySleepMode2D.NeverSleep;
 
 		anim = GetComponent<Animator>();
 		if (anim == null)

@@ -1658,7 +1658,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1183795697220702}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 107.73, y: -5.391, z: 0}
+  m_LocalPosition: {x: 107.86, y: -6.09, z: 0}
   m_LocalScale: {x: 0.125, y: 0.125, z: 1}
   m_Children:
   - {fileID: 4992569501027798}
@@ -2280,7 +2280,7 @@ Rigidbody2D:
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 1
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &61168968059360108
@@ -3590,10 +3590,16 @@ MonoBehaviour:
   jumpBoostForce: 15.4
   airSpeedFactor: 0.75
   landingSlownessFactor: 0.2
-  groundToAirForgiveTime: 0.07
-  jumpCooldown: 0.08
+  groundToAirForgiveTime: 0.15
+  jumpCooldown: 0.16
   jumpBoostTime: 0.3
+  airNoLandingTimer: 0.13
   spikeThreshold: 0.3
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  spikeHandling: 1
+  downhillStabilization: 1
 --- !u!114 &114955890301261502
 MonoBehaviour:
   m_ObjectHideFlags: 1
