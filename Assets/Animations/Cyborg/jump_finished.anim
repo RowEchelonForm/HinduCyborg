@@ -5809,7 +5809,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5
+    path: Sprites/dust 2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5819,7 +5819,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5
+    path: Sprites/dust 2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5829,7 +5829,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5
+    path: Sprites/dust 2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6382,7 +6382,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Sprites/dust 2
+    path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6392,7 +6392,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Sprites/dust 2
+    path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6402,7 +6402,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Sprites/dust 2
+    path: bones/hip/torso/Head/hair/hair 1/hair 2/hair 3/hair 4/hair 5
     classID: 4
     script: {fileID: 0}
   m_HasGenericRootTransform: 0

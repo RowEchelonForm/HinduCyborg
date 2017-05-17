@@ -2849,16 +2849,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: staticGravity.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: nonStaticGravity.Array.size
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4473551827281202, guid: 20844768cd3ffbf4d968f7ab27dd2af7, type: 2}
       propertyPath: m_LocalPosition.x
       value: -3.8
@@ -2898,9 +2888,24 @@ Prefab:
       objectReference: {fileID: 1019660264}
     - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
         type: 2}
+      propertyPath: staticGravity.Array.data[1].other
+      value: 
+      objectReference: {fileID: 1638757359}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
       propertyPath: nonStaticGravity.Array.data[0].other
       value: 
       objectReference: {fileID: 406107142}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: nonStaticGravity.Array.data[1].other
+      value: 
+      objectReference: {fileID: 139313995}
+    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
+        type: 2}
+      propertyPath: nonStaticGravity.Array.data[2].other
+      value: 
+      objectReference: {fileID: 629639269}
     - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
         type: 2}
       propertyPath: planetName
@@ -2936,56 +2941,6 @@ Prefab:
       propertyPath: arrow
       value: 
       objectReference: {fileID: 1787474976}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: staticGravity.Array.data[1].gravity
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: staticGravity.Array.data[1].other
-      value: 
-      objectReference: {fileID: 1638757359}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: staticGravity.Array.data[1].maxDistance
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: nonStaticGravity.Array.data[1].gravity
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: nonStaticGravity.Array.data[1].other
-      value: 
-      objectReference: {fileID: 139313995}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: nonStaticGravity.Array.data[1].maxDistance
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: nonStaticGravity.Array.data[2].gravity
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: nonStaticGravity.Array.data[2].other
-      value: 
-      objectReference: {fileID: 629639269}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: nonStaticGravity.Array.data[2].maxDistance
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 114505115292562288, guid: 20844768cd3ffbf4d968f7ab27dd2af7,
-        type: 2}
-      propertyPath: landingSpeed
-      value: 0.8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 20844768cd3ffbf4d968f7ab27dd2af7, type: 2}
   m_IsPrefabParent: 0
@@ -5411,7 +5366,7 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 963549664}
-  m_LocalRotation: {x: -0.33598405, y: 0.13447542, z: -0.57132214, w: 0.73662883}
+  m_LocalRotation: {x: -0.33598408, y: 0.13447544, z: -0.5713222, w: 0.7366289}
   m_LocalPosition: {x: -165.70468, y: -14.187288, z: 0}
   m_LocalScale: {x: 1.0000002, y: 1.0000004, z: 1.0000002}
   m_Children: []

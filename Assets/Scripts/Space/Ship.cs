@@ -71,6 +71,7 @@ public class Ship : MonoBehaviour
     private bool inGui;
     private int shownGui;
     private AudioSource thrusterAudioSource;
+    private bool justLoaded; // true for a couple frames after loading the scene
 
 
     private double[] speedParts;
@@ -84,12 +85,15 @@ public class Ship : MonoBehaviour
     {
         yes.onClick.AddListener(yesClick);
         no.onClick.AddListener(exitGui);
+        justLoaded = true;
+        StartCoroutine(afterStartBuffer());
     }
 
     void yesClick()
     {
         exitGui();
-        SaveLoad.Save("Space");
+        SaveLoad.Save(LevelManager.currentLevelName);
+        SaveLoad.SaveToFile("space");
         LevelManager.loadLevel(level);
     }
 
@@ -306,6 +310,10 @@ public class Ship : MonoBehaviour
                 planetDesc.text = planet.description;
                 planetPanel.SetActive(true);
                 arrow.SetActive(false);
+                if (justLoaded)
+                {
+                    exitGui();
+                }
             }
             else
             {
@@ -348,5 +356,15 @@ public class Ship : MonoBehaviour
             planetPanel.SetActive(true);
             arrow.SetActive(false);
         }
+    }
+    
+    // Call at start.
+    // Sets 'justLoaded' to true, and after two full frames, sets it to to false.
+    private IEnumerator afterStartBuffer()
+    {
+        justLoaded = true;
+        yield return null;
+        yield return null;
+        justLoaded = false;
     }
 }

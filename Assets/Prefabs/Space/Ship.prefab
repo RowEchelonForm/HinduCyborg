@@ -139,10 +139,19 @@ MonoBehaviour:
   - gravity: 100
     other: {fileID: 0}
     maxDistance: 50
+  - gravity: 100
+    other: {fileID: 0}
+    maxDistance: 50
   nonStaticGravity:
   - gravity: 10
     other: {fileID: 0}
     maxDistance: 5
+  - gravity: 20
+    other: {fileID: 0}
+    maxDistance: 8
+  - gravity: 40
+    other: {fileID: 0}
+    maxDistance: 10
   divByDistance: 1
   divByDistance2: 1
   bufferTime: 0.01
@@ -155,3 +164,15 @@ MonoBehaviour:
   no: {fileID: 0}
   thrusterSound: {fileID: 8300000, guid: 88dd142f0b33b1f49801fb5e0a4a4bae, type: 3}
   thrusterVolume: 0.3
+  landingSpeed: 1.2
+  landingFailmsg: '
+
+    You landed too hard.
+
+    Now you are stuck here with the broken ship'
+  meteorCrash: 'Asteroid field filled with rubble...
+
+    and the wreck of your spaceship.
+
+    Hopefully you eventually land somewhere ending the eternal floating in space.'
+  arrow: {fileID: 0}

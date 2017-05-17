@@ -10,6 +10,7 @@ using Anima2D;
 public class ObjectStats
 {
     public string name;
+    public string sceneName;
 
     public bool active;
 
@@ -31,7 +32,6 @@ public class PlayerStats : ObjectStats
 {
 	public List<string> enabledAbilities = new List<string>();
     public int health;
-    public string scene;
 
 	public PlayerStats(ObjectStats objStats)
 	{
@@ -52,6 +52,9 @@ public class Game
 {
     public string scene = "Space";
     
+    // The name of the scene where a save was previously loaded.
+    public string previouslyLoadedSaveScene = "";
+    
     public List<ObjectStats> sceneObjects = new List<ObjectStats>();
 
     public List<ObjectStats> spaceObjects = new List<ObjectStats>();
@@ -62,7 +65,8 @@ public class SaveLoad : MonoBehaviour {
     public static SaveLoad instance = null; // singleton
 
     public static Game game = null;
-
+    
+    
 
     public static List<GameObject> FindAllObjects()
     {
@@ -157,6 +161,7 @@ public class SaveLoad : MonoBehaviour {
             stats.rotY = o.transform.rotation.y;
             stats.rotZ = o.transform.rotation.z;
             stats.rotW = o.transform.rotation.w;
+            stats.sceneName = LevelManager.currentLevelName;
 
             if (space)
             {
@@ -209,9 +214,11 @@ public class SaveLoad : MonoBehaviour {
     //only set objects
     public static void Reload()
     {
+        game.previouslyLoadedSaveScene = game.scene;
+        game.scene = LevelManager.currentLevelName;
         Time.timeScale = 0;
         List<ObjectStats> objs;
-        if (game.scene == "Space")
+        if (LevelManager.currentLevelName == "Space")
         {
             //Debug.Log("loading space");
             objs = game.spaceObjects;
@@ -220,6 +227,7 @@ public class SaveLoad : MonoBehaviour {
         {
             objs = game.sceneObjects;
         }
+        Debug.Log("Loading: " + game.scene + ". Number of objects to load: " + objs.Count);
 
 		List<GameObject> allObjs = FindAllObjects();
         foreach (ObjectStats obj in objs)
@@ -237,9 +245,18 @@ public class SaveLoad : MonoBehaviour {
             }
             if (real)
             {
-                real.SetActive(obj.active);
-                real.transform.position = new Vector3(obj.posX, obj.posY, obj.posZ);
-                real.transform.rotation = new Quaternion(obj.rotX, obj.rotY, obj.rotZ, obj.rotW);
+                if (real.tag != "Player" && obj.sceneName != game.scene)
+                {
+                    // Don't load object if it wasn't in the same scene.
+                    // Player is an exception.
+                    continue;
+                }
+                if (real.tag != "Player" || (real.tag == "Player" && game.scene == "Space")) // non-space player loaded differently
+                {
+                    real.SetActive(obj.active);
+                    real.transform.position = new Vector3(obj.posX, obj.posY, obj.posZ);
+                    real.transform.rotation = new Quaternion(obj.rotX, obj.rotY, obj.rotZ, obj.rotW);
+                }
                 if (game.scene == "Space")
                 {
                     Rigidbody rb = real.GetComponent<Rigidbody>();
@@ -257,14 +274,14 @@ public class SaveLoad : MonoBehaviour {
                 else
                 {
                     Rigidbody2D rb = real.GetComponent<Rigidbody2D>();
-                    if (rb)
+                    if (rb && real.tag != "Player")
                     {
                         rb.position = new Vector3(obj.posX, obj.posY, obj.posZ);
                         rb.rotation = obj.rotZ;
                     }
-                    if (real.tag == "Player")
+                    else if (rb && real.tag == "Player")
                     {
-                    	LoadPlayerStats((PlayerStats)obj, real);
+                    	LoadPlayerStats((PlayerStats)obj, real, rb);
                     }
                 }
             }
@@ -305,13 +322,13 @@ public class SaveLoad : MonoBehaviour {
         {
             plStats.health = plHealth.getHealth();
         }
-        plStats.scene = scene;
+        plStats.sceneName = scene;
     	return plStats;
     }
 
 	// Returns a PlayerStats object containing the extra stats that the player has. 
     // The regular ObjectStats should be in 'stats' already.
-    private static void LoadPlayerStats(PlayerStats stats, GameObject player)
+    private static void LoadPlayerStats(PlayerStats stats, GameObject player, Rigidbody2D rb)
     {
     	PlayerAbilityManager abilityManager = player.GetComponent<PlayerAbilityManager>();
 		if (abilityManager != null)
@@ -319,12 +336,22 @@ public class SaveLoad : MonoBehaviour {
     		for (int i = 0; i < stats.enabledAbilities.Count; ++i)
     		{
 				abilityManager.enableAbility( stats.enabledAbilities[i] );
+                Debug.Log("Player loading enabled abilities");
     		}
     	}
         PlayerHealth plHealth = player.GetComponent<PlayerHealth>();
-        if (plHealth != null && stats.health > 0 && stats.scene == game.scene)
+        
+        // Only load position, rotation and health if the scene of the same was same as the current one and
+        // the scene where a save was previously loaded was the current one.
+        if (stats.sceneName == game.scene && game.previouslyLoadedSaveScene == game.scene)
         {
-            plHealth.setHealth(stats.health);
+            // Only load position and health if same level.
+            rb.position = new Vector3(stats.posX, stats.posY, stats.posZ);
+            rb.rotation = stats.rotZ;
+            if (plHealth != null && stats.health > 0) // safety check
+            {
+                plHealth.setHealth(stats.health);
+            }
         }
     }
 
@@ -344,7 +371,7 @@ public class SaveLoad : MonoBehaviour {
     
     void sceneWasLoaded(Scene scene, LoadSceneMode mode)
     {
-    	Reload();
+        Reload();
     }
 
     void OnEnable()
