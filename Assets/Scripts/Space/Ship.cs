@@ -54,6 +54,17 @@ public class Ship : MonoBehaviour
     [SerializeField] [Range(0f, 1f)]
     private float thrusterVolume = 0.3f;
 
+    [SerializeField]
+    private float landingSpeed = 0.66f;
+    [SerializeField]
+    [TextArea(3, 10)]
+    private string landingFailmsg = "\nYou landed too hard.\nNow you are stuck here with the broken ship";
+    [SerializeField]
+    [TextArea(3, 10)]
+    private string meteorCrash = "Asteroid field filled with rubble...\nand the wreck of your spaceship.\nHopefully you eventually land somewhere ending the eternal floating in space.";
+    [SerializeField]
+    private GameObject arrow;
+
     private Rigidbody rb;
     private bool onPlanet;
     private string level;
@@ -86,6 +97,7 @@ public class Ship : MonoBehaviour
     {
         planetPanel.SetActive(false);
         landPanel.SetActive(false);
+        arrow.SetActive(true);
         inGui = false;
     }
 
@@ -271,7 +283,8 @@ public class Ship : MonoBehaviour
         Planet planet = col.gameObject.GetComponent<Planet>();
         if (planet != null && !onPlanet)
         {
-            if (avgSpeed() < 0.5)
+            stopPlayingThrusterSound();
+            if (avgSpeed() < landingSpeed)
             {
                 //landed on something
                 if (!planet.sun)
@@ -286,24 +299,31 @@ public class Ship : MonoBehaviour
                     //some nice game over?
                     gameObject.GetComponent<MeshRenderer>().enabled = false;
                     shownGui = 3;
-                    stopPlayingThrusterSound();
                 }
                 onPlanet = true;
                 inGui = true;
                 planetName.text = planet.planetName;
                 planetDesc.text = planet.description;
                 planetPanel.SetActive(true);
+                arrow.SetActive(false);
             }
             else
             {
                 if (!planet.sun)
                 {
                     //going too fast -> take dmg or something
+                    gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    shownGui = 3;
+                    onPlanet = true;
+                    inGui = true;
+                    planetName.text = planet.planetName;
+                    planetDesc.text = planet.description + landingFailmsg;
+                    planetPanel.SetActive(true);
+                    arrow.SetActive(false);
                 }
                 else
                 {
                     //gg, you made it to afterlife
-                    stopPlayingThrusterSound();
                     gameObject.GetComponent<MeshRenderer>().enabled = false;
                     shownGui = 3;
                     onPlanet = true;
@@ -311,8 +331,22 @@ public class Ship : MonoBehaviour
                     planetName.text = planet.planetName;
                     planetDesc.text = planet.description;
                     planetPanel.SetActive(true);
+                    arrow.SetActive(false);
                 }
             }
+        }
+        else if (avgSpeed() > landingSpeed)
+        {
+            //gg, you made it to afterlife
+            stopPlayingThrusterSound();
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
+            shownGui = 3;
+            onPlanet = true;
+            inGui = true;
+            planetName.text = "Asteroid Field";
+            planetDesc.text = meteorCrash;
+            planetPanel.SetActive(true);
+            arrow.SetActive(false);
         }
     }
 }
