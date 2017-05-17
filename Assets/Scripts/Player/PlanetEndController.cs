@@ -19,7 +19,6 @@ public class PlanetEndController : MonoBehaviour
     [SerializeField]
     private Button noButton;
 
-    private float originalTimeScale;
     private bool isUIActive = false;
 
 	private void Start()
@@ -56,7 +55,6 @@ public class PlanetEndController : MonoBehaviour
 
     private void enableUI()
     {
-        originalTimeScale = Time.timeScale;
         Time.timeScale = 0f;
         planetUI.SetActive(true);
         isUIActive = true;
@@ -64,7 +62,7 @@ public class PlanetEndController : MonoBehaviour
 
     private void disableUI()
     {
-        Time.timeScale = originalTimeScale;
+        Time.timeScale = 1;
         planetUI.SetActive(false);
         isUIActive = false;
     }

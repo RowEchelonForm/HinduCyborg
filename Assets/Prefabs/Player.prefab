@@ -264,6 +264,7 @@ GameObject:
   - component: {fileID: 114843874956190478}
   - component: {fileID: 114313279088323468}
   - component: {fileID: 114630905319848762}
+  - component: {fileID: 114849981851442806}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1575,7 +1576,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1183795697220702}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 183.6, y: 3.4, z: 0}
+  m_LocalPosition: {x: 114.54, y: -6.09, z: 0}
   m_LocalScale: {x: 0.125, y: 0.125, z: 1}
   m_Children:
   - {fileID: 4992569501027798}
@@ -2337,7 +2338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.4200039
+  m_Length: 1.4200058
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4350550575553050}
   m_AttachedIK: {fileID: 0}
@@ -2353,7 +2354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 2.961194
+  m_Length: 2.9611328
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4087452304854370}
   m_AttachedIK: {fileID: 0}
@@ -2633,7 +2634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.1776769
+  m_Length: 1.177678
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4356738460285974}
   m_AttachedIK: {fileID: 0}
@@ -2833,7 +2834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 3.7855554
+  m_Length: 3.785519
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4921556871614664}
   m_AttachedIK: {fileID: 0}
@@ -2907,7 +2908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.1923127
+  m_Length: 1.1923659
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4523943048238554}
   m_AttachedIK: {fileID: 0}
@@ -2972,7 +2973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.7517217
+  m_Length: 0.75172204
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4371733343719904}
   m_AttachedIK: {fileID: 0}
@@ -3015,7 +3016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 3.8100004
+  m_Length: 3.8100023
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4719202110193268}
   m_AttachedIK: {fileID: 0}
@@ -3151,7 +3152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e81e0d0ed5a7b449b5aef8396580fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugToggles: 0
+  debugToggles: 1
 --- !u!114 &114738700514107904
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3237,7 +3238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.4799817
+  m_Length: 1.4799844
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4554037735200466}
   m_AttachedIK: {fileID: 0}
@@ -3304,7 +3305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 5.568844
+  m_Length: 5.568845
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4046995343137334}
   m_AttachedIK: {fileID: 0}
@@ -3360,7 +3361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.99996847
+  m_Length: 1.0000029
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4795454518795350}
   m_AttachedIK: {fileID: 0}
@@ -3395,6 +3396,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6f89d509f5234b4ea2333f953aaad70, type: 2}
   - {fileID: 11400000, guid: 14fc2a74808eaaf4184cda85f0525b44, type: 2}
   - {fileID: 11400000, guid: 7c3d7fc65a826ec44973c0023f3ca45c, type: 2}
+--- !u!114 &114849981851442806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1183795697220702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db5c53439c344a347b37f208c43257f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetUI: {fileID: 0}
+  yesButton: {fileID: 0}
+  noButton: {fileID: 0}
 --- !u!114 &114857434472285074
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3543,7 +3558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 3.9015799
+  m_Length: 3.901539
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4042884972481054}
   m_AttachedIK: {fileID: 0}
