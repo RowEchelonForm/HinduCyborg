@@ -9,9 +9,17 @@ using UnityEngine;
  * Do not turn the abilites on or off manually, this class will handle it.
  * The ability scripts should be enabled at start, this script will disable them.
  * Does not manage the visual parts object(s) of the ability.
+ * 
+ * If debugToggles == true, the following debug controls work:
+ *   Backspace + U == Dash
+ *   Backspace + I == Shield
+ *   Backspace + O == Punch
 */
 public class PlayerAbilityManager : MonoBehaviour
 {
+
+    [SerializeField]
+    private bool debugToggles = false;
 
 	// <abilityName, ability>
     private Dictionary<string, PlayerAbility> enabledAbilities = new Dictionary<string, PlayerAbility>();
@@ -85,11 +93,15 @@ public class PlayerAbilityManager : MonoBehaviour
     }
 
 
-	// Use this for initialization
 	private void Awake()
 	{
 		findPlayerAbilityComponents();
 	}
+
+    private void Update()
+    {
+        handleDebugInput();
+    }
 
 	private void OnTriggerEnter2D(Collider2D col)
 	{
@@ -108,6 +120,7 @@ public class PlayerAbilityManager : MonoBehaviour
 			col.gameObject.SetActive(false);
 		}
     }
+
 
 	private void findPlayerAbilityComponents()
 	{
@@ -131,4 +144,44 @@ public class PlayerAbilityManager : MonoBehaviour
             (disabledAbilities.Count - abilityCount) + " of those abilities are enabled");
 	}
 
+
+
+    ///////////////////////////////////////////////
+    //////////////// FOR DEBUGGING ////////////////
+    ///////////////////////////////////////////////
+
+    // Toggles abilities if debugToggles is on.
+    private void handleDebugInput()
+    {
+        if (debugToggles)
+        {
+            if (Input.GetKey(KeyCode.Backspace))
+            {
+                if (Input.GetKeyDown(KeyCode.U))
+                {
+                    toggleAbility("Dash");
+                }
+                if (Input.GetKeyDown(KeyCode.I))
+                {
+                    toggleAbility("Shield");
+                }
+                if (Input.GetKeyDown(KeyCode.O))
+                {
+                    toggleAbility("Punch");
+                }
+            }
+        }
+    }
+
+    private void toggleAbility(string abilityName)
+    {
+        if (enabledAbilities.ContainsKey(abilityName))
+        {
+            disableAbility(abilityName);
+        }
+        else
+        {
+            enableAbility(abilityName);
+        }
+    }
 }

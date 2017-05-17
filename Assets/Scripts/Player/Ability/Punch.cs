@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/*
+ * The punch ability.
+ * The punch effect GameObject should be controlled by Animator.
+ * The punch effect GameObject should have a Collider2D and be on the 'Punch' layer.
+*/
 [RequireComponent(typeof(Animator))]
 public class Punch : PlayerAbility
 {
@@ -20,7 +24,10 @@ public class Punch : PlayerAbility
 	[SerializeField]
 	private string abilityName = "Punch";
 
-    private bool punchTriggered;
+    [SerializeField] [Range(0f, 30f)]
+    private float punchCooldown = 5f; // after punch started.
+
+    private float punchTimer;
     private Animator anim;
 
 
@@ -29,18 +36,57 @@ public class Punch : PlayerAbility
     	base.Start();
         findComponents();
         enableAbilityParts();
+        punchTimer = 0;
     }
 	
 	private void Update()
 	{
-        if (hasAbility && Input.GetButtonDown("Punch") && 
-        	actionHandler.isActionAllowed(action)) // TODO do the proper punch mechanic!!
+        if (!hasAbility)
         {
-            anim.SetTrigger("punch");
+            return;
+        }
+
+        handleTimer(Time.deltaTime);
+        if (shouldPunch())
+        {
+            doPunch();
         }
 	}
 
-	// TODO: do we need these?
+
+    private void handleTimer(float deltaTime)
+    {
+        if (punchTimer > 0)
+        {
+            punchTimer -= deltaTime;
+            if (punchTimer <= 0)
+            {
+                enableAbilityParts();
+            }
+        }
+    }
+
+    // Should be called after handleTimer().
+    // Returns true if should perform punch.
+    private bool shouldPunch()
+    {
+        if (punchTimer <= 0 && Input.GetButtonDown("Punch") &&
+            actionHandler.isActionAllowed(action))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // Performs punching.
+    private void doPunch()
+    {
+        anim.SetTrigger("punch");
+        punchTimer = punchCooldown;
+        disableAbilityParts();
+    }
+
+	
     private void findComponents()
     {
         anim = GetComponent<Animator>();

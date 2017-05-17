@@ -143,5 +143,5 @@ MonoBehaviour:
     loop: 1
   - levelName: Planet02
     levelMusicClip: {fileID: 8300000, guid: 33a633064d9fb7342b692995e0aed50a, type: 3}
-    trackVolume: 0.08
+    trackVolume: 0.12
     loop: 1
