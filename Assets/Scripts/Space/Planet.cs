@@ -13,5 +13,5 @@ public class Planet : MonoBehaviour {
 
     public bool sun;
     
-    public bool hasLevel;
+    public bool hasNoLevel;
 }

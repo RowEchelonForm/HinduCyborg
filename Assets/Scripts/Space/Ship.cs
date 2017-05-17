@@ -42,6 +42,8 @@ public class Ship : MonoBehaviour
     [SerializeField]
     private Text planetDesc;
     [SerializeField]
+    private Text landText;
+    [SerializeField]
     private GameObject planetPanel;
     [SerializeField]
     private GameObject landPanel;
@@ -94,7 +96,14 @@ public class Ship : MonoBehaviour
         exitGui();
         SaveLoad.Save(LevelManager.currentLevelName);
         SaveLoad.SaveToFile("space");
-        LevelManager.loadLevel(level);
+        if (shownGui == 5) // quit gui
+        {
+            LevelManager.loadStart();
+        }
+        else
+        {
+            LevelManager.loadLevel(level);
+        }
     }
 
     void exitGui()
@@ -254,6 +263,14 @@ public class Ship : MonoBehaviour
                 rb.AddTorque(0, 0, -h * Time.deltaTime);
             }
             gravityTick();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                inGui = true;
+                landText.text = "Quit?";
+                landPanel.SetActive(true);
+                arrow.SetActive(false);
+                shownGui = 5;
+            }
         }
         else
         {
@@ -262,6 +279,7 @@ public class Ship : MonoBehaviour
             {
                 planetPanel.SetActive(false);
                 landPanel.SetActive(true);
+                landText.text = "Land?";
                 shownGui = 2;
             }
             else if (shownGui == 2)
@@ -283,6 +301,18 @@ public class Ship : MonoBehaviour
             {
                 exitGui();
             }
+            if (shownGui == 5)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape) || h > 0)
+                {
+                    exitGui();
+                    landText.text = "Land?";
+                }
+                else if (h < 0)
+                {
+                    yesClick();
+                }
+            }
         }
     }
 
@@ -291,11 +321,15 @@ public class Ship : MonoBehaviour
         Planet planet = col.gameObject.GetComponent<Planet>();
         if (planet != null && !onPlanet)
         {
+            if (inGui)
+            {
+                exitGui();
+            }
             stopPlayingThrusterSound();
             if (avgSpeed() < landingSpeed)
             {
                 //landed on something
-                if (planet.hasLevel)
+                if (planet.hasNoLevel)
                 {
                     shownGui = 4;
                     gameObject.AddComponent<FixedJoint>();
@@ -335,7 +369,7 @@ public class Ship : MonoBehaviour
                     onPlanet = true;
                     inGui = true;
                     planetName.text = planet.planetName;
-                    planetDesc.text = planet.description + landingFailmsg;
+                    planetDesc.text = landingFailmsg;
                     planetPanel.SetActive(true);
                     arrow.SetActive(false);
                 }
@@ -351,6 +385,8 @@ public class Ship : MonoBehaviour
                     planetPanel.SetActive(true);
                     arrow.SetActive(false);
                 }
+                rb.velocity = new Vector3(0, 0, 0);
+                rb.constraints = RigidbodyConstraints.FreezeAll;
             }
         }
         else if (avgSpeed() > landingSpeed)
