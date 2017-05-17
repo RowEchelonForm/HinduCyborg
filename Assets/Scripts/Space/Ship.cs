@@ -279,6 +279,10 @@ public class Ship : MonoBehaviour
             {
                 LevelManager.reloadCurrentLevel();
             }
+            else if (shownGui == 4 && Input.GetButton("Jump"))
+            {
+                exitGui();
+            }
         }
     }
 
@@ -291,7 +295,13 @@ public class Ship : MonoBehaviour
             if (avgSpeed() < landingSpeed)
             {
                 //landed on something
-                if (!planet.sun)
+                if (planet.hasLevel)
+                {
+                    shownGui = 4;
+                    gameObject.AddComponent<FixedJoint>();
+                    gameObject.GetComponent<FixedJoint>().connectedBody = col.rigidbody;
+                }
+                else if (!planet.sun)
                 {
                     gameObject.AddComponent<FixedJoint>();
                     gameObject.GetComponent<FixedJoint>().connectedBody = col.rigidbody;
