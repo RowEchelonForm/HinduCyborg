@@ -2923,6 +2923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityName: Punch
+  punchCooldown: 5
 --- !u!114 &114599888624895908
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3134,6 +3135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e81e0d0ed5a7b449b5aef8396580fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugToggles: 0
 --- !u!114 &114738700514107904
 MonoBehaviour:
   m_ObjectHideFlags: 1
