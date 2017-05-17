@@ -19,8 +19,8 @@ public class AbilityTrigger : MonoBehaviour
     [SerializeField]
     private AudioClip getAbilitySound;
     [SerializeField]
-    private Text helpTextObject;
-    [SerializeField]
+    private GameObject helpTextUIPrefab;
+    [SerializeField] [TextArea]
     private string helpText = "Press [BUTTON]\nto perform [ACTION]";
     
     
@@ -30,11 +30,26 @@ public class AbilityTrigger : MonoBehaviour
         SoundFXPlayer.instance.playClipOnce(getAbilitySound, 0.2f);
     }
     
+    // Shows the tutorial text for the ability
+    public void showHelpText()
+    {
+        if (helpTextUIPrefab == null)
+        {
+            return;
+        }
+        GameObject hTextUI = Instantiate(helpTextUIPrefab, transform.position, Quaternion.identity);
+        Text helpTextObject = hTextUI.GetComponentInChildren<Text>();
+        helpTextObject.text = helpText;
+    }
+    
     
     private void Start()
     {
         StartCoroutine( checkIfPlayerHasAbility() );
-        findComponents();
+        if (helpTextUIPrefab == null)
+        {
+            Debug.LogError("AbilityTrigger for " + abilityName_ + " needs helpTextUIPrefab.");
+        }
     }
     
     private IEnumerator checkIfPlayerHasAbility()
@@ -62,20 +77,6 @@ public class AbilityTrigger : MonoBehaviour
                     gameObject.SetActive(false);
                 }
             }
-        }
-    }
-    
-    private void findComponents()
-    {
-        if (helpTextObject != null)
-        {
-            helpTextObject = transform.GetComponentInChildren<Text>();
-            if (helpTextObject == null)
-            {
-                Debug.LogError("Could not find helpTextObject for AbilityTrigger for " + abilityName_);
-                return;
-            }
-            helpTextObject.text = helpText;
         }
     }
     

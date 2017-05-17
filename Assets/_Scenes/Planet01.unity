@@ -9015,42 +9015,15 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 33274556223298438, guid: e046bab40a3c946499f1f6045c86d4b8,
-        type: 2}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 33104525624385704, guid: e046bab40a3c946499f1f6045c86d4b8,
         type: 2}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 114790072594893416, guid: e046bab40a3c946499f1f6045c86d4b8,
+    - target: {fileID: 33274556223298438, guid: e046bab40a3c946499f1f6045c86d4b8,
         type: 2}
-      propertyPath: abilityName_
-      value: Dash
-      objectReference: {fileID: 0}
-    - target: {fileID: 23735271058392656, guid: e046bab40a3c946499f1f6045c86d4b8,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 21587830804201706, guid: 3b791fec13c83894e944ec0b1e7fd1f5,
-        type: 2}
-    - target: {fileID: 23763573930035458, guid: e046bab40a3c946499f1f6045c86d4b8,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 21541277982989552, guid: aac4f7a88f70c98478a991a3fb445318,
-        type: 2}
-    - target: {fileID: 224830679705562774, guid: e046bab40a3c946499f1f6045c86d4b8,
-        type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224830679705562774, guid: e046bab40a3c946499f1f6045c86d4b8,
-        type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e046bab40a3c946499f1f6045c86d4b8, type: 2}
