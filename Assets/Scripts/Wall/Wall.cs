@@ -2,23 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wall : MonoBehaviour {
+/* 
+ * Wall that breaks when a trigger in the 'destroyLayers' layer hits it.
+*/
+[RequireComponent(typeof(Animator))]
+public class Wall : MonoBehaviour
+{
 
+    [SerializeField]
+    LayerMask destroyLayers;
 
     private Animator anim;
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+    {
         findComponents();
-        //anim.Play("collapse_animation");
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if ( destroyLayers == (destroyLayers | (1 << collision.gameObject.layer)))
+        {
+            anim.SetTrigger("destroy");
+        }
+    }
 
-    // TODO: do we need these?
+
     private void findComponents()
     {
         anim = GetComponent<Animator>();

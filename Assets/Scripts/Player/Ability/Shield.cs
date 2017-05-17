@@ -23,7 +23,7 @@ public class Shield : PlayerAbility
 
 	[SerializeField]
 	private string abilityName = "Shield";
-	[SerializeField] [Range(1, 10)]
+	[SerializeField] [Range(1, 1000)]
 	private int shieldStrength = 1;
 	[SerializeField] [Range(0f, 60f)]
 	private float shieldTimer = 1f;

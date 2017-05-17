@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114581893686434742}
   - component: {fileID: 33338602863997372}
   - component: {fileID: 23869765622127122}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: wall 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114720395317385940}
   - component: {fileID: 33969664024698850}
   - component: {fileID: 23963860790950952}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: wall 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 114294042961395810}
   - component: {fileID: 33342576197367024}
   - component: {fileID: 23562289068734448}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: wall 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4083107726465802}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 95910389718136780}
   - component: {fileID: 60212092189956422}
   - component: {fileID: 114829723581560230}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 114622909892256656}
   - component: {fileID: 33880475839905688}
   - component: {fileID: 23897066534352448}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: wall 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4337828331456874}
   - component: {fileID: 114660459760388010}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: collapsed wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 114409785630017516}
   - component: {fileID: 33321124490546182}
   - component: {fileID: 23079119056992538}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: wall 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 114470105479411932}
   - component: {fileID: 33393094903099914}
   - component: {fileID: 23570183174340650}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -713,3 +713,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2ba1de52bd10f448b3942f13006e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyLayers:
+    serializedVersion: 2
+    m_Bits: 4096
