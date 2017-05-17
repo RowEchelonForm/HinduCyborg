@@ -9025,6 +9025,13 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 114790072594893416, guid: e046bab40a3c946499f1f6045c86d4b8,
+        type: 2}
+      propertyPath: helpText
+      value: 'Press ''Shift''
+
+        to perform Dash'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e046bab40a3c946499f1f6045c86d4b8, type: 2}
   m_IsPrefabParent: 0

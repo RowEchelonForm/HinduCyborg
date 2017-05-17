@@ -42,6 +42,10 @@ public class PlanetEndController : MonoBehaviour
         {
             handleUIInput();
         }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            enableUI();
+        }
 	}
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -83,6 +87,10 @@ public class PlanetEndController : MonoBehaviour
             clickYes();
         }
         else if (Input.GetKeyDown(KeyCode.D))
+        {
+            clickNo();
+        }
+        else if(Input.GetKeyDown(KeyCode.Escape))
         {
             clickNo();
         }

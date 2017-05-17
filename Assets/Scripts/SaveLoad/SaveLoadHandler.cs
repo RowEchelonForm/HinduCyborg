@@ -30,10 +30,10 @@ public class SaveLoadHandler : MonoBehaviour {
             SaveLoad.Load();
         }*/
         
-        if ( Input.GetKeyDown(KeyCode.Escape) )
+        /*if ( Input.GetKeyDown(KeyCode.Escape) )
         {
             LevelManager.loadStart();
-        }
+        }*/
     }
     
 }

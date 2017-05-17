@@ -32,6 +32,7 @@ public class CameraFollow : MonoBehaviour
 	private Vector3 prevCamPos;
     private Ship playerScript;
     private Camera cam;
+    private bool instantMovement = false;
 
 	// Use this for initialization
 	void Start ()
@@ -41,6 +42,8 @@ public class CameraFollow : MonoBehaviour
         initPosition();
         addZoomComponents();
         findBackgroundScroller();
+        instantMovement = true;
+        StartCoroutine(instantMovementHack());
         prevCamPos = new Vector3 (mainCamTransform.position.x, mainCamTransform.position.y, mainCamTransform.position.z);
 	}
 	
@@ -51,7 +54,15 @@ public class CameraFollow : MonoBehaviour
 		{
             Vector3 cameraPos = mainCamTransform.position;
             Vector3 playerPos = playerTransform.position + cameraOffset;
-			Vector3 cameraChange = Vector3.Lerp(cameraPos, playerPos, lerpMe*Time.deltaTime);
+            Vector3 cameraChange;
+            if (instantMovement)
+            {
+                 cameraChange = playerPos;
+            }
+            else
+            {
+			    cameraChange = Vector3.Lerp(cameraPos, playerPos, lerpMe*Time.deltaTime);
+            }
             if (lockY)
             {
                 cameraChange.y = prevCamPos.y;
@@ -152,5 +163,16 @@ public class CameraFollow : MonoBehaviour
         {
             mainCamTransform.position = new Vector3 (playerTransform.position.x, playerTransform.position.y, mainCamTransform.position.z) + cameraOffset;
         }
+    }
+    
+    // Instant camera movement to player for a few frames.
+    private IEnumerator instantMovementHack()
+    {
+        instantMovement = true;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        instantMovement = false;
     }
 }
