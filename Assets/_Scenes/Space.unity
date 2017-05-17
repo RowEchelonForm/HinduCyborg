@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 72574676}
   - component: {fileID: 72574675}
   m_Layer: 0
-  m_Name: Planet02 (1)
+  m_Name: Planet02 Moon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
