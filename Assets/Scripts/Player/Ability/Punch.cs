@@ -4,8 +4,8 @@ using UnityEngine;
 
 /*
  * The punch ability.
- * The punch effect GameObject should be controlled by Animator.
- * The punch effect GameObject should have a Collider2D and be on the 'Punch' layer.
+ * The punch effect GameObject should be controlled by Animator and be DISABLED at start.
+ * The punch effect GameObject should have a DISABLED Collider2D and be on the 'Punch' layer.
 */
 [RequireComponent(typeof(Animator))]
 public class Punch : PlayerAbility
