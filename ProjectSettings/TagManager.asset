@@ -13,6 +13,8 @@ TagManager:
   - GroundCheck
   - Wall
   - Background
+  - EndTrigger
+  - PlanetUI
   layers:
   - Default
   - TransparentFX
