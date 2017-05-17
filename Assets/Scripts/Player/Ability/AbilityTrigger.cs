@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
  * Used on a trigger object that enables an unlockable ability on the player.
@@ -17,6 +18,10 @@ public class AbilityTrigger : MonoBehaviour
     private string abilityName_ = "";
     [SerializeField]
     private AudioClip getAbilitySound;
+    [SerializeField]
+    private Text helpTextObject;
+    [SerializeField]
+    private string helpText = "Press [BUTTON]\nto perform [ACTION]";
     
     
     // Plays the getAbilitySound
@@ -29,6 +34,7 @@ public class AbilityTrigger : MonoBehaviour
     private void Start()
     {
         StartCoroutine( checkIfPlayerHasAbility() );
+        findComponents();
     }
     
     private IEnumerator checkIfPlayerHasAbility()
@@ -56,6 +62,20 @@ public class AbilityTrigger : MonoBehaviour
                     gameObject.SetActive(false);
                 }
             }
+        }
+    }
+    
+    private void findComponents()
+    {
+        if (helpTextObject != null)
+        {
+            helpTextObject = transform.GetComponentInChildren<Text>();
+            if (helpTextObject == null)
+            {
+                Debug.LogError("Could not find helpTextObject for AbilityTrigger for " + abilityName_);
+                return;
+            }
+            helpTextObject.text = helpText;
         }
     }
     
