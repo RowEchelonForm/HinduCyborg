@@ -20,11 +20,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4473551827281202}
   - component: {fileID: 33985039787623900}
-  - component: {fileID: 136214815846177496}
   - component: {fileID: 23057614098789458}
   - component: {fileID: 114505115292562288}
   - component: {fileID: 54622276489335104}
   - component: {fileID: 114226936379133106}
+  - component: {fileID: 64588002722593032}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Player
@@ -38,9 +38,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1131385953848832}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.8, y: -0.16, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.035, y: 0.04, z: 0.04}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -58,7 +58,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: fde1e4a5468ff024893e0a7b0f97c4b8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,7 +83,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1131385953848832}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 783ccc071b8352644a40fada47631a1d, type: 3}
 --- !u!54 &54622276489335104
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -99,6 +99,20 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 56
   m_CollisionDetection: 0
+--- !u!64 &64588002722593032
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1131385953848832}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 783ccc071b8352644a40fada47631a1d, type: 3}
 --- !u!114 &114226936379133106
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -121,12 +135,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e11f9fe60a12c7e42ae279a746beaab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staticGravity: []
-  nonStaticGravity: []
-  divByDistance: 0
-  divByDistance2: 0
+  staticGravity:
+  - gravity: 100
+    other: {fileID: 0}
+    maxDistance: 50
+  nonStaticGravity:
+  - gravity: 10
+    other: {fileID: 0}
+    maxDistance: 5
+  divByDistance: 1
+  divByDistance2: 1
   bufferTime: 0.01
-  bufferParts: 40
+  bufferParts: 30
   planetName: {fileID: 0}
   planetDesc: {fileID: 0}
   planetPanel: {fileID: 0}
@@ -135,16 +155,3 @@ MonoBehaviour:
   no: {fileID: 0}
   thrusterSound: {fileID: 8300000, guid: 88dd142f0b33b1f49801fb5e0a4a4bae, type: 3}
   thrusterVolume: 0.3
---- !u!136 &136214815846177496
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1131385953848832}
-  m_Material: {fileID: 13400000, guid: ba121972f57d54a4dac47b109b633760, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}

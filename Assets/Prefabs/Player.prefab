@@ -2508,7 +2508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityName: Shield
-  shieldStrength: 1
+  shieldStrength: 1000
   shieldTimer: 3
   shieldCooldown: 3
   shieldForgivenessTime: 0.1
@@ -3510,7 +3510,7 @@ MonoBehaviour:
   spikeThreshold: 0.3
   groundLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2304
   spikeHandling: 1
   downhillStabilization: 1
 --- !u!114 &114955890301261502
