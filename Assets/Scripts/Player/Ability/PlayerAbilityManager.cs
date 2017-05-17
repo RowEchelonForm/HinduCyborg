@@ -17,11 +17,6 @@ public class PlayerAbilityManager : MonoBehaviour
     private Dictionary<string, PlayerAbility> enabledAbilities = new Dictionary<string, PlayerAbility>();
     private Dictionary<string, PlayerAbility> disabledAbilities = new Dictionary<string, PlayerAbility>();
 
-    void Start()
-    {
-        enableAbility("Punch");
-    }
-
     // Call this to enable a certain ability.
     // Nothing else should be called from 'the outside'.
     public void enableAbility(string abilityName)
