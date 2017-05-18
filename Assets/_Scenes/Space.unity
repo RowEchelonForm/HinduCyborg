@@ -202,8 +202,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotation: 8
   selfRotation: 15
-  minDistance: 4
-  maxDistance: 5
+  minDistance: 9.3
+  maxDistance: 10.3
   randomRotation: 0
   randomSelfRotation: 0
   sun: {fileID: 1019660260}
@@ -640,8 +640,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotation: 10
   selfRotation: 10
-  minDistance: 24
-  maxDistance: 25
+  minDistance: 7.36
+  maxDistance: 8.36
   randomRotation: 0
   randomSelfRotation: 0
   sun: {fileID: 1019660260}
