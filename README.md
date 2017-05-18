@@ -1,13 +1,13 @@
-# HinduCyborg
+# Dhrama
 
-Repository for Hindu Cyborg in Space game made with Unity 5.5.2f1
+Repository for Dharma game made with Unity 5.6.0f3.
 
-ITIA9 Game Project course at University of Tampere, 2017
+ITIA9 Game Project course at University of Tampere, 2017.
 
 Team: Hindu Cyborgs
 
 -------------------------
-To use Git:
+Below are instructions for using Git:
 - Download and install Git https://git-scm.com/downloads
 - Make a Github account 
 - A handy Git guide: https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf
