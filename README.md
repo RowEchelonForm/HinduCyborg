@@ -1,4 +1,4 @@
-# Dhrama
+# Dharma
 
 Repository for Dharma game made with Unity 5.6.0f3.
 
